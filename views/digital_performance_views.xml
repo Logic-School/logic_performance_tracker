@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.actions.act_window" id="digital_task_performance_action">
+        <field name="name">Digital</field>
+        <field name="res_model">digital.task</field>
+        <field name="view_mode">graph</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="digital_executive_performance_action_window">
+        <field name="name">Digital</field>
+        <field name="res_model">digital.executive.performance</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+
+    <record id="digital_executive_performance_action" model="ir.actions.server">
+        <field name="name">Executive Performance</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_digital_executive_performance"/>
+        <field name="binding_model_id" ref="logic_performance_tracker.model_digital_executive_performance"></field>
+        <field name="state">code</field>
+        <field name="code">action=model.action_executive_performance()</field>
+    </record>
+
+    <record id="digital_executive_performance_tree" model="ir.ui.view">
+        <field name="name">digital.executive.performance.tree</field>
+        <field name="model">digital.executive.performance</field>
+        <field name="arch" type="xml">
+            <tree create="0">
+                <field name="digital_executive"/>
+                <field name="average_rating"/>
+                <field name="completed_tasks"/>
+            </tree>
+
+        </field>
+    </record>
+
+    <menuitem name="Performance Tracker" id="menu_performance_tracker"
+              action="digital_task_performance_action"
+              sequence="6"
+              />
+    <menuitem name="Digital" id="menu_digital_performance"
+              sequence="9"
+              parent="menu_performance_tracker"
+              />
+    <menuitem name="Tasks" id="menu_digital_performance_tasks"
+              sequence="9"
+              parent="menu_digital_performance"
+              action="digital_task_performance_action"
+              />
+    <menuitem name="Executives" id="menu_digital_performance_executives"
+              sequence="10"
+              parent="menu_digital_performance"
+              action="digital_executive_performance_action"
+              />
+
+</odoo>
