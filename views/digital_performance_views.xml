@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+        <template id="assets_backend" name="hello world assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+            <script type="text/javascript" src="/logic_performance_tracker/static/src/js/dashboard_card_view.js"/>
+            <!-- <link rel="stylesheet" type="text/scss" href="/logic_performance_tracker/static/src/scss/dashboard_card_view.scss"/> -->
+            </xpath>
+        </template>
+
     <record model="ir.actions.act_window" id="digital_task_performance_action">
         <field name="name">Digital</field>
         <field name="res_model">digital.task</field>
-        <field name="view_mode">graph</field>
+        <field name="view_mode">dashboard_card</field>
     </record>
+
+    <record model="ir.ui.view" id="view_dashboard_card">
+        <field name="name">Dashboard Card View</field>
+        <field name="model">digital.task</field>
+        <field name="arch" type="xml">
+            <dashboard_card>
+                <field name="name"/>
+            </dashboard_card>
+        </field>
+    </record>
+    
 
     <record model="ir.actions.act_window" id="digital_executive_performance_action_window">
         <field name="name">Digital</field>
@@ -26,7 +44,7 @@
         <field name="name">digital.executive.performance.tree</field>
         <field name="model">digital.executive.performance</field>
         <field name="arch" type="xml">
-            <tree create="0">
+            <tree create="0" default_order="completed_tasks desc">
                 <field name="digital_executive"/>
                 <field name="average_rating"/>
                 <field name="completed_tasks"/>
@@ -38,6 +56,7 @@
     <menuitem name="Performance Tracker" id="menu_performance_tracker"
               action="digital_task_performance_action"
               sequence="6"
+              web_icon="logic_performance_tracker/static/description/icon.png"
               />
     <menuitem name="Digital" id="menu_digital_performance"
               sequence="9"

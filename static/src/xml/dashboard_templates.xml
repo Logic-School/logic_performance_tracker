@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <templates id="template" xml:space="preserve">
+        <!-- Define your QWeb template for the dashboard_card view -->
+        <t t-name="logic_performance_tracker.dashboard_card_template">
+            <div class="o_dashboard_card">
+                <h1 t-esc="values.length">adfdsfds</h1>
+                <!-- <t t-foreach="values" t-as="value">
+                <h1 t-esc="value['name']"></h1>
+                </t> -->
+
+                <!-- <table>
+                    <thead>
+
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table> -->
+                <!-- <div class="o_dashboard_card_title">
+                    <t t-esc="widget.title"/>
+                </div>
+                <div class="o_dashboard_card_content">
+                    <t t-esc="widget.content"/>
+                </div>
+                <div class="o_dashboard_card_actions">
+                    <button class="o_button_primary">Action 1</button>
+                    <button class="o_button_secondary">Action 2</button>
+                </div> -->
+            </div>
+        </t>
+    </templates>

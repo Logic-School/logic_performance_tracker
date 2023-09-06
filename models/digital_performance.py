@@ -3,6 +3,7 @@ from odoo.exceptions import UserError
 
 class DigitalPerformance(models.Model):
     _name = "digital.executive.performance"
+    _order = "completed_tasks desc"
     digital_executive = fields.Many2one('res.users')
     average_rating = fields.Float(string="Average Rating")
     completed_tasks = fields.Integer(string="Completed Tasks")

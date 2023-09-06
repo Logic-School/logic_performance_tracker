@@ -8,6 +8,11 @@
         'security/ir.model.access.csv',
         'views/digital_performance_views.xml',
     ],
+    # 'assets':{'web.assets_qweb': [
+    #     'logic_performance_tracker/static/src/xml/dashboard_templates.xml',
+    # ],
+    # },
+    'qweb': ["static/src/xml/dashboard_templates.xml"],
     'demo': [],
     'summary': "Performance Tracker",
     'description': "",
