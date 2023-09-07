@@ -13,6 +13,11 @@
     # ],
     # },
     'qweb': ["static/src/xml/dashboard_templates.xml"],
+    'assets': {
+    'web.assets_backend': [
+        '/logic_performance_tracker/static/src/js/dashboard_card_view.js',
+        "/logic_performance_tracker/static/src/scss/dashboard_card_view.scss"
+    ]},
     'demo': [],
     'summary': "Performance Tracker",
     'description': "",

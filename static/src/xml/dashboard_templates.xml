@@ -2,30 +2,85 @@
     <templates id="template" xml:space="preserve">
         <!-- Define your QWeb template for the dashboard_card view -->
         <t t-name="logic_performance_tracker.dashboard_card_template">
+            <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/dashboard_card_view.css"/>
+            <!-- <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/bootstrap.css"/> -->
+
+            <!-- <style>
+                h1{
+                    color:red;
+                }
+            </style> -->
             <div class="o_dashboard_card">
-                <h1 t-esc="values.length">adfdsfds</h1>
-                <!-- <t t-foreach="values" t-as="value">
-                <h1 t-esc="value['name']"></h1>
-                </t> -->
 
-                <!-- <table>
-                    <thead>
+                <div t-if="values">
+                    <div class="row">
 
-                    </thead>
-                    <tbody>
+                        <t t-foreach="Object.keys(values['states'])" t-as="state">
+                            <div class="col-sm-3 hr_job_application_approve">
+                                <div class="oh-card text-color">
+                                <div class="oh-card-body pb-0">
+                                    <p t-esc="state" class="stat-title"/>
+                                    <h4 class="mb-0">
+                                    <p class="stat-count">
+                                    <t t-esc="values['states'][state]"/>
+                                    </p>
+                                    </h4>
+                                </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
 
-                    </tbody>
-                </table> -->
-                <!-- <div class="o_dashboard_card_title">
-                    <t t-esc="widget.title"/>
+                    <!-- <div class="card oh-card" style="width: 18rem;">
+                        <div class="card-body oh-card-body">
+                          <h5 class="card-title text-center">Digital Tasks</h5>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                        <t t-foreach="Object.keys(values['states'])" t-as="state">
+                          <li t-esc="state+' : '+values['states'][state]" class="list-group-item" style="font-size:14px;"/>
+                        </t>
+                        </ul>
+                    </div> -->
+
+                    <h1>Leaderboard</h1><span>From: </span><input type="date"/><span> To: </span><input type="date"/><button class="ml-2 rounded btn btn-primary" type="button">Filter</button>
+                    <!-- <ul>
+                        <t t-foreach="Object.keys(values['performances'])" t-as="exec_name">
+                            <li>
+                                <p>
+                                    Name: <span t-esc="exec_name"/>
+                                    , Rating: <span t-esc="values['performances'][exec_name]['rating']"/>
+                                    , Tasks Completed: <span t-esc="values['performances'][exec_name]['completed_tasks']"/>
+                                </p>
+                            </li>
+                        </t>
+                    </ul> -->
+                    
+                    <div class="w-25 w-50">
+                    <table class="table table-striped table-dark table-responsive-md">
+                        <thead>
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Executive</th>
+                            <th scope="col">Average Rating</th>
+                            <th scope="col">Completed Tasks</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="index" t-value="1"/>
+                            <t t-foreach="values['performances']" t-as="exec_performance">
+
+                                <tr>
+                                    <td t-esc="index"/>
+                                    <td t-esc="exec_performance['name']"/>
+                                    <td t-esc="exec_performance['average_rating']"/>
+                                    <td t-esc="exec_performance['completed_tasks']"/>
+                                </tr>
+                                <t t-set="index" t-value="index+1"/>
+                                </t>
+                        </tbody>
+                      </table>
+                    </div>
                 </div>
-                <div class="o_dashboard_card_content">
-                    <t t-esc="widget.content"/>
-                </div>
-                <div class="o_dashboard_card_actions">
-                    <button class="o_button_primary">Action 1</button>
-                    <button class="o_button_secondary">Action 2</button>
-                </div> -->
             </div>
         </t>
     </templates>
