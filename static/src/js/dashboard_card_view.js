@@ -26,6 +26,19 @@ odoo.define('logic_performance_tracker.DashboardCardView', function (require) {
         // template: 'logic_performance_tracker.dashboard_card_template',
         xmlDependencies: ['/logic_performance_tracker/static/src/xml/dashboard_templates.xml'],
         
+        events:_.extend({}, ListRenderer.prototype.events, {
+            'click .o_filter_performance': '_onPerformanceFilterActionClicked',
+        }),
+
+
+        _onPerformanceFilterActionClicked: function (ev) {
+            var self = this;
+
+            // Get the date field's value
+            // var selectedDate = this.$('#from_date').val();
+            // console.log(selectedDate+"Helloasdas")
+        },
+        
     // Override the render method to customize the rendering logic
         init: function (parent, state, params) {
             this._super.apply(this, arguments);

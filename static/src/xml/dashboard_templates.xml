@@ -42,7 +42,7 @@
                         </ul>
                     </div> -->
 
-                    <h1>Leaderboard</h1><span>From: </span><input type="date"/><span> To: </span><input type="date"/><button class="ml-2 rounded btn btn-primary" type="button">Filter</button>
+                    <h1>Leaderboard</h1><span>From: </span><input id="from_date" type="date"/><span> To: </span><input id="to_date" type="date"/><button class="ml-2 rounded btn btn-primary o_filter_performance" type="button">Filter</button>
                     <!-- <ul>
                         <t t-foreach="Object.keys(values['performances'])" t-as="exec_name">
                             <li>
