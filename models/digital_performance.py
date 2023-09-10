@@ -1,5 +1,6 @@
 from odoo import models,fields,api
 from odoo.exceptions import UserError
+from datetime import date
 
 class DigitalPerformance(models.Model):
     _name = "digital.executive.performance"
@@ -10,10 +11,19 @@ class DigitalPerformance(models.Model):
     completed_tasks = fields.Integer(string="Completed Tasks")
 
     @api.model
-    def action_executive_performance(self, order="completed_tasks asc"):
+    def action_executive_performance(self,from_date=False,end_date=False,order="completed_tasks desc"):
         self.env['digital.executive.performance'].search([]).unlink()
         executives_performance = {}
-        digital_tasks = self.env['digital.task'].search([('state','in',('completed','to_post','posted'))])
+        if not from_date or not end_date:
+            digital_tasks = self.env['digital.task'].search([('state','in',('completed','to_post','posted'))])
+        else:
+            from_date = from_date.split("-")
+            from_date = date(year=int(from_date[0]),month=int(from_date[1]), day=int(from_date[2]))
+            end_date = end_date.split("-")
+            end_date = date(year=int(end_date[0]),month=int(end_date[1]), day=int(end_date[2]))
+            digital_tasks = self.env['digital.task'].search([('state','in',('completed','to_post','posted')), ('date_completed', '>=',from_date), ('date_completed','<=',end_date)])
+
+            # raise UserError(str(from_date) + "blbal" + str(to_date))
         for task in digital_tasks:
             for executive in task.assigned_execs:
                 if executives_performance.get(executive.id):
@@ -35,9 +45,13 @@ class DigitalPerformance(models.Model):
         #     executives_performance[name]['average_rating'] = executives_performance[name]['rating']/executives_performance[name]['rated_tasks']
 
         for exec_id in executives_performance.keys():
+            if executives_performance[exec_id].get('rating'):
+                average_rating = round(executives_performance[exec_id]['rating']/executives_performance[exec_id]['rated_tasks'],1)
+            else:
+                average_rating = 0
             self.env['digital.executive.performance'].create({
                 'digital_executive': exec_id,
-                'average_rating': round(executives_performance[exec_id]['rating']/executives_performance[exec_id]['rated_tasks'],1),
+                'average_rating':average_rating,
                 'completed_tasks': executives_performance[exec_id]['completed_tasks'],
             })
         

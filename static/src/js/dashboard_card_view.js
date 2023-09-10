@@ -6,6 +6,8 @@ odoo.define('logic_performance_tracker.DashboardCardView', function (require) {
     var AbstractRenderer = require('web.AbstractRenderer');
     var AbstractView = require('web.AbstractView');
     var viewRegistry = require('web.view_registry');
+    var web_client = require('web.web_client');
+
     var QWeb = core.qweb;
 
     
@@ -26,17 +28,148 @@ odoo.define('logic_performance_tracker.DashboardCardView', function (require) {
         // template: 'logic_performance_tracker.dashboard_card_template',
         xmlDependencies: ['/logic_performance_tracker/static/src/xml/dashboard_templates.xml'],
         
-        events:_.extend({}, ListRenderer.prototype.events, {
+        events:_.extend({}, AbstractRenderer.prototype.events, {
             'click .o_filter_performance': '_onPerformanceFilterActionClicked',
+            'click .o_record_state': '_onStateActionClicked',
         }),
 
+        render_dashboards: function() {
+            let values = self.state.data;
+            console.log(self,"dash_rend")
+            var dashboard = QWeb.render('logic_performance_tracker.dashboard_card_template', {
+                values: values
+            });
+            this.updateState(self.state,false)
+            // console.log(dashboard)
+            // this.$el.empty()
+            this.$el.html(dashboard)
+            return $.when()
 
-        _onPerformanceFilterActionClicked: function (ev) {
+        },
+
+        fetch_data: function(modelName){
+            var def = this._rpc({
+                model: 'performance.tracker', // Replace with your actual model name
+                method: 'retrieve_dashboard_data', // Use 'search_read' to retrieve records
+                args: [modelName], // Define search domain if needed
+                // kwargs: {},
+            }).then(function (data) {
+                self.state = {'data':data,'model_name':modelName}
+            }).catch(function(err){
+                console.log(err)
+            })
+            return $.when(def)
+        },
+
+        update_cp: function() {
+            var self = this;
+        },
+        on_reverse_breadcrumb : function(){
+            // )
             var self = this;
 
+            // Save the current state
+            var currentState = _.extend({}, this.state);
+        
+            console.log("Current State:", currentState);
+            // console.log("state",self.state)
+
+        
+            web_client.do_push_state({});
+            // this.update_cp()
+            this.fetch_data(this.state.model_name).then(function(){
+                self.$el.empty()
+                // console.log("state",self.state)
+                // self.updateState(self.state,false)
+                self.render_dashboards();
+            });
+        
+            // this.controller.reloadData(this.state.model_name).then(function(data){
+            //     this.updateState(data)
+            //     this._render()
+            // })
+            // console.log("State after push:", this.state);
+        
+            // this.render_dashboards(currentState);
+
+            
+                // this.render_dashboards();
+        },
+
+        _onPerformanceFilterActionClicked: function (ev) {
+            if (!self)
+            {
+                var self = this;
+
+            }
+            console.log(self,"self", "this",this)
+
             // Get the date field's value
-            // var selectedDate = this.$('#from_date').val();
-            // console.log(selectedDate+"Helloasdas")
+            var fromDate = this.$('.from_date').val();
+            var endDate = this.$('.end_date').val();
+
+            console.log(fromDate)
+            console.log(endDate)
+            // this.$(".date_val").text(fromDate)
+            self.state.data.dates = {}
+            self.state.data.dates.fromDate = fromDate
+            self.state.data.dates.endDate = endDate
+
+            this._rpc({
+                model: 'digital.executive.performance', // Replace with your actual model name
+                method: 'action_executive_performance', // Use 'search_read' to retrieve records
+                args: [
+                    fromDate,endDate
+                ], // Define search domain if needed
+                // kwargs: {},
+            }).then(function (performances) {
+                // Set the state with the retrieved data
+                self.state.data.performances = performances
+                self.updateState(self.state,false)
+                console.log(self.renderer)
+            }).catch(function(err){
+                console.log(err)
+            });
+
+            // this.updateState(self.state,false)
+        },
+
+        _onStateActionClicked: function (ev) {
+            let record_state = $(ev.currentTarget).find('.state').text()
+            var self = this
+            console.log(this)
+            var options = {
+                on_reverse_breadcrumb: this.on_reverse_breadcrumb,
+            };
+            var action = {
+                type: 'ir.actions.act_window',
+                name: self.state.model_name,
+                res_model: self.state.model_name,
+                views: [[false, 'list'],[false,'form']],
+                // view_type: 'tree',
+                view_mode: 'tree,form',
+                domain: [['state','=',record_state]],
+                // target: 'main',
+                target: 'current',
+                // nodestroy: true
+                // context: {'no_breadcrumbs': true},
+            }
+            return self.do_action(action,options);
+            // this._rpc({
+            //     model: 'performance.tracker', // Replace with your actual model name
+            //     method: 'action_open_view', // Use 'search_read' to retrieve records
+            //     args: [
+            //         self.state.model_name,record_state
+            //     ], // Define search domain if needed
+            //     // kwargs: {},
+            // }).then(function (performances) {
+            //     // Set the state with the retrieved data
+            //     // self.state.data.performances = performances
+            //     // self.updateState(self.state,false)
+            //     console.log(self)
+            // }).catch(function(err){
+            //     console.log(err)
+            // });
         },
         
     // Override the render method to customize the rendering logic
@@ -57,12 +190,23 @@ odoo.define('logic_performance_tracker.DashboardCardView', function (require) {
         //     console.log(self)
         // },
         _render: function () {
-            const values = this.state.data
-            console.log(values)
+            let values = this.state.data;
+            if (values!==undefined && values.dates===undefined){
+                values.dates  = {fromDate:"",endDate:""}
+            }
+            console.log("_render called")
+            console.log(this)
+
             var digital_dashboard = QWeb.render('logic_performance_tracker.dashboard_card_template', {
                 values: values
             });
-            this.$el.append(digital_dashboard);
+            // this.$el.parent().find(".o_dashboard_card").remove();
+
+            this.$el.html(digital_dashboard);
+            if (values!==undefined && values.dates!==undefined){
+                this.$(".from_date").val(values.dates.fromDate)
+                this.$(".end_date").val(values.dates.endDate)
+            }
                     
                 return $.when();
             // var self = this;
@@ -95,18 +239,32 @@ odoo.define('logic_performance_tracker.DashboardCardView', function (require) {
         },
     });
     var DashboardCardController = AbstractController.extend({
+        
+        // reloadData : function(modelName){
+        //     console.log("reload method called")
+        //     this._rpc({
+        //         model: 'performance.tracker', // Replace with your actual model name
+        //         method: 'retrieve_dashboard_data', // Use 'search_read' to retrieve records
+        //         args: [modelName], // Define search domain if needed
+        //         // kwargs: {},
+        //     }).then(function (data) {
+        //         return data
+        //     }).catch(function(err){
+        //         console.log(err)
+        //     })
+        // },
         start: function () {
             var self = this;
             var state = {}
             // self.state.dashboardValues = {'name':'babu','age':10};
             this._rpc({
-                model: this.modelName, // Replace with your actual model name
+                model: 'performance.tracker', // Replace with your actual model name
                 method: 'retrieve_dashboard_data', // Use 'search_read' to retrieve records
-                // args: [], // Define search domain if needed
+                args: [self.modelName], // Define search domain if needed
                 // kwargs: {},
             }).then(function (data) {
                 // Set the state with the retrieved data
-                state = {'data': data}
+                state = {'data': data, 'model_name':self.modelName}
                 self.renderer.updateState(state,false)
                 console.log(self.renderer)
             }).catch(function(err){

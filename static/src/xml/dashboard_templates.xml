@@ -11,18 +11,19 @@
                 }
             </style> -->
             <div class="o_dashboard_card">
-
+            <div t-if="values">
                 <div t-if="values">
-                    <div class="row">
+                    <div class="row m-2">
 
                         <t t-foreach="Object.keys(values['states'])" t-as="state">
-                            <div class="col-sm-3 hr_job_application_approve">
+                            <div class="o_record_state col-sm-3 hr_job_application_approve m-2">
                                 <div class="oh-card text-color">
                                 <div class="oh-card-body pb-0">
-                                    <p t-esc="state" class="stat-title"/>
+                                    <p t-esc="values['states'][state][0]" class="stat-title"/>
+                                    <span class="state" t-esc="state" style="display:none;"/>
                                     <h4 class="mb-0">
                                     <p class="stat-count">
-                                    <t t-esc="values['states'][state]"/>
+                                    <t t-esc="values['states'][state][1]"/>
                                     </p>
                                     </h4>
                                 </div>
@@ -41,46 +42,56 @@
                         </t>
                         </ul>
                     </div> -->
+                    <div class="m-3">
+                        <div class="inline-container">
+                            <h1 class="inline">Leaderboard</h1>
+                            <span>From: </span>
+                            <input class="from_date date-picker-icon custom-date-input" type="date"/>
+                            <span> To: </span>
+                            <input placeholder="From: " class="end_date date-picker-icon custom-date-input" type="date"/>
+                            <button class="ml-2 rounded btn-md btn-warning o_filter_performance" type="button">Filter</button>
+                        </div>
+                        
 
-                    <h1>Leaderboard</h1><span>From: </span><input id="from_date" type="date"/><span> To: </span><input id="to_date" type="date"/><button class="ml-2 rounded btn btn-primary o_filter_performance" type="button">Filter</button>
-                    <!-- <ul>
-                        <t t-foreach="Object.keys(values['performances'])" t-as="exec_name">
-                            <li>
-                                <p>
-                                    Name: <span t-esc="exec_name"/>
-                                    , Rating: <span t-esc="values['performances'][exec_name]['rating']"/>
-                                    , Tasks Completed: <span t-esc="values['performances'][exec_name]['completed_tasks']"/>
-                                </p>
-                            </li>
-                        </t>
-                    </ul> -->
-                    
-                    <div class="w-25 w-50">
-                    <table class="table table-striped table-dark table-responsive-md">
-                        <thead>
-                          <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Executive</th>
-                            <th scope="col">Average Rating</th>
-                            <th scope="col">Completed Tasks</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                            <t t-set="index" t-value="1"/>
-                            <t t-foreach="values['performances']" t-as="exec_performance">
-
+                        <div class="w-25 w-50 ranking-table">
+                            <table class="table table-striped table-bordered table-responsive-md table-hover rounded-table">
+                                <thead class="thead-dark">
                                 <tr>
-                                    <td t-esc="index"/>
-                                    <td t-esc="exec_performance['name']"/>
-                                    <td t-esc="exec_performance['average_rating']"/>
-                                    <td t-esc="exec_performance['completed_tasks']"/>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Executive</th>
+                                    <th scope="col">Average Rating</th>
+                                    <th scope="col">Completed Tasks</th>
                                 </tr>
-                                <t t-set="index" t-value="index+1"/>
-                                </t>
-                        </tbody>
-                      </table>
+                                </thead>
+                                <tbody>
+                                    <t t-set="index" t-value="1"/>
+                                    <t t-foreach="values['performances']" t-as="exec_performance">
+
+                                        <tr>
+                                            <td t-esc="index"/>
+                                            <td t-esc="exec_performance['name']"/>
+                                            <!-- <td t-esc="exec_performance['average_rating']"/> -->
+                                            <t t-set="star_count" t-value="Math.floor(exec_performance['average_rating'])"/>
+                                            <td>
+                                                <t t-foreach="Array.from(Array(star_count).keys())" t-as="star_ind">
+                                                    <span class="fa fa-star checked"></span>
+                                                </t>
+                                                <t t-foreach="Array.from(Array(5-star_count).keys())" t-as="star_ind">
+                                                    <span class="fa fa-star"></span>
+                                                </t>
+                                                <span class="ml-2" t-esc="average_rating"/>
+                                            </td>
+                                            <td style="color: green" t-esc="exec_performance['completed_tasks']"/>
+                                        </tr>
+                                        <t t-set="index" t-value="index+1"/>
+                                        </t>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
+
+            </div>
             </div>
         </t>
     </templates>

@@ -6,6 +6,85 @@
 .head_class{
     color:#2eb3ac;
 }
+.checked {
+    color: orange;
+  }
+.ranking-table  table {
+    border-collapse:separate;
+    border:solid black 1px;
+    border-radius:6px;
+}
+
+.ranking-table td, th {
+    border-left:solid black 1px;
+    border-top:solid black 1px;
+}
+
+.ranking-table th {
+    background-color: blue;
+    border-top: none;
+}
+
+.ranking-table td:first-child, th:first-child {
+     border-left: none;
+}
+
+
+.custom-date-input {
+    background-color: #d1e1e4; /* Light gray background color */
+    border: 2px solid #0b5a50; /* Blue border color */
+    border-radius: 8px;
+    /* padding: 12px; */
+    /* width: 200px; */
+    /* font-size: 16px; */
+    color: #333;
+    outline: none; /* Remove the default focus border */
+    transition: border-color 0.3s ease; /* Smooth border color transition */
+}
+
+/* Style for the date picker icon */
+.date-picker-icon {
+    position: relative;
+    display: inline-block;
+}
+
+.date-picker-icon::before {
+    content: "\f073"; /* Unicode character for a calendar icon (you can use your preferred icon) */
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: #347920; /* Blue color for the icon */
+    font-size: 10px; /* Adjust the icon size */
+}
+
+/* Hover effect to highlight the input field */
+.custom-date-input:hover {
+    border-color: #54c2a1; /* Red border color on hover */
+}
+
+/* Focus effect for the input field */
+.custom-date-input:focus {
+    border-color: #54c2a1; /* Red border color on focus */
+}
+
+.inline-container {
+    display: flex; /* Use flexbox layout */
+    align-items: center; /* Center items vertically */
+}
+
+/* Adjust spacing as needed */
+.inline-container h1,
+.inline-container span,
+.inline-container input,
+.inline-container button {
+    margin-right: 10px; /* Add margin between elements */
+}
+
+
+
+
+
 
 
 
