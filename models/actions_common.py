@@ -1,4 +1,12 @@
 from odoo import models,fields,api
+from datetime import date
+
+def get_date_obj_from_string(from_date,end_date):
+        from_date = from_date.split("-")
+        from_date = date(year=int(from_date[0]),month=int(from_date[1]), day=int(from_date[2]))
+        end_date = end_date.split("-")
+        end_date = date(year=int(end_date[0]),month=int(end_date[1]), day=int(end_date[2]))
+        return from_date,end_date
 
 class StateAction(models.Model):
     _name = "performance.tracker"

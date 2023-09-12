@@ -1,95 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-        <template id="assets_backend" name="hello world assets" inherit_id="web.assets_backend">
-            <xpath expr="." position="inside">
-            <script type="text/javascript" src="/logic_performance_tracker/static/src/js/dashboard_card_view.js"/>
-            <!-- <link rel="stylesheet" type="text/scss" href="/logic_performance_tracker/static/src/scss/dashboard_card_view.scss"/> -->
-            </xpath>
-        </template>
+    <template id="assets_backend_dashboard" name="hello world assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+        <script type="text/javascript" src="/logic_performance_tracker/static/src/js/digital_performance.js"/>
 
-    <record model="ir.actions.act_window" id="digital_task_performance_action">
-        <field name="name">Digital</field>
-        <field name="res_model">digital.task</field>
-        <field name="view_mode">dashboard_card</field>
+        <!-- <link rel="stylesheet" type="text/scss" href="/logic_performance_tracker/static/src/scss/dashboard_card_view.scss"/> -->
+        </xpath>
+    </template>
+
+    <record id="digital_performance_action" model="ir.actions.client">
+        <field name="name">Dashboard</field>
+        <field name="tag">digital_dashboard</field>
     </record>
 
-    <record model="ir.ui.view" id="view_dashboard_card">
-        <field name="name">Dashboard Card View</field>
-        <field name="model">digital.task</field>
-        <field name="arch" type="xml">
-            <dashboard_card>
-                <!-- <field name="name"/> -->
-            </dashboard_card>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="view_dashboard_cardorder">
-        <field name="name">Dashboard Card View</field>
-        <field name="model">purchase.order</field>
-        <field name="arch" type="xml">
-            <dashboard_card>
-                <!-- <field name="name"/> -->
-            </dashboard_card>
-        </field>
-    </record>
-
-    <!-- <record model="ir.ui.view" id="view_dashboard_card_exec">
-        <field name="name">Dashboard Card View</field>
-        <field name="model">digital.executive.performance</field>
-        <field name="arch" type="xml">
-            <dashboard_card>
-            </dashboard_card>
-        </field>
-    </record> -->
-    
-
-    <record model="ir.actions.act_window" id="digital_executive_performance_action_window">
-        <field name="name">Digital</field>
-        <field name="res_model">digital.executive.performance</field>
-        <field name="view_mode">tree</field>
-    </record>
-
-
-    <record id="digital_executive_performance_action" model="ir.actions.server">
-        <field name="name">Executive Performance</field>
-        <field name="type">ir.actions.server</field>
-        <field name="model_id" ref="model_digital_executive_performance"/>
-        <field name="binding_model_id" ref="logic_performance_tracker.model_digital_executive_performance"></field>
-        <field name="state">code</field>
-        <field name="code">action=model.action_executive_performance()</field>
-    </record>
-
-    <record id="digital_executive_performance_tree" model="ir.ui.view">
-        <field name="name">digital.executive.performance.tree</field>
-        <field name="model">digital.executive.performance</field>
-        <field name="arch" type="xml">
-            <tree create="0" default_order="completed_tasks desc">
-                <field name="digital_executive"/>
-                <field name="average_rating"/>
-                <field name="completed_tasks"/>
-            </tree>
-
-        </field>
-    </record>
 
     <menuitem name="Performance Tracker" id="menu_performance_tracker"
-              action="digital_task_performance_action"
+              action="digital_performance_action"
               sequence="6"
               web_icon="logic_performance_tracker/static/description/icon.png"
               />
     <menuitem name="Digital" id="menu_digital_performance"
               sequence="9"
               parent="menu_performance_tracker"
+              action="digital_performance_action"
+
               />
-    <menuitem name="Tasks" id="menu_digital_performance_tasks"
+
+    <!-- <menuitem name="Tasks" id="menu_digital_performance_tasks"
               sequence="9"
               parent="menu_digital_performance"
-              action="digital_task_performance_action"
-              />
-    <menuitem name="Executives" id="menu_digital_performance_executives"
-              sequence="10"
-              parent="menu_digital_performance"
-              action="digital_executive_performance_action"
-              />
+              action="digital_performance_action"
+              /> -->
+
+
+
+              
 
 </odoo>

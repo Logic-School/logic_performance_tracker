@@ -19,13 +19,7 @@ odoo.define('logic_performance_tracker.DashboardCardView', function (require) {
     });
     
     var DashboardCardRenderer = AbstractRenderer.extend({
-        // Override the template to specify a custom QWeb template
-        // template: 'custom_module.CustomRendererTemplate',
-        // className: 'o_dashboard_card',
-        // cssLibs: [
-        //     "/logic_performance_tracker/static/src/scss/dashboard_card_view.scss"
-        // ],
-        // template: 'logic_performance_tracker.dashboard_card_template',
+
         xmlDependencies: ['/logic_performance_tracker/static/src/xml/dashboard_templates.xml'],
         
         events:_.extend({}, AbstractRenderer.prototype.events, {
@@ -33,6 +27,7 @@ odoo.define('logic_performance_tracker.DashboardCardView', function (require) {
             'click .o_record_state': '_onStateActionClicked',
         }),
 
+        // to be used when going back using breadcrumb
         render_dashboards: function() {
             let values = self.state.data;
             console.log(self,"dash_rend")
@@ -47,6 +42,7 @@ odoo.define('logic_performance_tracker.DashboardCardView', function (require) {
 
         },
 
+        // to refetch data when using breadcrumb
         fetch_data: function(modelName){
             var def = this._rpc({
                 model: 'performance.tracker', // Replace with your actual model name
@@ -61,9 +57,11 @@ odoo.define('logic_performance_tracker.DashboardCardView', function (require) {
             return $.when(def)
         },
 
+        // to use self globally between functions
         update_cp: function() {
             var self = this;
         },
+        // execute when using breadcrumb
         on_reverse_breadcrumb : function(){
             // )
             var self = this;
@@ -155,21 +153,6 @@ odoo.define('logic_performance_tracker.DashboardCardView', function (require) {
                 // context: {'no_breadcrumbs': true},
             }
             return self.do_action(action,options);
-            // this._rpc({
-            //     model: 'performance.tracker', // Replace with your actual model name
-            //     method: 'action_open_view', // Use 'search_read' to retrieve records
-            //     args: [
-            //         self.state.model_name,record_state
-            //     ], // Define search domain if needed
-            //     // kwargs: {},
-            // }).then(function (performances) {
-            //     // Set the state with the retrieved data
-            //     // self.state.data.performances = performances
-            //     // self.updateState(self.state,false)
-            //     console.log(self)
-            // }).catch(function(err){
-            //     console.log(err)
-            // });
         },
         
     // Override the render method to customize the rendering logic

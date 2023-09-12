@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
     <templates id="template" xml:space="preserve">
         <!-- Define your QWeb template for the dashboard_card view -->
-        <t t-name="logic_performance_tracker.dashboard_card_template">
+        <t t-name="logic_performance_tracker.digital_dashboard_template">
             <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/dashboard_card_view.css"/>
             <!-- <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/bootstrap.css"/> -->
 
@@ -42,19 +42,22 @@
                         </t>
                         </ul>
                     </div> -->
+
                     <div class="m-3">
                         <div class="inline-container">
-                            <h1 class="inline">Leaderboard</h1>
+                            <h1 class="inline" >Leaderboard</h1>
+                            <div style="margin-left: auto; margin-right: 0;">
                             <span>From: </span>
                             <input class="from_date date-picker-icon custom-date-input" type="date"/>
                             <span> To: </span>
                             <input placeholder="From: " class="end_date date-picker-icon custom-date-input" type="date"/>
-                            <button class="ml-2 rounded btn-md btn-warning o_filter_performance" type="button">Filter</button>
+                            <button class="ml-2 rounded btn-md btn-primary o_filter_performance" type="button">Filter</button>
+                            </div>
                         </div>
                         
 
-                        <div class="w-25 w-50 ranking-table">
-                            <table class="table table-striped table-bordered table-responsive-md table-hover rounded-table">
+                        <div class="h-100">
+                            <table style="font-size:14px;" class="table table-striped table-responsive-md table-hover rounded-table">
                                 <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">#</th>
@@ -63,7 +66,7 @@
                                     <th scope="col">Completed Tasks</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody style="font-size:15px;">
                                     <t t-set="index" t-value="1"/>
                                     <t t-foreach="values['performances']" t-as="exec_performance">
 
@@ -81,7 +84,48 @@
                                                 </t>
                                                 <span class="ml-2" t-esc="average_rating"/>
                                             </td>
-                                            <td style="color: green" t-esc="exec_performance['completed_tasks']"/>
+                                            <td style="color: green" t-esc="exec_performance['completed_tasks']" class="text-center"/>
+                                        </tr>
+                                        <t t-set="index" t-value="index+1"/>
+                                        </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                    <div class="m-3">
+                        <h1 class="inline">Qualitative Analysis</h1>
+                        <div class="h-100">
+                            <table style="font-size:14px;" class="table table-striped  table-responsive-md table-hover rounded-table">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Employee</th>
+                                    <th scope="col">Performances</th>
+                                </tr>
+                                </thead>
+                                <tbody >
+                                    <t t-set="index" t-value="1"/>
+                                    <t t-foreach="Object.keys(values['qualitatives'])" t-as="employee">
+                                        <tr>
+                                            <td t-esc="index"/>
+                                            <td t-esc="employee"/>
+                                            <td style="color: brown" class="">
+                                                <t t-foreach="Object.keys(values['qualitatives'][employee])" t-as="attribute">
+                                                    <span class="ml-4">
+                                                        <span class="text-center" t-esc="attribute+': '"/>
+                                                        <t t-set="star_count" t-value="Math.floor(values['qualitatives'][employee][attribute]['average_rating'])"/>
+                                                            <t t-foreach="Array.from(Array(star_count).keys())" t-as="star_ind">
+                                                                <span class="text-right fa fa-star checked"></span>
+                                                            </t>
+                                                            <t t-foreach="Array.from(Array(5-star_count).keys())" t-as="star_ind">
+                                                                <span class="text-right fa fa-star"></span>
+                                                            </t>
+                                                            <span class="ml-2" t-esc="values['qualitatives'][employee][attribute]['average_rating']"/>
+                                                        </span>
+                                                </t>
+                                            </td>
                                         </tr>
                                         <t t-set="index" t-value="index+1"/>
                                         </t>

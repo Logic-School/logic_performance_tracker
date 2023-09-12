@@ -9,6 +9,14 @@
 .checked {
     color: orange;
   }
+
+  .ranking-table{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
 .ranking-table  table {
     border-collapse:separate;
     border:solid black 1px;

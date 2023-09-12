@@ -1,6 +1,7 @@
 from odoo import models,fields,api
 from odoo.exceptions import UserError
 from datetime import date
+from . import actions_common
 
 class DigitalPerformance(models.Model):
     _name = "digital.executive.performance"
@@ -17,13 +18,8 @@ class DigitalPerformance(models.Model):
         if not from_date or not end_date:
             digital_tasks = self.env['digital.task'].search([('state','in',('completed','to_post','posted'))])
         else:
-            from_date = from_date.split("-")
-            from_date = date(year=int(from_date[0]),month=int(from_date[1]), day=int(from_date[2]))
-            end_date = end_date.split("-")
-            end_date = date(year=int(end_date[0]),month=int(end_date[1]), day=int(end_date[2]))
             digital_tasks = self.env['digital.task'].search([('state','in',('completed','to_post','posted')), ('date_completed', '>=',from_date), ('date_completed','<=',end_date)])
 
-            # raise UserError(str(from_date) + "blbal" + str(to_date))
         for task in digital_tasks:
             for executive in task.assigned_execs:
                 if executives_performance.get(executive.id):
@@ -46,12 +42,12 @@ class DigitalPerformance(models.Model):
 
         for exec_id in executives_performance.keys():
             if executives_performance[exec_id].get('rating'):
-                average_rating = round(executives_performance[exec_id]['rating']/executives_performance[exec_id]['rated_tasks'],1)
+                tasks_average_rating = round(executives_performance[exec_id]['rating']/executives_performance[exec_id]['rated_tasks'],1)
             else:
-                average_rating = 0
+                tasks_average_rating = 0
             self.env['digital.executive.performance'].create({
                 'digital_executive': exec_id,
-                'average_rating':average_rating,
+                'average_rating':tasks_average_rating,
                 'completed_tasks': executives_performance[exec_id]['completed_tasks'],
             })
         
@@ -66,6 +62,7 @@ class DigitalPerformance(models.Model):
             executives_performances.append(current_performance)
 
         return executives_performances
+
 
 
         # return {
