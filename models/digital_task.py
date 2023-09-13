@@ -24,11 +24,11 @@ class DigitalTaskInherit(models.Model):
         
         if not start_date or not end_date:
             dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(manager)
-            dashboard_data['performances'] = self.env['digital.executive.performance'].action_executive_performance()
+            dashboard_data['performances'] = self.env['digital.executive.performance'].action_executive_performance(dashboard_data['qualitatives'])
         else:
             start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
             dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(manager,start_date,end_date)
-            dashboard_data['performances'] = self.env['digital.executive.performance'].action_executive_performance(start_date,end_date)
+            dashboard_data['performances'] = self.env['digital.executive.performance'].action_executive_performance(dashboard_data['qualitatives'],start_date,end_date)
 
         # raise UserError(dashboard_data)
         return dashboard_data
