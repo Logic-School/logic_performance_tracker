@@ -1,3 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
-access_digital_performance,access_digital_performance,model_digital_executive_performance,base.group_user,1,1,1,1
+access_digital_performance_user,access_digital_performance_user,model_digital_executive_performance,base.group_user,1,1,1,1
