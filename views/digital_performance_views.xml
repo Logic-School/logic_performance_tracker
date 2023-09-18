@@ -3,14 +3,20 @@
     <template id="assets_backend_dashboard" name="hello world assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
         <script type="text/javascript" src="/logic_performance_tracker/static/src/js/digital_performance.js"/>
+        <script type="text/javascript" src="/logic_performance_tracker/static/src/js/academic_performance.js"/>
 
         <!-- <link rel="stylesheet" type="text/scss" href="/logic_performance_tracker/static/src/scss/dashboard_card_view.scss"/> -->
         </xpath>
     </template>
 
     <record id="digital_performance_action" model="ir.actions.client">
-        <field name="name">Dashboard</field>
+        <field name="name">Digital</field>
         <field name="tag">digital_dashboard</field>
+    </record>
+
+    <record id="academic_performance_action" model="ir.actions.client">
+        <field name="name">Academic</field>
+        <field name="tag">academic_dashboard</field>
     </record>
 
 
@@ -23,6 +29,12 @@
               sequence="9"
               parent="menu_performance_tracker"
               action="digital_performance_action"
+
+              />
+    <menuitem name="Academic" id="menu_academic_performance"
+              sequence="9"
+              parent="menu_performance_tracker"
+              action="academic_performance_action"
 
               />
 

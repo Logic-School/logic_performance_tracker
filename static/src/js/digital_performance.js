@@ -171,6 +171,7 @@ var DashboardCardAction = AbstractAction.extend({
 
     _onStateActionClicked: function (ev) {
         let record_state = $(ev.currentTarget).find('.state').text()
+        let state_title = $(ev.currentTarget).find('.stat-title').text()
         var self = this
         console.log(this)
         var options = {
@@ -178,7 +179,7 @@ var DashboardCardAction = AbstractAction.extend({
         };
         var action = {
             type: 'ir.actions.act_window',
-            name: self.model_name,
+            name: "Digital Tasks: "+state_title,
             res_model: self.model_name,
             views: [[false, 'list'],[false,'form']],
             // view_type: 'tree',

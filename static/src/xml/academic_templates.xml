@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <templates id="template" xml:space="preserve">
+        <!-- Define your QWeb template for the dashboard_card view -->
+        <t t-name="logic_performance_tracker.academic_dashboard_template">
+            <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/dashboard_card_view.css"/>
+            <!-- <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/bootstrap.css"/> -->
+
+            <!-- <style>
+                h1{
+                    color:red;
+                }
+            </style> -->
+            <div class="o_dashboard_card">
+                <div class="inline-container m-3">
+                    <h1 class="inline" >Academic </h1>
+                    <div style="margin-left: auto; margin-right: 0;">
+                    <span class="font-weight-bold">From: </span>
+                    <input class="from_date date-picker-icon custom-date-input" type="date"/>
+                    <span class="font-weight-bold"> To: </span>
+                    <input placeholder="From: " class="end_date date-picker-icon custom-date-input" type="date"/>
+                    <button class="ml-2 rounded btn-md btn-primary o_filter_performance" type="button">Filter</button>
+                    </div>
+                </div>
+                <div t-if="values">
+                        <div class="row m-2">
+    
+                            <!-- <div class="col-sm-2 hr_job_application_approve m-2 o_model_count">
+                                <div class="oh-card text-color">
+                                <div class="oh-card-body pb-0">
+                                    <p t-esc="'Upaya'" class="model-title"/>
+                                    <span class="model_name" t-esc="'upaya.form'" style="display:none;"/>
+                                    <h4 class="mb-0">
+                                    <p class="stat-count">
+                                    <t t-esc="values['upaya_count']"/>
+                                    </p>
+                                    </h4>
+                                </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-2 hr_job_application_approve m-2 o_model_count">
+                                <div class="oh-card text-color">
+                                <div class="oh-card-body pb-0">
+                                    <p t-esc="'Yes Plus'" class="model-title"/>
+                                    <span class="model_name" t-esc="'yes_plus.logic'" style="display:none;"/>
+                                    <h4 class="mb-0">
+                                    <p class="stat-count">
+                                    <t t-esc="values['yes_plus_count']"/>
+                                    </p>
+                                    </h4>
+                                </div>
+                                </div>
+                            </div> -->
+
+                            <div class="col-md-2 col-sm-6 oh-payslip" >
+                                <div class="oh-card">
+                                    <div class="oh-card-body">
+                                        <div class="stat-widget-one">
+                                            <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/upaya.png"/></div>
+                                            <div class="stat-content">
+                                                <div class="stat-text">Upaya</div>
+                                                <div class="stat-digit"><t t-esc="values['upaya_count']"/></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 col-sm-6 oh-payslip" >
+                                <div class="oh-card">
+                                    <div class="oh-card-body">
+                                        <div class="stat-widget-one">
+                                            <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/yes_plus.png"/></div>
+                                            <div class="stat-content">
+                                                <div class="stat-text">Yes Plus</div>
+                                                <div class="stat-digit"><t t-esc="values['yes_plus_count']"/></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 col-sm-6 oh-payslip" >
+                                <div class="oh-card">
+                                    <div class="oh-card-body">
+                                        <div class="stat-widget-one">
+                                            <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/sfc.png"/></div>
+                                            <div class="stat-content">
+                                                <div class="stat-text">SFC</div>
+                                                <div class="stat-digit"><t t-esc="values['sfc_count']"/></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- <div class="col-sm-2 hr_job_application_approve m-2 o_model_count">
+                                <div class="oh-card text-color">
+                                <div class="oh-card-body pb-0">
+                                    <p t-esc="'Exams'" class="model-title"/>
+                                    <span class="model_name" t-esc="'exam.details'" style="display:none;"/>
+                                    <h4 class="mb-0">
+                                    <p class="stat-count">
+                                    <t t-esc="values['exam_count']"/>
+                                    </p>
+                                    </h4>
+                                </div>
+                                </div>
+                            </div> -->
+
+
+                            <!-- dfdsfsdfds -->
+                            <div class="col-md-2 col-sm-6 oh-payslip" >
+                                <div class="oh-card">
+                                    <div class="oh-card-body">
+                                        <div class="stat-widget-one">
+                                            <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/exam.png"/></div>
+                                            <div class="stat-content">
+                                                <div class="stat-text">Exams</div>
+                                                <div class="stat-digit"><t t-esc="values['exam_count']"/></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                </div>
+            </div>
+        </t>
+    </templates>

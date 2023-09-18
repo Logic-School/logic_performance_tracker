@@ -89,7 +89,11 @@
     margin-right: 10px; /* Add margin between elements */
 }
 
-
+.img-fluid{
+  object-fit:contain;
+  height:100%;
+  width:100%;
+}
 
 
 
@@ -132,7 +136,7 @@
     ---------------------------*/
     .stat-content {
         display: inline-block;
-        width: 66%;
+        /* width: 66%; */
     }
     .stat-icon{
         display: inline-block;
@@ -441,10 +445,9 @@
     
         width: 30%;
         height: 85px;
-        text-align: center;
-        padding-top: 15%;
-        background: #ff8762;
-        color: #fff;
+        /* padding-top: 15%; */
+        /* background: #ff8762; */
+        /* color: #fff; */
     
     }
     .oh-payslip .oh-card {
@@ -457,7 +460,7 @@
     .stat-widget-one .stat-text {
     
         font-size: 14px;
-        color: #ff8762;
+        color: #e7b083;
         margin-top: 2.3rem;
         margin-left: 1rem;
     
@@ -466,8 +469,9 @@
     
         font-size: 17px;
         color: #000;
-        margin-left: 1rem;
-        padding-left: 26px;
+        text-align: center;
+        /* margin-left: 1rem;
+        padding-left: 26px; */
     
     }
     
@@ -481,21 +485,21 @@
     }
     .stat-widget-one {
     
-        background-color: white;
-        text-align: inherit !important;
+        background-color: #fefeff;
+        text-align: center !important;
     
     }
     .stat-widget-one {
         width: 100%;
     }
-    .oh-payslip .stat-icon {
+    /* .oh-payslip .stat-icon {
     
         width: 30%;
         height: 85px;
         text-align: center;
         padding-top: 15%;
     
-    }
+    } */
     .oh-timesheets .stat-icon{
         background: #5ebade !important;
     }
