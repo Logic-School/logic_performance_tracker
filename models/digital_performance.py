@@ -15,12 +15,12 @@ class DigitalPerformance(models.Model):
 
     @api.model
     def action_executive_performance(self,qualitatives,from_date=False,end_date=False,order="completed_tasks desc"):
-        self.env['digital.executive.performance'].search([]).unlink()
+        self.env['digital.executive.performance'].sudo().search([]).unlink()
         executives_performance = {}
         if not from_date or not end_date:
-            digital_tasks = self.env['digital.task'].search([('state','in',('completed','to_post','posted'))])
+            digital_tasks = self.env['digital.task'].sudo().search([('state','in',('completed','to_post','posted'))])
         else:
-            digital_tasks = self.env['digital.task'].search([('state','in',('completed','to_post','posted')), ('date_completed', '>=',from_date), ('date_completed','<=',end_date)])
+            digital_tasks = self.env['digital.task'].sudo().search([('state','in',('completed','to_post','posted')), ('date_completed', '>=',from_date), ('date_completed','<=',end_date)])
 
         for task in digital_tasks:
             for executive in task.assigned_execs:
@@ -64,7 +64,7 @@ class DigitalPerformance(models.Model):
 
             })
         
-        performances = self.env['digital.executive.performance'].search([],order=order)
+        performances = self.env['digital.executive.performance'].sudo().search([],order=order)
         
         executives_performances = []
         for exec_performance in performances:

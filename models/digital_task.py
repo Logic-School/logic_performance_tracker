@@ -7,7 +7,7 @@ class DigitalTaskInherit(models.Model):
     @api.model
     def retrieve_dashboard_data(self,start_date=False,end_date=False):
 
-        tasks = self.env['digital.task'].search([])
+        tasks = self.env['digital.task'].sudo().search([])
         try:
             manager = self.env.ref('logic_digital_tracker.group_digital_head').users[0].employee_id
 

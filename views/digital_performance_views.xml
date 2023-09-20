@@ -9,6 +9,15 @@
         </xpath>
     </template>
 
+    <record model="ir.actions.server" id="open_perf_tracker_action">
+        <field name="name">Performance Tracker</field>
+        <field name="model_id" ref="model_performance_tracker"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.perf_tracker_open_action()
+        </field>
+    </record>
+
     <record id="digital_performance_action" model="ir.actions.client">
         <field name="name">Digital</field>
         <field name="tag">digital_dashboard</field>
@@ -21,21 +30,22 @@
 
 
     <menuitem name="Performance Tracker" id="menu_performance_tracker"
-              action="digital_performance_action"
+              action="open_perf_tracker_action"
               sequence="6"
               web_icon="logic_performance_tracker/static/description/icon.png"
+              groups="group_perf_academic_head,group_perf_digital_head,group_perf_admin"
               />
     <menuitem name="Digital" id="menu_digital_performance"
               sequence="9"
               parent="menu_performance_tracker"
               action="digital_performance_action"
-
+              groups="group_perf_digital_head,group_perf_admin"
               />
     <menuitem name="Academic" id="menu_academic_performance"
               sequence="9"
               parent="menu_performance_tracker"
               action="academic_performance_action"
-
+              groups="group_perf_academic_head,group_perf_admin"
               />
 
     <!-- <menuitem name="Tasks" id="menu_digital_performance_tasks"

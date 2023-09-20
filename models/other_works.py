@@ -9,23 +9,23 @@ class OtherTaskInherit(models.Model):
         employee_performances = {}
         if not start_date or not end_date:
             if manager:
-                records = self.env['logic.task.other'].search([('task_creator_employee','in',manager.child_ids.ids)])
+                records = self.env['logic.task.other'].sudo().search([('task_creator_employee','in',manager.child_ids.ids)])
             else:
-                records = self.env['logic.task.other'].search([])
+                records = self.env['logic.task.other'].sudo().search([])
         else:
             if manager:
-                records = self.env['logic.task.other'].search([('task_creator_employee','in',manager.child_ids.ids),('date','>=',start_date),('date','<=',end_date)])
+                records = self.env['logic.task.other'].sudo().search([('task_creator_employee','in',manager.child_ids.ids),('date','>=',start_date),('date','<=',end_date)])
             else:
-                records = self.env['logic.task.other'].search([('date','>=',start_date),('date','<=',end_date)])  
+                records = self.env['logic.task.other'].sudo().search([('date','>=',start_date),('date','<=',end_date)])  
         employees = []
         for record in records:
             if record.task_creator_employee.id not in employees:
                 employees.append(record.task_creator_employee.id)
         for employee_id in employees:
             if not start_date or not end_date:
-                task_records = self.env['logic.task.other'].search([('task_creator_employee','=',employee_id)])
+                task_records = self.env['logic.task.other'].sudo().search([('task_creator_employee','=',employee_id)])
             else:
-                task_records = self.env['logic.task.other'].search([('task_creator_employee','=',employee_id),('date','>=',start_date),('date','<=',end_date)])
+                task_records = self.env['logic.task.other'].sudo().search([('task_creator_employee','=',employee_id),('date','>=',start_date),('date','<=',end_date)])
             for task in task_records:
                 emp_name = self.env['hr.employee'].browse(employee_id).name
 

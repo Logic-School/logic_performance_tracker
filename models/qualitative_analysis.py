@@ -9,23 +9,23 @@ class QualitativeInherit(models.Model):
         performances = {}
         if not start_date or not end_date:
             if manager:
-                records = self.env['base.qualitative.analysis'].search([('name','in',manager.child_ids.ids)])
+                records = self.env['base.qualitative.analysis'].sudo().search([('name','in',manager.child_ids.ids)])
             else:
-                records = self.env['base.qualitative.analysis'].search([])
+                records = self.env['base.qualitative.analysis'].sudo().search([])
         else:
             if manager:
-                records = self.env['base.qualitative.analysis'].search([('name','in',manager.child_ids.ids),('added_date','>=',start_date),('added_date','<=',end_date)])
+                records = self.env['base.qualitative.analysis'].sudo().search([('name','in',manager.child_ids.ids),('added_date','>=',start_date),('added_date','<=',end_date)])
             else:
-                records = self.env['base.qualitative.analysis'].search([('added_date','>=',start_date),('added_date','<=',end_date)])  
+                records = self.env['base.qualitative.analysis'].sudo().search([('added_date','>=',start_date),('added_date','<=',end_date)])  
         employees = []
         for record in records:
             # name field is employee m2o field
             employees.append(record.name.id)
         for employee_id in employees:
             if not start_date or not end_date:
-                quality_records = self.env['base.qualitative.analysis'].search([('name','=',employee_id)])
+                quality_records = self.env['base.qualitative.analysis'].sudo().search([('name','=',employee_id)])
             else:
-                quality_records = self.env['base.qualitative.analysis'].search([('name','=',employee_id),('added_date','>=',start_date),('added_date','<=',end_date)])
+                quality_records = self.env['base.qualitative.analysis'].sudo().search([('name','=',employee_id),('added_date','>=',start_date),('added_date','<=',end_date)])
             employee_attributes = {}
             for quality_rec in quality_records:
                 for attributes in quality_rec.attribute_ids:

@@ -5,7 +5,6 @@ class AcademicTracker(models.Model):
     
     @api.model
     def retrieve_dashboard_data(self,start_date=False,end_date=False):
-        
 
         if not start_date or not end_date:
             upaya_count = self.env['upaya.form'].sudo().search_count([])

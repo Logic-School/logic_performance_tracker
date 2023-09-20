@@ -5,6 +5,7 @@
     'sequence': "0",
     'depends': ['base','mail','logic_digital_tracker','logic_miscellaneous','purchase'],
     'data': [
+        'security/groups.xml',
         'security/ir.model.access.csv',
         'views/digital_performance_views.xml',
 
