@@ -31,6 +31,8 @@ class DigitalPerformance(models.Model):
                     executives_performance[executive.id]['completed_tasks']+=1
                 else:
                     executives_performance[executive.id] = {}
+                    executives_performance[executive.id]['rating'] = 0
+                    executives_performance[executive.id]['rated_tasks'] = 0
                     if task.head_rating!='0':
                         executives_performance[executive.id]['rating'] = int(task.head_rating)
                         executives_performance[executive.id]['rated_tasks']=1

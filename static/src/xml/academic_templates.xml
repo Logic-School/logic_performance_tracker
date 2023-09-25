@@ -3,13 +3,7 @@
         <!-- Define your QWeb template for the dashboard_card view -->
         <t t-name="logic_performance_tracker.academic_dashboard_template">
             <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/dashboard_card_view.css"/>
-            <!-- <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/bootstrap.css"/> -->
 
-            <!-- <style>
-                h1{
-                    color:red;
-                }
-            </style> -->
             <div class="o_dashboard_card">
                 <div class="inline-container mt-2">
                     <div style="margin-left: auto; margin-right: 0;">
@@ -148,7 +142,7 @@
                                             <t t-foreach="Object.keys(values['qualitatives'][employee])" t-as="attribute">
                                                 <span class="ml-4">
                                                     <span class="text-center" t-esc="attribute+': '"/>
-                                                    <t t-set="star_count" t-value="Math.floor(values['qualitatives'][employee][attribute]['average_rating'])"/>
+                                                    <t t-set="star_count" t-value="Math.round(values['qualitatives'][employee][attribute]['average_rating'])"/>
                                                         <t t-foreach="Array.from(Array(star_count).keys())" t-as="star_ind">
                                                             <span class="text-right fa fa-star checked"></span>
                                                         </t>
