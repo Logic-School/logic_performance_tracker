@@ -45,7 +45,7 @@ class OtherTaskInherit(models.Model):
                     employee_performances[employee_id]['name'] = emp_name    
                     employee_performances[employee_id]['completed_tasks']=1
                 if employee_performances[employee_id].get('rating') and employee_performances[employee_id].get('rated_tasks'):
-                    employee_performances[employee_id]['average_rating'] = employee_performances[employee_id]['rating'] / employee_performances[employee_id]['rated_tasks']
+                    employee_performances[employee_id]['average_rating'] = round(employee_performances[employee_id]['rating'] / employee_performances[employee_id]['rated_tasks'],2)
                 else:
                     employee_performances[employee_id]['average_rating'] = 0
 

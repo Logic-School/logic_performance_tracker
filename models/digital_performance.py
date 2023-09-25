@@ -49,10 +49,10 @@ class DigitalPerformance(models.Model):
             if qualitatives.get(employee_name):
                 for attribute in qualitatives[employee_name].keys():
                     qualitative_average += qualitatives[employee_name][attribute]['average_rating']
-                qualitative_average = qualitative_average/len(qualitatives[employee_name].keys())
+                qualitative_average = round(qualitative_average/len(qualitatives[employee_name].keys()), 2)
 
             if executives_performance[exec_id].get('rating'):
-                tasks_average_rating = round(executives_performance[exec_id]['rating']/executives_performance[exec_id]['rated_tasks'],1)
+                tasks_average_rating = round(executives_performance[exec_id]['rating']/executives_performance[exec_id]['rated_tasks'],2)
             else:
                 tasks_average_rating = 0
             self.env['digital.executive.performance'].create({
@@ -60,7 +60,7 @@ class DigitalPerformance(models.Model):
                 'average_rating':tasks_average_rating,
                 'completed_tasks': executives_performance[exec_id]['completed_tasks'],
                 'qualitative_average': qualitative_average,
-                'overall_rating': round((tasks_average_rating+qualitative_average)/2,1) if qualitative_average>0 else tasks_average_rating
+                'overall_rating': round((tasks_average_rating+qualitative_average)/2,2) if qualitative_average>0 else tasks_average_rating
 
             })
         

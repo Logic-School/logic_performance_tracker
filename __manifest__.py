@@ -3,7 +3,7 @@
     'author': 'Rizwaan',
     'version': "14.0.1.0",
     'sequence': "0",
-    'depends': ['base','mail','logic_digital_tracker','logic_miscellaneous','purchase'],
+    'depends': ['base','mail','hr','logic_digital_tracker','logic_miscellaneous','yes_plus','upaya','one_to_one','qualitative_analysis','exam_logic','logic_sfc'],
     'data': [
         'security/groups.xml',
         'security/ir.model.access.csv',

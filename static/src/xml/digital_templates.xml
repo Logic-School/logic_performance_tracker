@@ -56,8 +56,8 @@
                         </div>
                         
 
-                        <div class="h-100" t-if="values['performances']">
-                            <table style="font-size:14px;" class="table table-striped table-responsive-md table-hover rounded-table">
+                        <div class="h-100 table-responsive" t-if="values['performances']">
+                            <table style="font-size:14px;" class="table table-striped table-hover rounded-table">
                                 <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">#</th>
@@ -80,7 +80,7 @@
                                             <td t-esc="exec_performance['name']"/>
                                             <td style="color: green" t-esc="exec_performance['completed_tasks']" class="text-center"/>
                                             <!-- <td t-esc="exec_performance['average_rating']"/> -->
-                                            <t t-set="star_count" t-value="Math.floor(exec_performance['average_rating'])"/>
+                                            <t t-set="star_count" t-value="Math.round(exec_performance['average_rating'])"/>
                                             <td>
                                                 <t t-foreach="Array.from(Array(star_count).keys())" t-as="star_ind">
                                                     <span class="fa fa-star checked"></span>
@@ -91,7 +91,7 @@
                                                 <span class="ml-2" t-esc="exec_performance['average_rating']"/>
                                             </td>
                                             
-                                            <t t-set="star_count" t-value="Math.floor(exec_performance['qualitative_average'])"/>
+                                            <t t-set="star_count" t-value="Math.round(exec_performance['qualitative_average'])"/>
                                             <td>
                                                 <t t-foreach="Array.from(Array(star_count).keys())" t-as="star_ind">
                                                     <span class="fa fa-star checked"></span>
@@ -102,7 +102,7 @@
                                                 <span class="ml-2" t-esc="exec_performance['qualitative_average']"/>
                                             </td>
 
-                                            <t t-set="star_count" t-value="Math.floor(exec_performance['overall_rating'])"/>
+                                            <t t-set="star_count" t-value="Math.round(exec_performance['overall_rating'])"/>
                                             <td>
                                                 <t t-foreach="Array.from(Array(star_count).keys())" t-as="star_ind">
                                                     <span class="fa fa-star checked"></span>
@@ -123,8 +123,8 @@
 
                     <div class="m-3" t-if="values['performances']">
                         <h1 class="inline">Qualitative Analysis</h1>
-                        <div class="h-100">
-                            <table style="font-size:14px;" class="table table-striped  table-responsive-md table-hover rounded-table">
+                        <div class="h-100  table-responsive">
+                            <table style="font-size:14px;" class="table table-striped table-hover rounded-table">
                                 <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">#</th>
@@ -142,7 +142,7 @@
                                                 <t t-foreach="Object.keys(values['qualitatives'][employee])" t-as="attribute">
                                                     <span class="ml-4">
                                                         <span class="text-center" t-esc="attribute+': '"/>
-                                                        <t t-set="star_count" t-value="Math.floor(values['qualitatives'][employee][attribute]['average_rating'])"/>
+                                                        <t t-set="star_count" t-value="Math.round(values['qualitatives'][employee][attribute]['average_rating'])"/>
                                                             <t t-foreach="Array.from(Array(star_count).keys())" t-as="star_ind">
                                                                 <span class="text-right fa fa-star checked"></span>
                                                             </t>
@@ -164,8 +164,8 @@
                     <div class="m-3">
                         <h1 class="inline">Miscellaneous Works</h1>
 
-                        <div class="h-100" t-if="values['other_performances']">
-                            <table style="font-size:14px;" class="table table-striped table-responsive-md table-hover rounded-table">
+                        <div class="h-100 table-responsive" t-if="values['other_performances']">
+                            <table style="font-size:14px;" class="table table-striped table-hover rounded-table">
                                 <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">#</th>
@@ -186,7 +186,7 @@
                                             <td t-esc="values['other_performances'][employee]['name']"/>
                                             <td style="color: green" t-esc="values['other_performances'][employee]['completed_tasks']" class="text-center"/>
                                             <!-- <td t-esc="exec_performance['average_rating']"/> -->
-                                            <t t-set="star_count" t-value="Math.floor(values['other_performances'][employee]['average_rating'])"/>
+                                            <t t-set="star_count" t-value="Math.round(values['other_performances'][employee]['average_rating'])"/>
                                             <td>
                                                 <t t-foreach="Array.from(Array(star_count).keys())" t-as="star_ind">
                                                     <span class="fa fa-star checked"></span>
