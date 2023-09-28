@@ -38,6 +38,8 @@ class OtherTaskInherit(models.Model):
                     employee_performances[employee_id]['completed_tasks']+=1
                 else:
                     employee_performances[employee_id] = {}
+                    employee_performances[employee_id]['rating'] = 0
+                    employee_performances[employee_id]['rated_tasks']=0
                     if task.head_rating!='0':
                         employee_performances[employee_id]['rating'] = int(task.head_rating)
                         employee_performances[employee_id]['rated_tasks']=1

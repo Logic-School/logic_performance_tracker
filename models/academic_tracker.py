@@ -1,6 +1,7 @@
 from odoo import models,fields,api
 from odoo.exceptions import UserError
 from . import actions_common
+import logging
 class AcademicTracker(models.Model):
     _name = "academic.tracker"
     
@@ -30,14 +31,7 @@ class AcademicTracker(models.Model):
             if department_obj:
                 managers = self.env['hr.employee'].sudo().search([('department_id','=',department_obj.id),('child_ids','!=',False)])
                 employees = self.env['hr.employee'].sudo().search([('department_id','=',department_obj.id)])
-                # for employee in employees:
-                #     employees_data[employee.id] = {}
-                #     employees_data[employee.id]['name'] = employee.name
-                #     employees_data[employee.id]['upaya_count'] = self.env['upaya.form'].sudo().search_count([('coordinator_id','=',employee.user_id.id)])
-                #     employees_data[employee.id]['yes_plus_count'] = self.env['yes_plus.logic'].sudo().search_count([('coordinator_id','=',employee.user_id.id)])
-                #     employees_data[employee.id]['one2one_count'] = self.env['one_to_one.meeting'].sudo().search_count([('coordinator_id','=',employee.user_id.id)])
 
-                # raise UserError(str(employees_data))
         elif self.env.user.has_group('logic_performance_tracker.group_perf_academic_head'):
             manager = self.env.user.employee_id
             employees = self.env['hr.employee'].sudo().search([('department_id','=',department_obj.id),('parent_id','=',manager.id)])
@@ -68,5 +62,4 @@ class AcademicTracker(models.Model):
                 dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(manager=manager,start_date=start_date,end_date=end_date)
             # dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(manager=)
         dashboard_data['coordinator_data'] = employees_data
-
         return dashboard_data
