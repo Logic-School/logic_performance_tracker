@@ -35,10 +35,12 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
 
     var DashboardCardAction = AbstractAction.extend({
 
-        xmlDependencies: ['/logic_performance_tracker/static/src/xml/academic_templates.xml'],
+        xmlDependencies: ['/logic_performance_tracker/static/src/xml/academic_templates.xml',],
         
         events:{
             'click .o_filter_performance': '_onPerformanceFilterActionClicked',
+            'click .o_filter_reset': 'filter_reset',
+            'click .o_employee_name': '_onEmployeeNameClicked',
 
             // uncomment the below line to view records on clicking the card
             // 'click .o_model_count': '_onCardActionClicked',
@@ -89,15 +91,66 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
     
         },
 
+        _onEmployeeNameClicked: function (ev) {
+            var self = this;
+    
+            // Get the date field's value
+            var fromDate = this.$('.from_date').val();
+            var endDate = this.$('.end_date').val();
+            console.log("from",fromDate==="")
+            console.log("To",endDate)
+            var employee_id = $(ev.currentTarget).find(".o_employee_id").data("empid")
+            console.log("hello",employee_id)
+            var next_element = $(ev.currentTarget).next()
+            
+            if (next_element.attr("class")==='o_academic_data_subtable')
+            {
+                $(ev.currentTarget).next().remove(".o_academic_data_subtable")
+            }
+            else
+            {
+                this._rpc({
+                    model: this.model_name, // Replace with your actual model name
+                    method: 'retrieve_employee_academic_data', // Use 'search_read' to retrieve records
+                    args: [
+                        employee_id,fromDate,endDate
+                    ], 
+                    // Define search domain if needed
+                    // kwargs: {},
+                }).then(function (values) {
+                    // Set the state with the retrieved data
+                    console.log(values)
+                    var coordinator_subdata = QWeb.render('logic_performance_tracker.academic_coordinator_data', {
+                        values: values
+                    });
+                    $(ev.currentTarget).after(coordinator_subdata)
+                    
+                }).catch(function(err){
+                    console.log(err)
+                });
+            }
+
+        },
+
         _onPerformanceFilterActionClicked: function (ev) {
             var self = this;
     
             // Get the date field's value
             var fromDate = this.$('.from_date').val();
             var endDate = this.$('.end_date').val();
+            var academic_head_id = this.$('.academic_head').val()
+            if (academic_head_id==="all")
+            {
+                var fun_args = [fromDate,endDate]
+            }
+            else
+            {
+                var fun_args = [fromDate,endDate,academic_head_id]
+            }
     
             console.log(fromDate)
             console.log(endDate)
+            console.log(fun_args)
             // this.$(".date_val").text(fromDate)
             self.data.dates = {}
             self.data.dates.fromDate = fromDate
@@ -106,9 +159,7 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
             this._rpc({
                 model: this.model_name, // Replace with your actual model name
                 method: 'retrieve_dashboard_data', // Use 'search_read' to retrieve records
-                args: [
-                    fromDate,endDate
-                ], // Define search domain if needed
+                args: fun_args // Define search domain if needed
                 // kwargs: {},
             }).then(function (data) {
                 // Set the state with the retrieved data
@@ -116,12 +167,14 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
                 self.render_dashboards()
                 self.$(".from_date").val(fromDate)
                 self.$(".end_date").val(endDate)
+                self.$(".academic_head").val(academic_head_id)
+
                 // self.updateState(self.state,false)
                 // console.log(self.renderer)
             }).catch(function(err){
                 console.log(err)
             });
-    
+            
             // this.updateState(self.state,false)
         },
 
@@ -143,6 +196,27 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
 
         update_cp: function() {
             var self = this;
+        },
+
+        filter_reset : function(){
+            var self = this;
+    
+            // Save the current state
+            var currentState = _.extend({}, this.state);
+        
+            console.log("Current State:", currentState);
+            // console.log("state",self.state)
+    
+        
+            web_client.do_push_state({});
+            this.update_cp()
+            this.fetch_data().then(function(){
+                self.$el.empty()
+                console.log(self.data,"datat")
+                // console.log("state",self.state)
+                // self.updateState(self.state,false)
+                self.render_dashboards();
+            });
         },
 
         on_reverse_breadcrumb : function(){
