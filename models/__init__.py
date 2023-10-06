@@ -4,3 +4,4 @@ from . import actions_common
 from . import qualitative_analysis
 from . import other_works
 from . import academic_tracker
+from . import academic_performance
