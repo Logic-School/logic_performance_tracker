@@ -50,3 +50,12 @@ class HrEmployeeInherit(models.Model):
             logger.error("org_data: "+str(org_data))
                 
         return org_data
+
+
+    def get_organisation_data(self, employee):
+        org_data = {'id': employee.id, 'name': employee.name, 'title': employee.job_title, 'children': []}
+
+        for subordinate in employee.child_ids:
+            org_data['children'].append(self.get_organisation_data(subordinate))
+
+        return org_data

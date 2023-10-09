@@ -66,6 +66,9 @@ class DigitalTaskInherit(models.Model):
         logger.error("dashboard_data['qualitatives']: "+str(dashboard_data['qualitatives']))
 
         dashboard_data['qualitative_overall_averages'] = qualitative_overall_average_datas
-
+        org_datas=[]
+        if manager:
+            org_datas = [manager.get_organisation_data(manager)]
+        dashboard_data['org_datas'] = org_datas
         # raise UserError(dashboard_data)
         return dashboard_data

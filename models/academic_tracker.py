@@ -8,9 +8,11 @@ class AcademicTracker(models.Model):
     @api.model
     def retrieve_dashboard_data(self,start_date=False,end_date=False,manager_id=False):
         logger = logging.getLogger("Debugger: ")
-        # org_data = test_employee.get_acad_organisation_data(test_employee)
-        # acad_org_datas = []
+        # test_employee = self.env['hr.employee'].search([('id','=',7)])
+        # org_data = test_employee.get_organisation_data(test_employee)
         # logger.error("org_data: "+str(org_data))
+
+        acad_org_datas = []
 
         logger.error("Manager Id: "+str(manager_id))
         if start_date and end_date:

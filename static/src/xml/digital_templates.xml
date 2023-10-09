@@ -3,6 +3,10 @@
         <!-- Define your QWeb template for the dashboard_card view -->
         <t t-name="logic_performance_tracker.digital_dashboard_template">
             <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/dashboard_card_view.css"/>
+            <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/jquery.orgchart.css"/>
+
+            <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/orgchart_styles.css"/>
+            
             <!-- <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/bootstrap.css"/> -->
 
             <!-- <style>
@@ -11,8 +15,22 @@
                 }
             </style> -->
             <div class="o_dashboard_card">
+                <script type="text/javascript" src="/logic_performance_tracker/static/src/js/org_chart_component.js"/> 
+
             <div t-if="values">
                 <div t-if="values">
+
+                    <div class="organisation_charts row ">
+                        <t t-set="index_id" t-value="0"/>
+                        <t t-foreach="Object.keys(values['org_datas'])" t-as="org_data">
+                            <div class="m-3 col chart-container" t-att-id="'chart-container-'+index_id">
+    
+                            </div>
+                            <t t-set="index_id" t-value="index_id+1"/>
+                        </t>
+                    </div>
+
+
                     <div class="row m-2">
 
                         <t t-foreach="Object.keys(values['states'])" t-as="state">

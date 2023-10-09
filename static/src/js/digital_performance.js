@@ -85,6 +85,30 @@ var DashboardCardAction = AbstractAction.extend({
         // console.log(dashboard)
         // this.$el.empty()
         this.$el.html(dashboard)
+
+        this.$(".organisation_charts").empty()
+        var org_datas = this.data['org_datas']
+        console.log(org_datas)
+        console.log(Object.keys(this.data['org_datas']).length)
+        for(let i=0; i<Object.keys(this.data['org_datas']).length; i++)
+        {
+            this.$(".organisation_charts").append($("<div id=chart-container-"+i+"></div>"))
+            this.$("#chart-container-"+i).addClass("chart-container col m-3")
+            var oc = this.$("#chart-container-"+i).orgchart({
+                exportButton: false,
+                exportFilename: "MyOrgChart",
+                data: org_datas[i],
+                nodeContent: "title",
+                nodeID: "id",
+                createNode: function ($node, data) {
+                // $node.find(".title").append(`
+                //   <img class="avatar" src="https://dabeng.github.io/OrgChart/img/avatar/${data.id}.jpg" crossorigin="anonymous" />
+                // `);
+                $node.find(".content").prepend($node.find(".symbol"));
+                }
+            });
+        }
+
         return $.when()
 
     },
