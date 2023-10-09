@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <templates id="template" xml:space="preserve">
+        <t t-name="logic_performance_tracker.organizational_chart">
+            <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/orgchart_styles.css"/>
+            <script t-js="context">
+                console.log(context)
+                console.log($('document'))
+                var chart = new OrgChart(document.getElementById("org_chart"), {
+                    padding: 5,
+                    template: "polina",
+                    layout: OrgChart.normal,
+                    enableSearch: false,
+                    enableSearch: false,
+                    enableEdit: false,
+                    mouseScrool: OrgChart.action.none,
+                    nodeMouseClick: OrgChart.action.none,
+                    editForm: {
+                        readOnly: true,
+                    },
+                    nodeBinding: {
+                        field_0: "name",
+                        field_1: "title",
+                        img_0: "img"
+                    },
+                    nodes: [
+                        { id: 1, name: "Amber McKenzie", title: "CEO", img: "https://cdn.balkan.app/shared/empty-img-white.svg" },
+                        { id: 2, pid: 1, name: "Ava Field", title: "IT Manager", img: "https://cdn.balkan.app/shared/empty-img-white.svg" },
+                        { id: 3, pid: 1, name: "Rhys Harper", img: "https://cdn.balkan.app/shared/empty-img-white.svg" }
+                    ],
+                });
+            </script>            
+            <div id="org_chart" class="m-0 px-0 py-0 org_chart" style="max-height:300px;">
+
+                </div>
+        </t>
+    </templates>

@@ -7,8 +7,11 @@ class AcademicTracker(models.Model):
     
     @api.model
     def retrieve_dashboard_data(self,start_date=False,end_date=False,manager_id=False):
-
         logger = logging.getLogger("Debugger: ")
+        # org_data = test_employee.get_acad_organisation_data(test_employee)
+        # acad_org_datas = []
+        # logger.error("org_data: "+str(org_data))
+
         logger.error("Manager Id: "+str(manager_id))
         if start_date and end_date:
             start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
@@ -231,6 +234,13 @@ class AcademicTracker(models.Model):
 
         dashboard_data['coordinator_data'] = employees_data
         dashboard_data['qualitative_overall_averages'] = qualitative_overall_average_datas
+        
+        acad_org_datas = []
+        if managers:
+            acad_org_datas = [manager.get_acad_organisation_data(manager) for manager in managers]
+        elif manager:
+            acad_org_datas = [manager.get_acad_organisation_data(manager)]
+        dashboard_data['acad_org_datas'] = acad_org_datas
         return dashboard_data
     
     @api.model
@@ -244,19 +254,21 @@ class AcademicTracker(models.Model):
             upaya_objs = self.env['upaya.form'].sudo().search([('coordinator_id','!=',False),('coordinator_id','=',employee.user_id.id)])
             yes_plus_objs = self.env['yes_plus.logic'].sudo().search([('coordinator_id','!=',False),('coordinator_id','=',employee.user_id.id)])
             one_to_one_objs = self.env['one_to_one.meeting'].sudo().search([('coordinator_id','!=',False),('coordinator_id','=',employee.user_id.id)])
-        
+            exam_objs = self.env['exam.details'].sudo().search([('coordinator','!=',False),('coordinator','=',employee.user_id.id)])
         else:
             start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
 
             upaya_objs = self.env['upaya.form'].sudo().search([('coordinator_id','!=',False),('coordinator_id','=',employee.user_id.id),('date','>=',start_date),('date','<=',end_date)])
             yes_plus_objs = self.env['yes_plus.logic'].sudo().search([('coordinator_id','!=',False),('coordinator_id','=',employee.user_id.id),('date_one','>=',start_date),('date_one','<=',end_date)])
             one_to_one_objs = self.env['one_to_one.meeting'].sudo().search([('coordinator_id','!=',False),('coordinator_id','=',employee.user_id.id),('added_date','>=',start_date),('added_date','<=',end_date)])
-        
+            exam_objs = self.env['exam.details'].sudo().search([('coordinator','!=',False),('coordinator','=',employee.user_id.id),('date','>=',start_date),('date','<=',end_date)])
+
         upaya_len = len(upaya_objs) if upaya_objs else 0
         yes_plus_len = len(yes_plus_objs) if yes_plus_objs else 0
         one_to_one_len = len(one_to_one_objs) if one_to_one_objs else 0
+        exam_len = len(exam_objs) if exam_objs else 0
 
-        longest_len = max(upaya_len,yes_plus_len,one_to_one_len) 
+        longest_len = max(upaya_len,yes_plus_len,one_to_one_len,exam_len) 
         employee_datas = []
         for i in range(longest_len):
             current_row_data = {}
@@ -275,6 +287,19 @@ class AcademicTracker(models.Model):
                 current_row_data['one_to_one_name'] = one_to_one_objs[i].name
             except:
                 current_row_data['one_to_one_name'] = '-'
+
+            current_row_data['exam'] = {} 
+
+            try:
+                present_count = list(exam_objs[i].student_results.mapped('present')).count(True)
+                total_students = len(exam_objs[i].student_results)
+                current_row_data['exam']['name'] = exam_objs[i].name
+                current_row_data['exam']['present_count'] = present_count
+                current_row_data['exam']['total_count'] = total_students
+            except Exception as exception:
+                logger.error("exception")
+                logger.error(exception)
+                current_row_data['exam']['name'] = '-'
             employee_datas.append(current_row_data)
 
         logger.error(employee_datas)

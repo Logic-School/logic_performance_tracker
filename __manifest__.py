@@ -8,6 +8,7 @@
         'security/groups.xml',
         'security/ir.model.access.csv',
         'views/digital_performance_views.xml',
+        'views/employee_views.xml',
 
     ],
     # 'assets':{'web.assets_qweb': [

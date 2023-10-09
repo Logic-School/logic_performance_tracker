@@ -30,12 +30,15 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
     var abstractView = require('web.AbstractView');
     var _t = core._t;
     var QWeb = core.qweb;
-    
+    // require('logic_performance_tracker/static/src/js/orgchart.js');
     const { useRef, useSubEnv } = hooks;
 
     var DashboardCardAction = AbstractAction.extend({
 
-        xmlDependencies: ['/logic_performance_tracker/static/src/xml/academic_templates.xml',],
+        xmlDependencies: [
+            '/logic_performance_tracker/static/src/xml/academic_templates.xml',
+            '/logic_performance_tracker/static/src/xml/organizational_chart.xml'
+        ],
         
         events:{
             'click .o_filter_performance': '_onPerformanceFilterActionClicked',
@@ -86,7 +89,32 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
             // this.updateState(self.state,false)
             // console.log(dashboard)
             // this.$el.empty()
+            // var org_chart = QWeb.render('logic_performance_tracker.organizational_chart')
             this.$el.html(dashboard)
+            this.$(".organisation_charts").empty()
+            var acad_org_datas = this.data['acad_org_datas']
+            console.log(acad_org_datas)
+            console.log(Object.keys(this.data['acad_org_datas']).length)
+            for(let i=0; i<Object.keys(this.data['acad_org_datas']).length; i++)
+            {
+                this.$(".organisation_charts").append($("<div id=chart-container-"+i+"></div>"))
+                this.$("#chart-container-"+i).addClass("chart-container col m-3")
+                var oc = this.$("#chart-container-"+i).orgchart({
+                    exportButton: false,
+                    exportFilename: "MyOrgChart",
+                    data: acad_org_datas[i],
+                    nodeContent: "title",
+                    nodeID: "id",
+                    createNode: function ($node, data) {
+                    // $node.find(".title").append(`
+                    //   <img class="avatar" src="https://dabeng.github.io/OrgChart/img/avatar/${data.id}.jpg" crossorigin="anonymous" />
+                    // `);
+                    $node.find(".content").prepend($node.find(".symbol"));
+                    }
+                });
+            }
+                // this.$(".org_chart_parent").append(org_chart)
+
             return $.when()
     
         },

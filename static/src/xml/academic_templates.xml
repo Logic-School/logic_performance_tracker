@@ -3,8 +3,16 @@
         <!-- Define your QWeb template for the dashboard_card view -->
         <t t-name="logic_performance_tracker.academic_dashboard_template">
             <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/dashboard_card_view.css"/>
+            <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/jquery.orgchart.css"/>
 
+            <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/orgchart_styles.css"/>
+            
             <div class="o_dashboard_card">
+                <script type="text/javascript" src="/logic_performance_tracker/static/src/js/org_chart_component.js"/> 
+                <!-- <script >
+                    var a = '<t t-esc="Object.keys(values)"/>';
+                    console.log(Object.values(a))
+                </script> -->
                 <div class="inline-container mt-2">
                     <div style="margin-left: auto; margin-right: 0;">
                         <span class="font-weight-bold">Academic Head </span>
@@ -21,9 +29,39 @@
                         <button class="rounded btn-md btn-warning o_filter_reset" type="button">Reset</button>
                     </div>
                 </div>
+
+                <!-- <t t-js="values">
+                    var elem = document.createElement("div")
+                    elem.id = "org_chart"
+                    console.log(document.getElementById("org_chart"))
+                    document.body.prepend(elem)
+                    var chart = new OrgChart(document.getElementById("org_chart"), {
+                        padding: 5,
+                        template: "polina",
+                        layout: OrgChart.normal,
+                        enableSearch: false,
+                        enableSearch: false,
+                        enableEdit: false,
+                        mouseScrool: OrgChart.action.none,
+                        nodeMouseClick: OrgChart.action.none,
+                        editForm: {
+                            readOnly: true,
+                        },
+                        nodeBinding: {
+                            field_0: "name",
+                            field_1: "title",
+                            img_0: "img"
+                        },
+                        nodes: [
+                            { id: 1, name: "Amber McKenzie", title: "CEO", img: "https://cdn.balkan.app/shared/empty-img-white.svg" },
+                            { id: 2, pid: 1, name: "Ava Field", title: "IT Manager", img: "https://cdn.balkan.app/shared/empty-img-white.svg" },
+                            { id: 3, pid: 1, name: "Rhys Harper", img: "https://cdn.balkan.app/shared/empty-img-white.svg" }
+                        ],
+                    });
+                </t> -->
                 
-                <div t-if="values">
-                        <div class="row m-2">
+                <!-- <div t-if="values"> -->
+                        <!-- <div class="row m-2"> -->
 
 
                             <!-- <div class="col-md-2 col-sm-6 oh-payslip" >
@@ -141,8 +179,18 @@
                                 </div>
                             </div> -->
 
+                        <!-- </div> -->
+                <!-- </div> -->
+                <div class="organisation_charts row ">
+                    <t t-set="index_id" t-value="0"/>
+                    <t t-foreach="Object.keys(values['acad_org_datas'])" t-as="acad_org_data">
+                        <div class="m-3 col chart-container" t-att-id="'chart-container-'+index_id">
+
                         </div>
+                        <t t-set="index_id" t-value="index_id+1"/>
+                    </t>
                 </div>
+
 
                 <div class="m-3" t-if="values['qualitatives']">
                     <!-- <h1 class="inline">Qualitative Analysis</h1> -->
@@ -319,9 +367,10 @@
                                 <thead>
                                     <tr>
                                         <th width="5%" scope="col" class="px-3">#</th>
-                                        <th width="31.6%" scope="col" class="px-3">Upaya</th>
-                                        <th width="31.6%" scope="col" class="px-3">Yes Plus</th>
-                                        <th width="31.6%" scope="col" class="px-3">One to One</th>
+                                        <th width="23.75%" scope="col" class="px-3">Upaya</th>
+                                        <th width="23.75%" scope="col" class="px-3">Yes Plus</th>
+                                        <th width="23.75%" scope="col" class="px-3">One to One</th>
+                                        <th width="23.75%" scope="col" class="px-3">Exam</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -332,6 +381,19 @@
                                             <td class="px-2" t-esc="employee_data['upaya_name']"/>
                                             <td class="px-2" t-esc="employee_data['yes_plus_name']"/>
                                             <td class="px-2" t-esc="employee_data['one_to_one_name']"/>
+                                            <td class="px-2">
+                                                <span t-esc="employee_data['exam']['name']"/>
+                                                <span t-if="employee_data['exam']['present_count']">
+                                                    (
+                                                    <span t-esc="employee_data['exam']['present_count']" class="text-secondary"/>
+                                                    /
+                                                    <span t-esc="employee_data['exam']['total_count']" class="text-success"/>
+                                                    )
+                                                </span>
+
+
+                                            </td>
+
                                         </tr>
                                         <t t-set="index" t-value="index+1"/>
 
