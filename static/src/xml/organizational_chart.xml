@@ -2,7 +2,7 @@
     <templates id="template" xml:space="preserve">
         <t t-name="logic_performance_tracker.organizational_chart">
             <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/orgchart_styles.css"/>
-            <script t-js="context">
+            <script t-="context">
                 console.log(context)
                 console.log($('document'))
                 var chart = new OrgChart(document.getElementById("org_chart"), {
