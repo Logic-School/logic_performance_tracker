@@ -12,7 +12,7 @@ class HrEmployeeInherit(models.Model):
     is_in_charge = fields.Boolean(string="Is In charge")
     in_charge_child_ids = fields.One2many("hr.employee","in_charge_id",string="In Charge Childs")
 
-    def get_acad_organisation_data(self, employee):
+    def get_organisation_data(self, employee):
         org_data = {'id': employee.id, 'name': employee.name, 'title': employee.job_title,'image':employee.image_1920, 'children': []}
         child_ids = employee.in_charge_child_ids if employee.in_charge_child_ids else employee.child_ids
         child_ids = []
@@ -21,7 +21,7 @@ class HrEmployeeInherit(models.Model):
         if employee.child_ids:
             child_ids+=employee.child_ids
         for subordinate in child_ids:
-            org_data['children'].append(self.get_acad_organisation_data(subordinate))
+            org_data['children'].append(self.get_organisation_data(subordinate))
 
         return org_data
         # org_data = {}
@@ -75,10 +75,10 @@ class HrEmployeeInherit(models.Model):
         # return org_data
 
 
-    def get_organisation_data(self, employee):
-        org_data = {'id': employee.id, 'name': employee.name, 'title': employee.job_title,'image':employee.image_1920, 'children': []}
+    # def get_organisation_data(self, employee):
+    #     org_data = {'id': employee.id, 'name': employee.name, 'title': employee.job_title,'image':employee.image_1920, 'children': []}
 
-        for subordinate in employee.child_ids:
-            org_data['children'].append(self.get_organisation_data(subordinate))
+    #     for subordinate in employee.child_ids:
+    #         org_data['children'].append(self.get_organisation_data(subordinate))
 
-        return org_data
+    #     return org_data

@@ -241,10 +241,10 @@ class AcademicTracker(models.Model):
         acad_org_datas = []
         dept_names = []
         if managers:
-            acad_org_datas = [manager.get_acad_organisation_data(manager) for manager in managers]
+            acad_org_datas = [manager.get_organisation_data(manager) for manager in managers]
             dept_names = [manager.department_id.name for manager in managers]
         elif manager:
-            acad_org_datas = [manager.get_acad_organisation_data(manager)]
+            acad_org_datas = [manager.get_organisation_data(manager)]
             dept_names = [manager.department_id.name]
 
         dashboard_data['acad_org_datas'] = acad_org_datas
