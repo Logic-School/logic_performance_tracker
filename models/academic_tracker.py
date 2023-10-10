@@ -55,10 +55,11 @@ class AcademicTracker(models.Model):
                 manager = self.env['hr.employee'].sudo().browse(int(manager_id))
             elif department_obj:
 
-                managers = self.env['hr.employee'].sudo().search([('department_id','in',department_obj[0].child_ids.ids),('child_ids','!=',False)])
+                managers = self.env['hr.employee'].sudo().search([('id','in',[academic_head.id for academic_head in academic_heads])])
                 
                 logger.error("managers")
                 logger.error(managers)
+                logger.error("department childs: "+str(department_obj[0].child_ids))
             logger.error("manager")
             logger.error(manager)
 
@@ -238,11 +239,17 @@ class AcademicTracker(models.Model):
         dashboard_data['qualitative_overall_averages'] = qualitative_overall_average_datas
         
         acad_org_datas = []
+        dept_names = []
         if managers:
             acad_org_datas = [manager.get_acad_organisation_data(manager) for manager in managers]
+            dept_names = [manager.department_id.name for manager in managers]
         elif manager:
             acad_org_datas = [manager.get_acad_organisation_data(manager)]
+            dept_names = [manager.department_id.name]
+
         dashboard_data['acad_org_datas'] = acad_org_datas
+        dashboard_data['dept_names'] = dept_names
+
         return dashboard_data
     
     @api.model

@@ -101,10 +101,11 @@ var DashboardCardAction = AbstractAction.extend({
                 nodeContent: "title",
                 nodeID: "id",
                 createNode: function ($node, data) {
-                // $node.find(".title").append(`
-                //   <img class="avatar" src="https://dabeng.github.io/OrgChart/img/avatar/${data.id}.jpg" crossorigin="anonymous" />
-                // `);
-                $node.find(".content").prepend($node.find(".symbol"));
+                    if (data.image!==undefined){
+                        $node.find(".title").append(`
+                        <img class="avatar" src="data:image/png;base64,${data.image}" crossorigin="anonymous" />
+                        `);
+                    }
                 }
             });
         }

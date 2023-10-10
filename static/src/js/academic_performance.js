@@ -93,12 +93,15 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
             this.$el.html(dashboard)
             this.$(".organisation_charts").empty()
             var acad_org_datas = this.data['acad_org_datas']
+            var dept_names = this.data['dept_names']
             console.log(acad_org_datas)
             console.log(Object.keys(this.data['acad_org_datas']).length)
             for(let i=0; i<Object.keys(this.data['acad_org_datas']).length; i++)
             {
                 this.$(".organisation_charts").append($("<div id=chart-container-"+i+"></div>"))
                 this.$("#chart-container-"+i).addClass("chart-container col m-3")
+                this.$("#chart-container-"+i).append($("<h2 class=text-center text-info>"+dept_names[i]+"</h2>"))
+
                 var oc = this.$("#chart-container-"+i).orgchart({
                     exportButton: false,
                     exportFilename: "MyOrgChart",
@@ -106,10 +109,12 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
                     nodeContent: "title",
                     nodeID: "id",
                     createNode: function ($node, data) {
-                    // $node.find(".title").append(`
-                    //   <img class="avatar" src="https://dabeng.github.io/OrgChart/img/avatar/${data.id}.jpg" crossorigin="anonymous" />
-                    // `);
-                    $node.find(".content").prepend($node.find(".symbol"));
+                    if (data.image!==undefined){
+                        $node.find(".title").append(`
+                        <img class="avatar" src="data:image/png;base64,${data.image}" crossorigin="anonymous" />
+                        `);
+                    }
+                    // $node.find(".content").prepend($node.find(".symbol"));
                     }
                 });
             }

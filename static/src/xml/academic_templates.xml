@@ -181,6 +181,9 @@
 
                         <!-- </div> -->
                 <!-- </div> -->
+                <div class="card m-5" style="">
+                    <h1 class="text-center">Department Hierarchy</h1>
+                </div>
                 <div class="organisation_charts row ">
                     <t t-set="index_id" t-value="0"/>
                     <t t-foreach="Object.keys(values['acad_org_datas'])" t-as="acad_org_data">

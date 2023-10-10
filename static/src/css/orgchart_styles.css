@@ -1,47 +1,52 @@
 .chart-container {
-    font-family: Arial;
-    /* border: 1px solid #aaa; */
-    height:fit-content;
-    overflow: visible;
-    text-align: center;
-  }
-  
-  #github-link {
-    display: inline-block;
-    /* background-image: url("https://dabeng.github.io/OrgChart/img/logo.png"); */
-    background-size: cover;
-    width: 64px;
-    height: 64px;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-  }
+  position: relative;
+  height: fit-content;
+  /* border: 1px solid #aaa; */
+  margin: 0.5rem;
+  overflow: visible;
+  text-align: center;
+}
 
-      .orgchart .node .title {
-        height: unset;
-        text-align: center;
-        line-height: 40px;
-        width: 200px;
-        background-color: rgb(117, 117, 122);
-      }
-      .orgchart .node .content {
-        font-weight: bold;
-        font-size: small;
-        text-align: center;
-        width: auto;
-        /* padding: 5px; */
-      }
-      .orgchart .node .content .symbol {
-        color: #aaa;
-        margin-right: 20px;
-      }
-      .oci-leader::before, .oci-leader::after {
-        background-color: rgba(134, 120, 120, 0.8);
-      }
-      .orgchart .node .avatar {
-        width: 60px;
-        height: 60px;
-        border-radius: 30px;
-        float: left;
-        margin: 5px;
-      }
+.orgchart .node .avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  float: inline-start;
+  margin: 5px;
+}
+
+.orgchart .node .title {
+  box-sizing: border-box;
+  width: 180px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  height: auto;
+  line-height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre-line;
+  background-color: rgba(89, 88, 102, 0.8);
+  color: #fff;
+  border-radius: 4px 4px 0 0; 
+  margin: auto;
+}
+
+.orgchart .node .content {
+
+  box-sizing: border-box;
+  width: 180px;
+  height: auto;
+  /* line-height: 20px; */
+  font-size: 12px;
+  font-weight: bold;
+
+  border: 1px solid rgba(47, 106, 146, 0.8);
+  /* border-width: 0 1px 1px 1px; */
+  border-radius: 0 0 0.25rem 0.25rem;
+  text-align: center;
+  background-color: #fff;
+  color: #333;
+  text-overflow: ellipsis;
+  white-space: wrap;
+}
