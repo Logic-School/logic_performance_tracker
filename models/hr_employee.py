@@ -14,14 +14,37 @@ class HrEmployeeInherit(models.Model):
 
     def get_organisation_data(self, employee):
         org_data = {'id': employee.id, 'name': employee.name, 'title': employee.job_title,'image':employee.image_1920, 'children': []}
-        child_ids = employee.in_charge_child_ids if employee.in_charge_child_ids else employee.child_ids
+        # child_ids = False
+        child_ids = False
+        if employee.in_charge_child_ids:
+            child_ids=employee.in_charge_child_ids.sorted(lambda child: len(child.in_charge_child_ids))
+        if employee.child_ids:
+            if child_ids:
+                child_ids+=employee.child_ids
+                child_ids = child_ids.sorted(lambda child: len(child.child_ids))
+            else:
+                child_ids = employee.child_ids.sorted(lambda child: len(child.child_ids))
+        if employee.child_ids and not employee.in_charge_child_ids:
+            child_ids = employee.child_ids.filtered(lambda child: child.in_charge_child_ids!=False)
+            if not child_ids:
+                child_ids = employee.child_ids
+        elif employee.in_charge_child_ids and not employee.child_ids:
+            child_ids = employee.in_charge_child_ids
+
+
+        # child_ids = employee.in_charge_child_ids if employee.in_charge_child_ids else employee.child_ids
         # child_ids = []
         # if employee.in_charge_child_ids:
         #     child_ids+=employee.in_charge_child_ids
         # if employee.child_ids:
         #     child_ids+=employee.child_ids
-        for subordinate in child_ids:
-            org_data['children'].append(self.get_organisation_data(subordinate))
+
+        if child_ids:
+            child_ids = child_ids.filtered(lambda child: child.in_charge_id!=False)
+
+            # child_ids.filtered(lambda child: child.child_ids not in employee.parent_id.child_ids)
+            for subordinate in child_ids:
+                org_data['children'].append(self.get_organisation_data(subordinate))
 
         return org_data
         # org_data = {}
