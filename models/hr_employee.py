@@ -15,11 +15,11 @@ class HrEmployeeInherit(models.Model):
     def get_organisation_data(self, employee):
         org_data = {'id': employee.id, 'name': employee.name, 'title': employee.job_title,'image':employee.image_1920, 'children': []}
         child_ids = employee.in_charge_child_ids if employee.in_charge_child_ids else employee.child_ids
-        child_ids = []
-        if employee.in_charge_child_ids:
-            child_ids+=employee.in_charge_child_ids
-        if employee.child_ids:
-            child_ids+=employee.child_ids
+        # child_ids = []
+        # if employee.in_charge_child_ids:
+        #     child_ids+=employee.in_charge_child_ids
+        # if employee.child_ids:
+        #     child_ids+=employee.child_ids
         for subordinate in child_ids:
             org_data['children'].append(self.get_organisation_data(subordinate))
 
