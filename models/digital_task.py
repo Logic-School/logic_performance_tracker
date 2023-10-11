@@ -5,6 +5,20 @@ import logging
 class DigitalTaskInherit(models.Model):
     _inherit = "digital.task"
 
+    def get_states_data(self,tasks):
+        states = {'Sent to Approve':0,'Approved':0,'Assigned':0,'In Progress':0,'Completed':0,'To Post':0,'Posted':0}
+        for task in tasks:
+            try:
+                states[dict(task._fields['state'].selection).get(task.state)]+=1
+            except:
+                pass
+        states_data = []
+        for key in states.keys():
+            states_data.append({'label':key,'value':states[key]})
+        return states_data
+            # except:
+            #     states[task.state] = [dict(task._fields['state'].selection).get(task.state),1]
+
     @api.model
     def retrieve_dashboard_data(self,start_date=False,end_date=False):
         logger = logging.getLogger("Debugger")
@@ -15,13 +29,8 @@ class DigitalTaskInherit(models.Model):
         except:
             manager = False
         dashboard_data = {}
-        states = {}
-        for task in tasks:
-            try:
-                states[task.state][1]+=1
-            except:
-                states[task.state] = [dict(task._fields['state'].selection).get(task.state),1]
-        dashboard_data['states'] = states
+
+        dashboard_data['states_data'] = self.get_states_data(tasks)
         
         if not start_date or not end_date:
             dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(manager=manager)

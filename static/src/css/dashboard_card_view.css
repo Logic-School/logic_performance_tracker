@@ -1,7 +1,28 @@
-.o_dashboard_card_view {
-    color: #FF0000;
-    font-size: 16px;
-    background-color: #FF0000;
+.state_pie_chart{
+/* padding-left: 90px; */
+height: auto;
+width:fit-content;
+/* padding-bottom: 65px; */
+text-align: center !important;
+
+}
+
+.state_pie_chart .legend {
+    margin-top: 0;
+    margin-bottom: -49px !important;
+    display: inline-block;
+    border-collapse: collapse;
+    /* border-spacing: 0px; */
+    margin-left: 28px !important;
+    /* margin-top: 77px !important; */
+}
+.state_pie_chart svg{
+    margin-top: 10px;
+    vertical-align: bottom !important;
+}
+
+.o_dashboard_card {
+    max-width: 100%;
 }
 .head_class{
     color:#2eb3ac;
@@ -39,13 +60,13 @@
 
 
 .custom-date-input {
-    background-color: #bfc1c2; /* Light gray background color */
-    border: 2px solid #0b5a50; /* Blue border color */
-    border-radius: 8px;
+    background-color: #f0f3f5; /* Light gray background color */
+    border: 0px;
+    border-radius: 0px;
     /* padding: 12px; */
     /* width: 200px; */
     /* font-size: 16px; */
-    color: #333;
+    color: #000000;
     outline: none; /* Remove the default focus border */
     transition: border-color 0.3s ease; /* Smooth border color transition */
 }
@@ -56,15 +77,7 @@
     display: inline-block;
 }
 
-.date-picker-icon::before {
-    content: "\f073"; /* Unicode character for a calendar icon (you can use your preferred icon) */
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    color: #347920; /* Blue color for the icon */
-    font-size: 10px; /* Adjust the icon size */
-}
+
 
 /* Hover effect to highlight the input field */
 .custom-date-input:hover {
@@ -634,14 +647,6 @@
     .leaves_request_today  h4 .stat-count ,.leaves_request_month h4 .stat-count , .hr_leave_request_approve h4 .stat-count
     {
         color:#fff !important;
-    }
-    .graph_view .legend {
-        margin-bottom: -49px !important;
-        display: inline-block;
-        border-collapse: collapse;
-        border-spacing: 0px;
-        margin-left: 90px !important;
-        margin-top: 77px !important;
     }
     .hr-chart-1{
         margin: 15px 0px;

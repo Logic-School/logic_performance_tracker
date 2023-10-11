@@ -78,6 +78,8 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
             this.render_dashboards()
         },
 
+
+
         render_dashboards: function() {
             // let values = self.state.data;
             // console.log(self,"dash_rend")
@@ -100,7 +102,7 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
             {
                 this.$(".organisation_charts").append($("<div id=chart-container-"+i+"></div>"))
                 this.$("#chart-container-"+i).addClass("chart-container col m-3")
-                this.$("#chart-container-"+i).append($("<h2 class=text-center text-info>"+dept_names[i]+"</h2>"))
+                this.$("#chart-container-"+i).append($("<div class='tracker-heading1 mt-3'><h2 class=text-center text-info>"+dept_names[i]+"</h2></div>"))
 
                 var oc = this.$("#chart-container-"+i).orgchart({
                     exportButton: false,

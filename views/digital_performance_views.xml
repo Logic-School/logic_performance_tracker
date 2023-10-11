@@ -2,12 +2,20 @@
 <odoo>
     <template id="assets_backend_dashboard" name="hello world assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
-            <script type="text/javascript" src="/logic_performance_tracker/static/src/js/orgchart.js"/>
-            <script type="text/javascript" src="/logic_performance_tracker/static/src/js/jquery.orgchart.js"/>
+            <script type="text/javascript" src="/logic_performance_tracker/static/src/js/lib/orgchart.js"/>
+            <script type="text/javascript" src="/logic_performance_tracker/static/src/js/lib/jquery.orgchart.js"/>
+            <script type="text/javascript" src="/logic_performance_tracker/static/src/js/lib/d3.min.js"/>
 
             <script type="text/javascript" src="/logic_performance_tracker/static/src/js/digital_performance.js"/>
             <script type="text/javascript" src="/logic_performance_tracker/static/src/js/academic_performance.js"/>
 
+
+
+            <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/dashboard_card_view.css"/>
+            <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/lib/jquery.orgchart.css"/>
+
+            <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/orgchart_styles.css"/>
+            <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/other_styles.css"/>
         <!-- <script type="text/javascript" src="https://balkan.app/js/orgchart.js"></script> -->
 
         <!-- <link rel="stylesheet" type="text/scss" href="/logic_performance_tracker/static/src/scss/dashboard_card_view.scss"/> -->

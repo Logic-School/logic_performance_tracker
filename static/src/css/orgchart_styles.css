@@ -1,6 +1,7 @@
 .chart-container {
   position: relative;
   height: fit-content;
+  width: 100%;
   /* border: 1px solid #aaa; */
   margin: 0.5rem;
   overflow: visible;
@@ -10,7 +11,7 @@
 .orgchart .node .avatar {
   width: 60px;
   height: 60px;
-  border-radius: 30px;
+  border-radius: 25px;
   margin-left: auto;
   margin-right: auto;
   /* display: block;
@@ -32,9 +33,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: pre-line;
-  background-color: rgba(89, 88, 102, 0.8);
+  background-color: rgb(15 14 27 / 80%);
   color: #fff;
-  border-radius: 4px 4px 0 0; 
+  border-radius: 8px 8px 0 0; 
   margin: auto;
 }
 
@@ -49,10 +50,10 @@
 
   border: 1px solid rgba(47, 106, 146, 0.8);
   /* border-width: 0 1px 1px 1px; */
-  border-radius: 0 0 0.25rem 0.25rem;
+  border-radius: 0 0 8px 8px;
   text-align: center;
   background-color: #fff;
   color: #333;
   text-overflow: ellipsis;
-  white-space: wrap;
+  white-space: normal;
 }

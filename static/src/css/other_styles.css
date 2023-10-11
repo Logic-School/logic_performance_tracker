@@ -1,0 +1,44 @@
+.tracker-heading1 {
+    text-align: center;
+    /* padding: px; */
+    /* background-color: #6893b1; */
+    color: rgb(80, 76, 76);
+    border-radius: 10px;
+}
+
+.tracker-heading1 h1,
+.tracker-heading1 h2 {
+    /* font-size: 4em; */
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: bold;
+    text-shadow: 4px 4px 3px rgba(0, 0, 0, 0.1);
+    text-decoration: underline;
+}
+
+.filter-button-container {
+    text-align: center;
+    padding: 50px;
+}
+
+.filter-button {
+    display: inline-block;
+    /* padding: 15px 30px; */
+    /* font-size: 1.2em; */
+    font-weight: bold;
+    color: #ffffff;
+    background-color: rgb(63, 105, 91);
+    border-radius: 4px;
+    /* transition: background-color 0.3s ease; */
+}
+
+.filter-button:hover {
+    background-color: rgb(17, 65, 38);
+}
+
+.o_dashboard_card th {
+    text-transform: capitalize;
+    letter-spacing: 0px;
+    /* font-weight: bold; */
+    text-shadow: 2px 2px 1px rgba(0, 0, 0, 0.1);
+}

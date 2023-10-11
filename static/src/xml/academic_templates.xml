@@ -2,33 +2,13 @@
     <templates id="template" xml:space="preserve">
         <!-- Define your QWeb template for the dashboard_card view -->
         <t t-name="logic_performance_tracker.academic_dashboard_template">
-            <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/dashboard_card_view.css"/>
-            <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/jquery.orgchart.css"/>
 
-            <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/orgchart_styles.css"/>
-            
             <div class="o_dashboard_card">
                 <script type="text/javascript" src="/logic_performance_tracker/static/src/js/org_chart_component.js"/> 
                 <!-- <script >
                     var a = '<t t-esc="Object.keys(values)"/>';
                     console.log(Object.values(a))
                 </script> -->
-                <div class="inline-container mt-2">
-                    <div style="margin-left: auto; margin-right: 0;">
-                        <span class="font-weight-bold">Academic Head </span>
-                        <select class="academic_head form-control mr-2" style="display: inline-block; width: auto;background-color:#bfc1c2;">
-                            <t t-foreach="values['academic_heads']" t-as="academic_head">
-                                <option t-att-value="academic_head['head_id']" t-esc="academic_head['name']"/>
-                            </t>
-                        </select>
-                        <span class="font-weight-bold">From: </span>
-                        <input class="from_date date-picker-icon custom-date-input" type="date"/>
-                        <span class="font-weight-bold"> To: </span>
-                        <input placeholder="From: " class="end_date date-picker-icon custom-date-input" type="date"/>
-                        <button class="ml-2 rounded btn-md btn-primary o_filter_performance" type="button">Filter</button>
-                        <button class="rounded btn-md btn-warning o_filter_reset" type="button">Reset</button>
-                    </div>
-                </div>
 
                 <!-- <t t-js="values">
                     var elem = document.createElement("div")
@@ -181,10 +161,10 @@
 
                         <!-- </div> -->
                 <!-- </div> -->
-                <div class="card m-5">
+                <div class="tracker-heading1 mt-3">
                     <h1 class="text-center">Department Hierarchy</h1>
                 </div>
-                <div class="organisation_charts row ">
+                <div class="organisation_charts row">
                     <t t-set="index_id" t-value="0"/>
                     <t t-foreach="Object.keys(values['acad_org_datas'])" t-as="acad_org_data">
                         <div class="m-3 col chart-container" t-att-id="'chart-container-'+index_id">
@@ -194,6 +174,22 @@
                     </t>
                 </div>
 
+                <div class="inline-container mt-2">
+                    <div style="margin-left: auto; margin-right: 0;">
+                        <span class="font-weight-bold">Department </span>
+                        <select class="academic_head form-control mr-2" style="display: inline-block; width: auto;background-color:#bfc1c2;">
+                            <t t-foreach="values['academic_heads']" t-as="academic_head">
+                                <option t-att-value="academic_head['head_id']" t-esc="academic_head['department_name']"/>
+                            </t>
+                        </select>
+                        <span class="font-weight-bold">From: </span>
+                        <input class="from_date date-picker-icon custom-date-input" type="date"/>
+                        <span class="font-weight-bold"> To: </span>
+                        <input placeholder="From: " class="end_date date-picker-icon custom-date-input" type="date"/>
+                        <button class="ml-2 filter-button btn-md o_filter_performance" type="button">Filter</button>
+                        <button class="rounded btn-md btn-warning o_filter_reset" type="button">Reset</button>
+                    </div>
+                </div>
 
                 <div class="m-3" t-if="values['qualitatives']">
                     <!-- <h1 class="inline">Qualitative Analysis</h1> -->

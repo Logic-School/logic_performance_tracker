@@ -42,11 +42,11 @@ class AcademicTracker(models.Model):
             for academic_dept in academic_depts:
                 if academic_dept.manager_id:
                     academic_heads.append(academic_dept.manager_id)
-            academic_heads_data = [{'head_id':'all','name':'All'}]
+            academic_heads_data = [{'head_id':'all','department_name':'All'}]
             for academic_head in academic_heads:
                 head_data = {}
                 head_data['head_id'] = academic_head.id
-                head_data['name'] = academic_head.name
+                head_data['department_name'] = academic_head.department_id.name
                 academic_heads_data.append(head_data)
             logger.error(academic_heads_data)
 
@@ -182,7 +182,7 @@ class AcademicTracker(models.Model):
             
             }
 
-            acad_coord_perf_obj = self.env['academic.coordinator.performance'].search([('employee','=',employee.id)])
+            acad_coord_perf_obj = self.env['academic.coordinator.performance'].sudo().search([('employee','=',employee.id)])
             if acad_coord_perf_obj:
                 acad_coord_perf_obj.write(values)
             else:
@@ -198,17 +198,17 @@ class AcademicTracker(models.Model):
                 logger.error("qual aver: "+str(qualitative_average))
             logger.error("qual values: "+str(qualitative_values))
             
-            emp_qual_obj = self.env['employee.qualitative.performance'].search([('employee','=',employee.id)])
+            emp_qual_obj = self.env['employee.qualitative.performance'].sudo().search([('employee','=',employee.id)])
             if emp_qual_obj:
                 emp_qual_obj.write({
                     'overall_average': qualitative_average
                 })
             else:
-                self.env['employee.qualitative.performance'].create({
+                self.env['employee.qualitative.performance'].sudo().create({
                     'employee': employee.id,
                     'overall_average': qualitative_average,
                 })
-        qualitative_overall_objs = self.env['employee.qualitative.performance'].search([('employee','in',employees.ids)],order="overall_average desc")
+        qualitative_overall_objs = self.env['employee.qualitative.performance'].sudo().search([('employee','in',employees.ids)],order="overall_average desc")
         qualitative_overall_average_datas = {}
         for qualitative_overall_obj in qualitative_overall_objs:
             qualitative_overall_average_datas[qualitative_overall_obj.employee.name] = qualitative_overall_obj.overall_average
@@ -218,7 +218,7 @@ class AcademicTracker(models.Model):
         logger.error("dashboard_data['qualitatives']: "+str(dashboard_data['qualitatives']))
 
 
-        academic_coord_perfs = self.env['academic.coordinator.performance'].search([('employee','in',employees.ids)])
+        academic_coord_perfs = self.env['academic.coordinator.performance'].sudo().search([('employee','in',employees.ids)])
         logger.error(academic_coord_perfs)
         for coord_perf in academic_coord_perfs:
             employees_data[coord_perf.employee.id] = {}
