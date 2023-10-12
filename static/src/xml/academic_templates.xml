@@ -386,7 +386,7 @@
                                     <tr>
                                         <td t-esc="index"/>
                                         <td t-esc="values['other_performances'][employee]['name']"/>
-                                        <td style="color: green" t-esc="values['other_performances'][employee]['completed_tasks']" class="text-center"/>
+                                        <td style="color: green" t-esc="values['other_performances'][employee]['total_completed']" class="text-center"/>
                                         <!-- <td t-esc="exec_performance['average_rating']"/> -->
                                         <t t-set="star_count" t-value="Math.round(values['other_performances'][employee]['average_rating'])"/>
                                         <td>
