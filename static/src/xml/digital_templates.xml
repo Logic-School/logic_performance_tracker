@@ -87,14 +87,14 @@
 
 
                     <div class="m-3">
-                        <div class="inline-container m-2">
-                            <!-- <h1 class="inline" >Leaderboard</h1> -->
-                            <div style="margin-left: auto; margin-right: 0;">
-                            <span class="font-weight-bold">From: </span>
-                            <input class="from_date date-picker-icon custom-date-input" type="date"/>
-                            <span class="font-weight-bold"> To: </span>
-                            <input placeholder="From: " class="end_date date-picker-icon custom-date-input" type="date"/>
-                            <button class="ml-2 filter-button btn-md o_filter_performance" type="button">Filter</button>
+                        <div class="inline-container mt-2">
+                            <div style="margin-left: auto; margin-right: 0;">   
+                                <span class="font-weight-bold">From: </span>
+                                <input class="from_date date-picker-icon custom-date-input" type="date"/>
+                                <span class="font-weight-bold"> To: </span>
+                                <input placeholder="From: " class="end_date date-picker-icon custom-date-input" type="date"/>
+                                <button class="ml-2 filter-button btn-md o_filter_performance" type="button">Filter</button>
+                                <button class="rounded btn-md btn-warning o_filter_reset" type="button">Reset</button>
                             </div>
                         </div>
                         

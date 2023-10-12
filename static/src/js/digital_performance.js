@@ -35,12 +35,12 @@ odoo.define('logic_performance_tracker.digital_dashboard', function (require) {
     
     var DashboardCardAction = AbstractAction.extend({
     
-        template: 'logic_performance_tracker.digital_dashboard_template',
         xmlDependencies: ['/logic_performance_tracker/static/src/xml/digital_templates.xml'],
             
         events:{
             'click .o_filter_performance': '_onPerformanceFilterActionClicked',
             'click .o_record_state': '_onStateActionClicked',
+            'click .o_filter_reset': 'filter_reset',
         },
     
         init: function(parent, context) {
@@ -73,6 +73,27 @@ odoo.define('logic_performance_tracker.digital_dashboard', function (require) {
             this.render_dashboards()
             this.render_state_chart()
 
+        },
+        filter_reset : function(){
+            var self = this;
+    
+            // Save the current state
+            var currentState = _.extend({}, this.state);
+        
+            console.log("Current State:", currentState);
+            // console.log("state",self.state)
+    
+        
+            web_client.do_push_state({});
+            this.update_cp()
+            this.fetch_data().then(function(){
+                self.$el.empty()
+                console.log(self.data,"datat")
+                // console.log("state",self.state)
+                // self.updateState(self.state,false)
+                self.render_dashboards();
+                self.render_state_chart();
+            });
         },
 
         render_state_chart:function(){
@@ -210,11 +231,11 @@ odoo.define('logic_performance_tracker.digital_dashboard', function (require) {
             var self = this;
     
             // Get the date field's value
-            var fromDate = this.$('.from_date').val();
+            var fromDate = this.$el.find('.from_date').val();
             var endDate = this.$('.end_date').val();
     
-            console.log(fromDate)
-            console.log(endDate)
+            console.log("from_date",fromDate)
+            console.log("end_date",endDate)
             // this.$(".date_val").text(fromDate)
             self.data.dates = {}
             self.data.dates.fromDate = fromDate
