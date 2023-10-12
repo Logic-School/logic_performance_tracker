@@ -243,9 +243,19 @@ class AcademicTracker(models.Model):
         if managers:
             acad_org_datas = [manager.get_organisation_data(manager) for manager in managers]
             dept_names = [manager.department_id.name for manager in managers]
+
+            if start_date or end_date:
+                dashboard_data['other_performances'] = self.env['logic.task.other'].retrieve_performance(False,managers,start_date,end_date)
+            else:
+                dashboard_data['other_performances'] =  self.env['logic.task.other'].retrieve_performance(False,managers)
         elif manager:
             acad_org_datas = [manager.get_organisation_data(manager)]
             dept_names = [manager.department_id.name]
+
+            if start_date or end_date:
+                dashboard_data['other_performances'] = self.env['logic.task.other'].retrieve_performance(manager,False,start_date,end_date)
+            else:
+                dashboard_data['other_performances'] =  self.env['logic.task.other'].retrieve_performance(manager,False)
 
         dashboard_data['org_datas'] = acad_org_datas
         dashboard_data['dept_names'] = dept_names

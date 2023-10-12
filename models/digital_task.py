@@ -40,7 +40,7 @@ class DigitalTaskInherit(models.Model):
             start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
             dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(manager=manager,start_date=start_date,end_date=end_date)
             dashboard_data['performances'] = self.env['digital.executive.performance'].action_executive_performance(dashboard_data['qualitatives'],start_date,end_date)
-            dashboard_data['other_performances'] = self.env['logic.task.other'].retrieve_performance(manager,start_date,end_date)
+            dashboard_data['other_performances'] = self.env['logic.task.other'].retrieve_performance(manager,False,start_date,end_date)
 
         for employee in employees:  
 
