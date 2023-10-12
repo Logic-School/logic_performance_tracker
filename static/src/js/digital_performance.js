@@ -35,7 +35,7 @@ odoo.define('logic_performance_tracker.digital_dashboard', function (require) {
     
     var DashboardCardAction = AbstractAction.extend({
     
-        // template: 'logic_performance_tracker.dashboard_card_template',
+        template: 'logic_performance_tracker.digital_dashboard_template',
         xmlDependencies: ['/logic_performance_tracker/static/src/xml/digital_templates.xml'],
             
         events:{

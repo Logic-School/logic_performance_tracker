@@ -35,9 +35,11 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
 
     var DashboardCardAction = AbstractAction.extend({
 
+        // template: 'logic_performance_tracker.academic_dashboard_template',
+
         xmlDependencies: [
             '/logic_performance_tracker/static/src/xml/academic_templates.xml',
-            '/logic_performance_tracker/static/src/xml/organizational_chart.xml'
+            // '/logic_performance_tracker/static/src/xml/organizational_chart.xml'
         ],
         
         events:{
@@ -94,11 +96,11 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
             // var org_chart = QWeb.render('logic_performance_tracker.organizational_chart')
             this.$el.html(dashboard)
             this.$(".organisation_charts").empty()
-            var acad_org_datas = this.data['acad_org_datas']
+            var acad_org_datas = this.data['org_datas']
             var dept_names = this.data['dept_names']
             console.log(acad_org_datas)
-            console.log(Object.keys(this.data['acad_org_datas']).length)
-            for(let i=0; i<Object.keys(this.data['acad_org_datas']).length; i++)
+            console.log(Object.keys(this.data['org_datas']).length)
+            for(let i=0; i<Object.keys(this.data['org_datas']).length; i++)
             {
                 this.$(".organisation_charts").append($("<div id=chart-container-"+i+"></div>"))
                 this.$("#chart-container-"+i).addClass("chart-container col m-3")

@@ -247,9 +247,9 @@ class AcademicTracker(models.Model):
             acad_org_datas = [manager.get_organisation_data(manager)]
             dept_names = [manager.department_id.name]
 
-        dashboard_data['acad_org_datas'] = acad_org_datas
+        dashboard_data['org_datas'] = acad_org_datas
         dashboard_data['dept_names'] = dept_names
-
+        logger.error(dashboard_data)
         return dashboard_data
     
     @api.model
