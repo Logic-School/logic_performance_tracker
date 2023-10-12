@@ -22,14 +22,15 @@
         "static/src/xml/digital_templates.xml"
              ],
     'assets': {
-    'web.assets_backend': [
-        '/logic_performance_tracker/static/src/js/dashboard_card_view.js',
-        '/logic_performance_tracker/static/src/scss/dashboard_card_view.scss',
-        '/logic_performance_tracker/static/src/css/dashboard_card_view.css',
-        '/logic_performance_tracker/static/src/css/lib/jquery.orgchart.css',
-        '/logic_performance_tracker/static/src/css/orgchart_styles.css',
-        '/logic_performance_tracker/static/src/css/other_styles.css',
-    ]},
+        'web.assets_backend': [
+            '/logic_performance_tracker/static/src/js/dashboard_card_view.js',
+            '/logic_performance_tracker/static/src/scss/dashboard_card_view.scss',
+            '/logic_performance_tracker/static/src/css/dashboard_card_view.css',
+            '/logic_performance_tracker/static/src/css/lib/jquery.orgchart.css',
+            '/logic_performance_tracker/static/src/css/orgchart_styles.css',
+            '/logic_performance_tracker/static/src/css/other_styles.css',
+        ]
+    },
     'demo': [],
     'summary': "Performance Tracker",
     'description': "",

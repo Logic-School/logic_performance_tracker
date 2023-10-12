@@ -10,6 +10,11 @@
                     color:red;
                 }
             </style> -->
+            <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/dashboard_card_view.css"/>
+            <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/lib/jquery.orgchart.css"/>
+
+            <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/orgchart_styles.css"/>
+            <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/other_styles.css"/>
             <div class="o_dashboard_card" style="overflow-x: auto;">
                 <script type="text/javascript" src="/logic_performance_tracker/static/src/js/org_chart_component.js"/> 
 
