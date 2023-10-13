@@ -17,7 +17,7 @@ class OtherTaskInherit(models.Model):
                 employees+=manager.child_ids.ids
 
         logger.error("Other works Emps: "+str(employees))
-        self.env['other.task.performance'].sudo().unlink()
+        self.env['other.task.performance'].sudo().search([]).unlink()
 
         for employee_id in employees:
             employee_performances[employee_id] = {}
@@ -59,7 +59,7 @@ class OtherTaskInherit(models.Model):
             })
         other_task_perf_objs = self.env['other.task.performance'].search([('employee','in',employees)], order="average_rating desc")
         employee_performances = {}
-        logger.error('other_task_perf_objs ',str(other_task_perf_objs))
+        logger.error('other_task_perf_objs '+str(other_task_perf_objs))
 
         for other_task_perf_obj in other_task_perf_objs:
             employee_performances[other_task_perf_obj.employee.id] = {}

@@ -87,7 +87,7 @@
 
 
                     <div class="m-3">
-                        <div class="inline-container mt-2">
+                        <div class="inline-container mt-2 mb-2">
                             <div style="margin-left: auto; margin-right: 0;">   
                                 <span class="font-weight-bold">From: </span>
                                 <input class="from_date date-picker-icon custom-date-input" type="date"/>
@@ -103,18 +103,20 @@
                             <table style="font-size:14px;" class="table table-striped table-hover rounded-table table-borderless">
                                 <thead>
                                     <tr class="rounded" style="background-color:#78787859;">
-                                        <td colspan="6" class="text-center"><h2>Leaderboard</h2></td>
+                                        <td colspan="7" class="text-center"><h2>Leaderboard</h2></td>
                                     </tr>
                                 </thead>
                                 <thead style="background-color:#e0e0de" class="">
                                     <tr>
                                     <th scope="col" width="7%">#</th>
                                     <th scope="col" width="25%">Employee</th>
-                                    <th class="text-center" width="20" scope="col">Completed Tasks</th>
+                                    <th class="text-center" width="8" scope="col">Completed Tasks</th>
 
-                                    <th scope="col" width="20%">Tasks Rating</th>
+                                    <th scope="col" width="18%">Tasks Rating</th>
                                     <th scope="col" width="15%">Qualitative Rating</th>
                                     <th scope="col" width="13%">Overall Rating</th>
+                                    <th class="text-center" width="12" scope="col">Total Score</th>
+
 
 
                                 </tr>
@@ -127,6 +129,7 @@
                                             <td t-esc="index"/>
                                             <td t-esc="exec_performance['name']"/>
                                             <td style="color: green" t-esc="exec_performance['completed_tasks']" class="text-center"/>
+
                                             <!-- <td t-esc="exec_performance['average_rating']"/> -->
                                             <t t-set="star_count" t-value="Math.round(exec_performance['average_rating'])"/>
                                             <td>
@@ -160,7 +163,10 @@
                                                 </t>
                                                 <span class="ml-2" t-esc="exec_performance['overall_rating']"/>
                                             </td>
+                                            <td style="color: green" t-esc="exec_performance['total_score']" class="text-center"/>
+
                                         </tr>
+
                                         <t t-set="index" t-value="index+1"/>
                                         </t>
                                 </tbody>

@@ -5,13 +5,21 @@ from . import actions_common
 
 class DigitalPerformance(models.Model):
     _name = "digital.executive.performance"
-    _order = "completed_tasks desc"
+    _order = "total_score desc"
     digital_executive = fields.Many2one('res.users')
     name = fields.Char(related='digital_executive.name')
     average_rating = fields.Float(string="Average Rating")
     completed_tasks = fields.Integer(string="Completed Tasks")
     qualitative_average = fields.Float(string="Qualitative Average")
+    total_score = fields.Integer(string="Total Score")
     overall_rating = fields.Float(string="Overall Rating")
+
+    def calculate_exec_score(self,task_id,executive):
+        contrib = self.env['digital.task.contribution'].sudo().search([('task_id','=',task_id.id),('executive','=',executive.id)])
+        score = 0
+        if contrib:
+            score = (contrib[0].contribution/100)*task_id.task_type.score
+        return score
 
     @api.model
     def action_executive_performance(self,qualitatives,from_date=False,end_date=False,order="completed_tasks desc"):
@@ -29,10 +37,13 @@ class DigitalPerformance(models.Model):
                         executives_performance[executive.id]['rating']+=int(task.head_rating)
                         executives_performance[executive.id]['rated_tasks']+=1
                     executives_performance[executive.id]['completed_tasks']+=1
+                    executives_performance[executive.id]['total_score'] += self.calculate_exec_score(task,executive)
+
                 else:
                     executives_performance[executive.id] = {}
                     executives_performance[executive.id]['rating'] = 0
                     executives_performance[executive.id]['rated_tasks'] = 0
+                    executives_performance[executive.id]['total_score'] = self.calculate_exec_score(task,executive)
                     if task.head_rating!='0':
                         executives_performance[executive.id]['rating'] = int(task.head_rating)
                         executives_performance[executive.id]['rated_tasks']=1
@@ -57,11 +68,13 @@ class DigitalPerformance(models.Model):
                 tasks_average_rating = round(executives_performance[exec_id]['rating']/executives_performance[exec_id]['rated_tasks'],2)
             else:
                 tasks_average_rating = 0
+
             self.env['digital.executive.performance'].create({
                 'digital_executive': exec_id,
                 'average_rating':tasks_average_rating,
                 'completed_tasks': executives_performance[exec_id]['completed_tasks'],
                 'qualitative_average': qualitative_average,
+                'total_score': executives_performance[exec_id]['total_score'],
                 'overall_rating': round((tasks_average_rating+qualitative_average)/2,2) if qualitative_average>0 else tasks_average_rating
 
             })
@@ -76,6 +89,7 @@ class DigitalPerformance(models.Model):
             current_performance['qualitative_average'] = exec_performance.qualitative_average
             current_performance['completed_tasks'] = exec_performance.completed_tasks
             current_performance['overall_rating'] = exec_performance.overall_rating
+            current_performance['total_score'] = exec_performance.total_score
 
             executives_performances.append(current_performance)
 
