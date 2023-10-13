@@ -31,7 +31,7 @@ class HrEmployeeInherit(models.Model):
         org_data = {
             'id': employee.id,
             'name': employee.name,
-            'title': employee.job_id.name,
+            'title': employee.job_title,
             'image':employee.image_1920,
             'children': [],
         }
