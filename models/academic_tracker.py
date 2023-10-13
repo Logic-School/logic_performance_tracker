@@ -221,18 +221,18 @@ class AcademicTracker(models.Model):
         academic_coord_perfs = self.env['academic.coordinator.performance'].sudo().search([('employee','in',employees.ids)])
         logger.error(academic_coord_perfs)
         for coord_perf in academic_coord_perfs:
-            employees_data[coord_perf.employee.id] = {}
-            employees_data[coord_perf.employee.id]['name'] = coord_perf.employee.name
-            employees_data[coord_perf.employee.id]['upaya_count'] = coord_perf.upaya_count
-            employees_data[coord_perf.employee.id]['yes_plus_count'] = coord_perf.yes_plus_count
-            employees_data[coord_perf.employee.id]['one2one_count'] = coord_perf.one2one_count
-            employees_data[coord_perf.employee.id]['sfc_count'] = coord_perf.sfc_count
-            employees_data[coord_perf.employee.id]['exam_count'] = coord_perf.exam_count
-            employees_data[coord_perf.employee.id]['mock_interview_count'] = coord_perf.mock_interview_count
-            employees_data[coord_perf.employee.id]['cip_excel_count'] = coord_perf.cip_excel_count
-            employees_data[coord_perf.employee.id]['bring_buddy_count'] = coord_perf.bring_buddy_count
-            employees_data[coord_perf.employee.id]['total_completed'] = coord_perf.total_completed
-            logger.error(employees_data)
+            emp_id_name = str(coord_perf.employee.id)+" "
+            employees_data[emp_id_name] = {}
+            employees_data[emp_id_name]['name'] = coord_perf.employee.name
+            employees_data[emp_id_name]['upaya_count'] = coord_perf.upaya_count
+            employees_data[emp_id_name]['yes_plus_count'] = coord_perf.yes_plus_count
+            employees_data[emp_id_name]['one2one_count'] = coord_perf.one2one_count
+            employees_data[emp_id_name]['sfc_count'] = coord_perf.sfc_count
+            employees_data[emp_id_name]['exam_count'] = coord_perf.exam_count
+            employees_data[emp_id_name]['mock_interview_count'] = coord_perf.mock_interview_count
+            employees_data[emp_id_name]['cip_excel_count'] = coord_perf.cip_excel_count
+            employees_data[emp_id_name]['bring_buddy_count'] = coord_perf.bring_buddy_count
+            employees_data[emp_id_name]['total_completed'] = coord_perf.total_completed
             # coord_perf.total_completed = 
 
         dashboard_data['coordinator_data'] = employees_data
@@ -256,14 +256,15 @@ class AcademicTracker(models.Model):
                 dashboard_data['other_performances'] = self.env['logic.task.other'].retrieve_performance(manager,False,start_date,end_date)
             else:
                 dashboard_data['other_performances'] =  self.env['logic.task.other'].retrieve_performance(manager,False)
+        logger.error("dashboard_data['other_performances'] "+str(dashboard_data['other_performances']))
 
         dashboard_data['org_datas'] = acad_org_datas
         dashboard_data['dept_names'] = dept_names
-        logger.error(dashboard_data)
         return dashboard_data
     
     @api.model
     def retrieve_employee_academic_data(self,employee_id,start_date=False,end_date=False):
+        employee_id = int(employee_id.strip())
         logger = logging.getLogger("Debugger")
         logger.error("from"+start_date)
         logger.error("end"+end_date)
