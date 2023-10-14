@@ -80,23 +80,11 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
     
             this._super.apply(this, arguments)
             this.render_dashboards()
+            this.render_organisation_chart()
         },
 
 
-
-        render_dashboards: function() {
-            // let values = self.state.data;
-            // console.log(self,"dash_rend")
-            var self = this
-            console.log(this)
-            var dashboard = QWeb.render('logic_performance_tracker.academic_dashboard_template', {
-                values: this.data
-            });
-            // this.updateState(self.state,false)
-            // console.log(dashboard)
-            // this.$el.empty()
-            // var org_chart = QWeb.render('logic_performance_tracker.organizational_chart')
-            this.$el.html(dashboard)
+        render_organisation_chart: function(){
             this.$(".organisation_charts").empty()
             var acad_org_datas = this.data['org_datas']
             var dept_names = this.data['dept_names']
@@ -124,6 +112,21 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
                     }
                 });
             }
+            return $.when()
+
+        },
+
+
+        render_dashboards: function() {
+            // let values = self.state.data;
+            // console.log(self,"dash_rend")
+            var self = this
+            console.log(this)
+            var dashboard = QWeb.render('logic_performance_tracker.academic_dashboard_template', {
+                values: this.data
+            });
+            this.$el.html(dashboard)
+
                 // this.$(".org_chart_parent").append(org_chart)
 
             return $.when()
@@ -133,10 +136,16 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
         _onEmployeeNodeClicked: function (ev){
             var self = this
             let emp_id = $(ev.currentTarget).attr('id')
+            let emp_name = 
             console.log("empt id: ",emp_id)
+            this._rpc({
+                model: "hr.employee", // Replace with your actual model name
+                method: 'search_read', // Use 'search_read' to retrieve records
+                domain: [['id','=',emp_id]],
+            }).then(function (employee) {
             var action = {
                 type: 'ir.actions.client',
-                name: "Employee Performance",
+                name: employee[0].name,
                 // res_model: self.model_name,
                 // view_type: 'tree',
                 // target: 'main',
@@ -148,6 +157,9 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
 
             }
             return self.do_action(action,{'hello': true});
+        }).catch(function(err){
+            console.log(err)
+        })
         },
 
         _onEmployeeNameClicked: function (ev) {
@@ -224,6 +236,7 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
                 // Set the state with the retrieved data
                 self.data = data
                 self.render_dashboards()
+                self.render_organisation_chart()
                 self.$(".from_date").val(fromDate)
                 self.$(".end_date").val(endDate)
                 self.$(".academic_head").val(academic_head_id)
@@ -275,6 +288,7 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
                 // console.log("state",self.state)
                 // self.updateState(self.state,false)
                 self.render_dashboards();
+                self.render_organisation_chart()
             });
         },
 
@@ -297,6 +311,7 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
                 // console.log("state",self.state)
                 // self.updateState(self.state,false)
                 self.render_dashboards();
+                self.render_organisation_chart()
             });
         
         },

@@ -3,8 +3,76 @@
 <templates xml:space="preserve">
     <!-- Define your QWeb template for the dashboard_card view -->
     <t t-name="logic_performance_tracker.employee_performance_template">
-
+        <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/employee_performance_styles.css"/>
         <div t-if="values">
+            <div class="container-fluid mt-3">
+                <div class="row justify-content-center">
+                    <div class="col-auto">
+
+                        <div t-if="values['personal_data']" class="col-auto employee_details_card card mt-3 mr-auto" style="width:fit-content">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="personal-details">
+                                        <div class="text-center" >
+                                            <img t-att-src="values['personal_data']['image']" class="m-3" style="height: 100px; width:auto; border-radius:20px;" />
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="label">Name:</span>
+                                            <span class="value" t-esc="values['personal_data']['name']">John Doe</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="label">Position:</span>
+                                            <span class="value" t-esc="values['personal_data']['job_title']">Senior Software Developer</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="label">Department:</span>
+                                            <span class="value" t-esc="values['personal_data']['department_name']"/>
+                                        </div>
+                                        <!-- <div class="detail-item mt-3">
+                                            <span class="label">Projects Completed:</span>
+                                            <span class="value">15</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="label">Tasks Completed:</span>
+                                            <span class="value">50</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="label">Student Feedback Score:</span>
+                                            <span class="value">4.5/5</span>
+                                        </div> -->
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="employee_details_card card mt-3">
+                            <div class="card-body">
+                                <h2 class="card-title"><u>Performance Details</u></h2>
+                                <div class="detail-item" t-if="values['common_performance']">
+                                    <span class="label">Miscellaneous Tasks:</span>
+                                    <span class="number-value" t-esc="values['common_performance']['misc_task_count']"/>
+                                </div>
+                                <div class="detail-item" t-if="values['academic_data']">
+                                    <span class="label">Student rating:</span>
+                                    <span class="number-value" t-esc="values['academic_data']['student_feedback_rating']"/>
+                                    <span>/ 5</span>
+                                </div>
+                                <div class="detail-item" t-if="values['common_performance']">
+                                    <span class="label">Qualitative rating:</span>
+                                    <span class="number-value" t-esc="values['common_performance']['qualitative_rating']"/>
+                                    <span>/ 5</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Tasks Completed:</span>
+                                    <span class="number-value">50</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div t-if="values['academic_data']">
                 <div t-if="values">
                     <div class="row m-2">

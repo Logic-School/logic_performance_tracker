@@ -73,6 +73,7 @@ odoo.define('logic_performance_tracker.digital_dashboard', function (require) {
             this._super.apply(this, arguments)
             this.render_dashboards()
             this.render_state_chart()
+            this.render_organisation_chart()
 
         },
         filter_reset : function(){
@@ -94,6 +95,7 @@ odoo.define('logic_performance_tracker.digital_dashboard', function (require) {
                 // self.updateState(self.state,false)
                 self.render_dashboards();
                 self.render_state_chart();
+                self.render_organisation_chart()
             });
         },
 
@@ -140,20 +142,8 @@ odoo.define('logic_performance_tracker.digital_dashboard', function (require) {
     
         
         },
-    
-        render_dashboards: function() {
-            // let values = self.state.data;
-            // console.log(self,"dash_rend")
-            var self = this
-            console.log(this)
-            var dashboard = QWeb.render('logic_performance_tracker.digital_dashboard_template', {
-                values: this.data
-            });
-            // this.updateState(self.state,false)
-            // console.log(dashboard)
-            // this.$el.empty()
-            this.$el.html(dashboard)
-    
+
+        render_organisation_chart: function(){
             this.$(".organisation_charts").empty()
             var org_datas = this.data['org_datas']
             console.log(org_datas)
@@ -177,6 +167,22 @@ odoo.define('logic_performance_tracker.digital_dashboard', function (require) {
                     }
                 });
             }
+            return $.when()
+
+        },
+    
+        render_dashboards: function() {
+            // let values = self.state.data;
+            // console.log(self,"dash_rend")
+            var self = this
+            console.log(this)
+            var dashboard = QWeb.render('logic_performance_tracker.digital_dashboard_template', {
+                values: this.data
+            });
+            // this.updateState(self.state,false)
+            // console.log(dashboard)
+            // this.$el.empty()
+            this.$el.html(dashboard)
     
             return $.when()
     
@@ -222,6 +228,7 @@ odoo.define('logic_performance_tracker.digital_dashboard', function (require) {
                 // console.log("state",self.state)
                 // self.updateState(self.state,false)
                 self.render_dashboards();
+                self.render_organisation_chart()
                 self.render_state_chart()
 
             });
@@ -269,10 +276,16 @@ odoo.define('logic_performance_tracker.digital_dashboard', function (require) {
         _onEmployeeNodeClicked: function (ev){
             var self = this
             let emp_id = $(ev.currentTarget).attr('id')
+            let emp_name = 
             console.log("empt id: ",emp_id)
+            this._rpc({
+                model: "hr.employee", // Replace with your actual model name
+                method: 'search_read', // Use 'search_read' to retrieve records
+                domain: [['id','=',emp_id]],
+            }).then(function (employee) {
             var action = {
                 type: 'ir.actions.client',
-                name: "Employee Performance",
+                name: employee[0].name,
                 // res_model: self.model_name,
                 // view_type: 'tree',
                 // target: 'main',
@@ -284,6 +297,9 @@ odoo.define('logic_performance_tracker.digital_dashboard', function (require) {
 
             }
             return self.do_action(action,{'hello': true});
+        }).catch(function(err){
+            console.log(err)
+        })
         },
     
         _onStateActionClicked: function (ev) {
