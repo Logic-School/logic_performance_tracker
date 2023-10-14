@@ -41,6 +41,7 @@ odoo.define('logic_performance_tracker.digital_dashboard', function (require) {
             'click .o_filter_performance': '_onPerformanceFilterActionClicked',
             'click .o_record_state': '_onStateActionClicked',
             'click .o_filter_reset': 'filter_reset',
+            'click .node': '_onEmployeeNodeClicked',
         },
     
         init: function(parent, context) {
@@ -263,6 +264,26 @@ odoo.define('logic_performance_tracker.digital_dashboard', function (require) {
             });
     
             // this.updateState(self.state,false)
+        },
+
+        _onEmployeeNodeClicked: function (ev){
+            var self = this
+            let emp_id = $(ev.currentTarget).attr('id')
+            console.log("empt id: ",emp_id)
+            var action = {
+                type: 'ir.actions.client',
+                name: "Employee Performance",
+                // res_model: self.model_name,
+                // view_type: 'tree',
+                // target: 'main',
+                tag: 'employee_performance',
+                target: 'current',
+                // nodestroy: true
+                params: {'employee_id': emp_id},
+                context: {'hello1': true},
+
+            }
+            return self.do_action(action,{'hello': true});
         },
     
         _onStateActionClicked: function (ev) {

@@ -8,6 +8,7 @@
 
             <script type="text/javascript" src="/logic_performance_tracker/static/src/js/digital_performance.js"/>
             <script type="text/javascript" src="/logic_performance_tracker/static/src/js/academic_performance.js"/>
+            <script type="text/javascript" src="/logic_performance_tracker/static/src/js/employee_performance.js"/>
 
 
 

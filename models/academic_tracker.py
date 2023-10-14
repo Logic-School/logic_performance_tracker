@@ -84,9 +84,13 @@ class AcademicTracker(models.Model):
             if managers:
                 logger.error("dept childs: "+str(department_obj[0].child_ids.ids))
                 employees = self.env['hr.employee'].sudo().search([('department_id','in',department_obj[0].child_ids.ids),('parent_id','in',managers.ids)])
+                employees+=managers
+
             else:
                 logger.error("inside else, manager: "+manager.name)
                 employees = self.env['hr.employee'].sudo().search([('department_id','=',manager.department_id.id),('parent_id','=',manager.id)])
+                employees+=manager
+
             logger.error("employees: "+str(employees))
             employee_user_ids = employees.mapped('user_id.id')
             logger.error("employee_user_ids: "+str(employee_user_ids))
