@@ -261,6 +261,8 @@ odoo.define('logic_performance_tracker.digital_dashboard', function (require) {
                 self.data = data
                 self.render_dashboards()
                 self.render_state_chart()
+                self.render_organisation_chart()
+
 
                 self.$(".from_date").val(fromDate)
                 self.$(".end_date").val(endDate)
