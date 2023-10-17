@@ -1,10 +1,29 @@
 from odoo import fields,api,models
 import logging
+from collections import deque
 
 import sys
 
 # Set the recursion limit to a higher value
-sys.setrecursionlimit(3000)  # Set the desired limit
+
+def get_sorted_record_list(records):
+    records_as_list = []
+    for record in records:
+         records_as_list.append(record)
+    sorted_recs = []
+    max_len = 0
+    max_ind = 0
+    while(len(records_as_list)!=0):
+        i=0
+        max_ind = 0
+        for record in records_as_list:
+            if len(record.in_charge_child_ids) > max_len:
+                max_len = len(record.in_charge_child_ids)
+                max_ind = i
+            i+=1
+        sorted_recs.append(records_as_list.pop(max_ind))
+
+    return sorted_recs
 
 class HrEmployeeInherit(models.Model):
     _inherit = "hr.employee"
@@ -12,37 +31,44 @@ class HrEmployeeInherit(models.Model):
     is_in_charge = fields.Boolean(string="Is In charge")
     in_charge_child_ids = fields.One2many("hr.employee","in_charge_id",string="In Charge Childs")
 
+
+
     def get_organisation_data(self,employee, processed_ids=None):
-        if processed_ids is None:
-            processed_ids = set()
+            if processed_ids is None:
+                processed_ids = set()
 
-        # Skip if the employee has already been processed
-        if employee.id in processed_ids:
-            return None
+            # Skip if the employee has already been processed
+            if employee.id in processed_ids:
+                return None
 
-        # Add the current employee to the set of processed IDs
-        processed_ids.add(employee.id)
+            # Add the current employee to the set of processed IDs
+            processed_ids.add(employee.id)
 
-        # Determine the set of children based on availability of in_charge_child_ids
-        # children_ids = employee.in_charge_child_ids if employee.in_charge_child_ids else employee.child_ids
-        children_ids = employee.in_charge_child_ids + employee.child_ids
+            # Determine the set of children based on availability of in_charge_child_ids
+            # children_ids = employee.in_charge_child_ids if employee.in_charge_child_ids else employee.child_ids
+            in_charge_child_ids = self.env['hr.employee'].search([('in_charge_id','=',employee.id)],order="name asc")
+            child_ids = self.env['hr.employee'].search([('parent_id','=',employee.id)],order="name asc")
+            children_ids = in_charge_child_ids + child_ids
+            children_ids = get_sorted_record_list(children_ids)
 
-        # Build the hierarchy for the current employee
-        org_data = {
-            'id': employee.id,
-            'name': employee.name,
-            'title': employee.job_title,
-            'image':employee.image_1920,
-            'children': [],
-        }
+            # Build the hierarchy for the current employee
+            org_data = {
+                'id': employee.id,
+                'name': employee.name,
+                'title': employee.job_title,
+                'image':employee.image_1920,
+                'children': [],
+            }
 
-        # Recursively get hierarchy for children
-        for child_id in children_ids:
-            child_hierarchy = self.get_organisation_data(child_id, processed_ids)
-            if child_hierarchy:
-                org_data['children'].append(child_hierarchy)
+            # Recursively get hierarchy for children
+            for child_id in children_ids:
+                child_hierarchy = self.get_organisation_data(child_id, processed_ids)
+                if child_hierarchy:
+                    org_data['children'].append(child_hierarchy)
 
-        return org_data
+            return org_data
+
+
 
 
 
