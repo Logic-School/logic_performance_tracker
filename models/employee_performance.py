@@ -19,6 +19,8 @@ class LogicEmployeePerformance(models.Model):
             domain = [['coordinator','=',employee.user_id.id]]
         elif model_name=="one_to_one.meeting":
             domain = [['coordinator_id','=',employee.user_id.id]]
+        elif model_name=="logic.mock_interview":
+            domain = [['coordinator','=',employee.user_id.id]]
         elif model_name=="logic.cip.form":
             domain = [['coordinator_id','=',employee.user_id.id]]
         elif model_name=="bring.your.buddy":
