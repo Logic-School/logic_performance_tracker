@@ -22,15 +22,15 @@
                                             <img t-att-src="values['personal_data']['image']" class="m-3" style="height: 100px; width:auto; border-radius:20px;" />
                                         </div>
                                         <div class="detail-item">
-                                            <span class="label">Name:</span>
+                                            <span class="label1">Name:</span>
                                             <span class="value" t-esc="values['personal_data']['name']">John Doe</span>
                                         </div>
                                         <div class="detail-item">
-                                            <span class="label">Position:</span>
+                                            <span class="label1">Position:</span>
                                             <span class="value" t-esc="values['personal_data']['job_title']">Senior Software Developer</span>
                                         </div>
                                         <div class="detail-item">
-                                            <span class="label">Department:</span>
+                                            <span class="label1">Department:</span>
                                             <span class="value" t-esc="values['personal_data']['department_name']"/>
                                         </div>
                                         <!-- <div class="detail-item mt-3">
@@ -56,21 +56,21 @@
                             <div class="card-body">
                                 <h2 class="card-title"><u>Performance Details</u></h2>
                                 <div class="detail-item" t-if="values['common_performance']">
-                                    <span class="label">Miscellaneous Tasks:</span>
+                                    <span class="label1">Miscellaneous Tasks:</span>
                                     <span class="number-value" t-esc="values['common_performance']['misc_task_count']"/>
                                 </div>
                                 <div class="detail-item" t-if="values['academic_data']">
-                                    <span class="label">Student rating:</span>
+                                    <span class="label1">Student rating:</span>
                                     <span class="number-value" t-esc="values['academic_data']['student_feedback_rating']"/>
                                     <span>/ 5</span>
                                 </div>
                                 <div class="detail-item" t-if="values['common_performance']">
-                                    <span class="label">Qualitative rating:</span>
+                                    <span class="label1">Qualitative rating:</span>
                                     <span class="number-value" t-esc="values['common_performance']['qualitative_rating']"/>
                                     <span>/ 5</span>
                                 </div>
                                 <div class="detail-item">
-                                    <span class="label">Tasks Completed:</span>
+                                    <span class="label1">Tasks Completed:</span>
                                     <span class="number-value">50</span>
                                 </div>
                             </div>
