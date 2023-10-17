@@ -4,27 +4,6 @@ from collections import deque
 
 import sys
 
-# Set the recursion limit to a higher value
-
-def get_sorted_record_list(records):
-    records_as_list = []
-    for record in records:
-         records_as_list.append(record)
-    sorted_recs = []
-    max_len = 0
-    max_ind = 0
-    while(len(records_as_list)!=0):
-        i=0
-        max_ind = 0
-        for record in records_as_list:
-            if len(record.in_charge_child_ids) > max_len:
-                max_len = len(record.in_charge_child_ids)
-                max_ind = i
-            i+=1
-        sorted_recs.append(records_as_list.pop(max_ind))
-
-    return sorted_recs
-
 class HrEmployeeInherit(models.Model):
     _inherit = "hr.employee"
     in_charge_id = fields.Many2one("hr.employee",string="In Charge")
@@ -49,7 +28,8 @@ class HrEmployeeInherit(models.Model):
             in_charge_child_ids = self.env['hr.employee'].search([('in_charge_id','=',employee.id)],order="name asc")
             child_ids = self.env['hr.employee'].search([('parent_id','=',employee.id)],order="name asc")
             children_ids = in_charge_child_ids + child_ids
-            children_ids = get_sorted_record_list(children_ids)
+            children_ids = sorted(children_ids, key=lambda record: len(record.in_charge_child_ids), reverse=True)
+
 
             # Build the hierarchy for the current employee
             org_data = {
