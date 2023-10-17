@@ -46,7 +46,7 @@ class LogicEmployeePerformance(models.Model):
             return average_rating
         else:
             return 0
-
+        
     def get_employee_academic_data(self,employee):
         academic_coord_perfs = self.env['academic.coordinator.performance'].sudo().search([('employee','=',employee.id)])
         if academic_coord_perfs:
@@ -75,6 +75,7 @@ class LogicEmployeePerformance(models.Model):
         if qualitative_perf:
             common_performance['qualitative_rating'] = qualitative_perf[0].overall_average
         common_performance['misc_task_count'] = self.env['logic.task.other'].search_count([('task_creator','=',employee.user_id.id)])
+        common_performance['to_do_count'] = self.env['to_do.tasks'].sudo().search_count([('state','=','completed'),'|',('assigned_to','=',employee.user_id.id),('coworkers_ids','in',[employee.user_id.id] )])
 
         return common_performance
 

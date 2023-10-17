@@ -70,8 +70,8 @@
                                     <span>/ 5</span>
                                 </div>
                                 <div class="detail-item">
-                                    <span class="label1">Tasks Completed:</span>
-                                    <span class="number-value">50</span>
+                                    <span class="label1">To Do Completed:</span>
+                                    <span class="number-value" t-esc="values['common_performance']['to_do_count']"/>
                                 </div>
                             </div>
                         </div>
