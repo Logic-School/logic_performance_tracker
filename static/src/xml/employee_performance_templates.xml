@@ -3,6 +3,11 @@
 <templates xml:space="preserve">
     <!-- Define your QWeb template for the dashboard_card view -->
     <t t-name="logic_performance_tracker.employee_performance_template">
+        <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/dashboard_card_view.css"/>
+        <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/lib/jquery.orgchart.css"/>
+
+        <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/orgchart_styles.css"/>
+        <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/other_styles.css"/>
         <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/employee_performance_styles.css"/>
         <div t-if="values">
             <div class="container-fluid mt-3">
