@@ -47,6 +47,16 @@ class LogicEmployeePerformance(models.Model):
                 to_do_data[date.month]+=1
         return list(to_do_data.values())
     
+    def get_monthly_digital_counts(self,employee,year):
+        digital_tasks = self.env['digital.task'].sudo().search([('state','=','completed'),('assigned_execs','in',[employee.user_id.id] )])
+        digital_tasks = digital_tasks.filtered(lambda task: task.date_completed.year==year)
+        digital_data = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0}
+        for task in digital_tasks:
+            if task.date_completed:
+                date = task.date_completed
+                digital_data[date.month]+=1
+        return list(digital_data.values())
+
     @api.model
     def get_line_chart_datasets(self,employee_id,year="2023"):
         employee = self.env['hr.employee'].sudo().browse(int(employee_id))
@@ -70,6 +80,16 @@ class LogicEmployeePerformance(models.Model):
         }
         datasets.append(misc_data)
         datasets.append(to_do_data)
+
+        if employee.department_id.name=="Digital":
+            digital_data = {
+                'label': 'Digital Tasks',
+                'backgroundColor': 'rgba(255,255,255, 0.2)',
+                'borderColor': 'rgba(112, 63, 205, 0.8)',
+                'borderWidth': 1,
+                'data': self.get_monthly_digital_counts(employee,year)
+            }
+            datasets.append(digital_data)
         return datasets
 
     def get_employee_personal_data(self,employee):
@@ -118,8 +138,8 @@ class LogicEmployeePerformance(models.Model):
         qualitative_perf = self.env['employee.qualitative.performance'].sudo().search([('employee','=',employee.id)])
         if qualitative_perf:
             common_performance['qualitative_rating'] = qualitative_perf[0].overall_average
-        common_performance['misc_task_count'] = self.env['logic.task.other'].sudo().search_count([('task_creator','=',employee.user_id.id)])
-        common_performance['to_do_count'] = self.env['to_do.tasks'].sudo().search_count([('state','=','completed'),'|',('assigned_to','=',employee.user_id.id),('coworkers_ids','in',[employee.user_id.id] )])        
+        common_performance['misc_task_count'] = self.env['logic.task.other'].sudo().search_count([('task_creator','=',employee.user_id.id),('state','=','completed')])
+        common_performance['to_do_count'] = self.env['to_do.tasks'].sudo().search_count([('state','=','completed'),'|',('assigned_to','=',employee.user_id.id),('coworkers_ids','in',[employee.user_id.id] ), ('state','=','completed')])        
         return common_performance
 
     @api.model
