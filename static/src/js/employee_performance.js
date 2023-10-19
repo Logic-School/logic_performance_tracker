@@ -45,6 +45,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
         init: function(parent, context) {
             this._super(parent, context);
             console.log("context",context)
+            this.line_chart_datasets = []
             this.employee_id = context.params.employee_id
             this.data = {};
         },
@@ -66,12 +67,62 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             });
         },
 
+        retrieve_line_chart_data: function(){
+            var self = this;
+                var def = self._rpc({
+                    model: 'logic.employee.performance', // Replace with your actual model name
+                    method: 'get_line_chart_datasets', // Use 'search_read' to retrieve records
+                    args: [self.employee_id,'2023'], // Define search domain if needed
+                    // kwargs: {},
+                }).then(function (data) {
+                    self.line_chart_datasets = data;
+                    self.render_line_chart();
+
+                }).catch(function(err){
+                    console.log(err)
+                })
+                return $.when(def)
+        },
+
         start: function() {
     
             this._super.apply(this, arguments)
             console.log("action cont: ",this.action)
-
             this.render_dashboards()
+            this.retrieve_line_chart_data()
+            // this.render_line_chart();
+        },
+
+        render_line_chart: function() {
+            var self = this
+            var data = {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                datasets: this.line_chart_datasets
+            };
+
+            // Configuration options
+            var options = {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            };
+
+            var canvas1 = this.$('#LineChart1')
+            // var canvas2 = this.$('#LineChart2')
+
+            // Create a new chart with jQuery
+            var LineChart1 = new Chart(canvas1, {
+                type: 'line',
+                data: data,
+                options: options
+            });
+            // var LineChart2 = new Chart(canvas2, {
+            //     type: 'line',
+            //     data: data,
+            //     options: options
+            // });
         },
 
         _onModelCardClickAction: function(ev) {

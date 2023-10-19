@@ -316,6 +316,7 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
         
         },
 
+
         _onCardActionClicked: function (ev) {
             // let record_state = $(ev.currentTarget).find('.state').text()
             // let state_title = $(ev.currentTarget).find('.stat-title').text()

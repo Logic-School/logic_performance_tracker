@@ -8,7 +8,8 @@
             <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/orgchart_styles.css"/>
             <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/other_styles.css"/>
             <div class="o_dashboard_card">
-                <script type="text/javascript" src="/logic_performance_tracker/static/src/js/org_chart_component.js"/> 
+                <script type="text/javascript" src="/logic_performance_tracker/static/src/js/org_chart_component.js"/>
+ 
                 <!-- <script >
                     var a = '<t t-esc="Object.keys(values)"/>';
                     console.log(Object.values(a))
@@ -177,7 +178,6 @@
                         <t t-set="index_id" t-value="index_id+1"/>
                     </t>
                 </div>
-
                 <div class="inline-container mt-2">
                     <div style="margin-left: auto; margin-right: 0;">
                         <span class="font-weight-bold">Department </span>
