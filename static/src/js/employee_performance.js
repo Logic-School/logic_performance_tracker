@@ -102,6 +102,9 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
 
             // Configuration options
             var options = {
+                responsive: true,
+                maintainAspectRatio: true,
+
                 scales: {
                     y: {
                         beginAtZero: true

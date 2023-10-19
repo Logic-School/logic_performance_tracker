@@ -28,7 +28,7 @@ class LogicEmployeePerformance(models.Model):
         return domain
     
     def get_monthly_misc_counts(self,employee,year):
-        misc_tasks = self.env['logic.task.other'].search([('task_creator_employee','=',employee.id),('state','=','completed')])
+        misc_tasks = self.env['logic.task.other'].sudo().search([('task_creator_employee','=',employee.id),('state','=','completed')])
         misc_tasks = misc_tasks.filtered(lambda task: (task.date_completed or task.date).year==year)
         misc_data = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0}
         for task in misc_tasks:
@@ -49,7 +49,7 @@ class LogicEmployeePerformance(models.Model):
     
     @api.model
     def get_line_chart_datasets(self,employee_id,year="2023"):
-        employee = self.env['hr.employee'].browse(int(employee_id))
+        employee = self.env['hr.employee'].sudo().browse(int(employee_id))
         logger = logging.getLogger("Debugger: ")
         year = int(year)
         datasets = []
@@ -115,17 +115,17 @@ class LogicEmployeePerformance(models.Model):
     def get_common_performance_data(self,employee):
         common_performance = {}
         common_performance['qualitative_rating'] = 0
-        qualitative_perf = self.env['employee.qualitative.performance'].search([('employee','=',employee.id)])
+        qualitative_perf = self.env['employee.qualitative.performance'].sudo().search([('employee','=',employee.id)])
         if qualitative_perf:
             common_performance['qualitative_rating'] = qualitative_perf[0].overall_average
-        common_performance['misc_task_count'] = self.env['logic.task.other'].search_count([('task_creator','=',employee.user_id.id)])
+        common_performance['misc_task_count'] = self.env['logic.task.other'].sudo().search_count([('task_creator','=',employee.user_id.id)])
         common_performance['to_do_count'] = self.env['to_do.tasks'].sudo().search_count([('state','=','completed'),'|',('assigned_to','=',employee.user_id.id),('coworkers_ids','in',[employee.user_id.id] )])        
         return common_performance
 
     @api.model
     def retrieve_employee_performance(self,employee_id):
         logger = logging.getLogger("Debugger: ")
-        employee = self.env['hr.employee'].browse(int(employee_id))
+        employee = self.env['hr.employee'].sudo().browse(int(employee_id))
         employee_data = {}
         employee_data['personal_data'] = self.get_employee_personal_data(employee)
         employee_data['academic_data'] = self.get_employee_academic_data(employee)

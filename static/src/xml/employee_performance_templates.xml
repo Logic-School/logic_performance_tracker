@@ -83,9 +83,9 @@
 
             <div class="container-fluid mt-3">
                 <div class="row justify-content-center">
-                    <div class="col-sm-8">
-                        <div class="m-4" style="">
-                            <canvas id="LineChart1"></canvas>
+                    <div class="col-auto" style="">
+                        <div class="canvas-container" style="position: relative; width:600px; height:350px;">
+                            <canvas id="LineChart1" style="width:600px;height:350px;"></canvas>
                         </div>
                     </div>
                     <!-- <div class="col-sm-6">
