@@ -1,4 +1,4 @@
-odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
+odoo.define('logic_performance_tracker.marketing_dashboard', function (require) {
     "use strict";
     
     const ActionMenus = require('web.ActionMenus');
@@ -30,18 +30,14 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
     var abstractView = require('web.AbstractView');
     var _t = core._t;
     var QWeb = core.qweb;
-    // require('logic_performance_tracker/static/src/js/orgchart.js');
-    const { useRef, useSubEnv } = hooks;
 
     var DashboardCardAction = AbstractAction.extend({
 
-        // template: 'logic_performance_tracker.academic_dashboard_template',
-
         xmlDependencies: [
-            '/logic_performance_tracker/static/src/xml/academic_templates.xml',
+            '/logic_performance_tracker/static/src/xml/marketing_templates.xml',
             // '/logic_performance_tracker/static/src/xml/organizational_chart.xml'
         ],
-        
+
         events:{
             'click .o_filter_performance': '_onPerformanceFilterActionClicked',
             'click .o_filter_reset': 'filter_reset',
@@ -51,11 +47,11 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
             // uncomment the below line to view records on clicking the card
             // 'click .o_model_count': '_onCardActionClicked',
         },
+
     
         init: function(parent, context) {
-
             this._super(parent, context);
-            this.model_name = 'academic.tracker'
+            this.model_name = 'marketing.tracker'
             this.data = {};
         },
 
@@ -116,13 +112,12 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
 
         },
 
-
         render_dashboards: function() {
             // let values = self.state.data;
             // console.log(self,"dash_rend")
             var self = this
             console.log(this)
-            var dashboard = QWeb.render('logic_performance_tracker.academic_dashboard_template', {
+            var dashboard = QWeb.render('logic_performance_tracker.marketing_dashboard_template', {
                 values: this.data
             });
             this.$el.html(dashboard)
@@ -136,7 +131,6 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
         _onEmployeeNodeClicked: function (ev){
             var self = this
             let emp_id = $(ev.currentTarget).attr('id')
-            let emp_name = 
             console.log("empt id: ",emp_id)
             this._rpc({
                 model: "hr.employee", // Replace with your actual model name
@@ -160,47 +154,6 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
         }).catch(function(err){
             console.log(err)
         })
-        },
-
-        _onEmployeeNameClicked: function (ev) {
-            var self = this;
-    
-            // Get the date field's value
-            var fromDate = this.$('.from_date').val();
-            var endDate = this.$('.end_date').val();
-            console.log("from",fromDate==="")
-            console.log("To",endDate)
-            var employee_id = $(ev.currentTarget).find(".o_employee_id").data("empid")
-            console.log("hello",employee_id)
-            var next_element = $(ev.currentTarget).next()
-            
-            if (next_element.attr("class")==='o_academic_data_subtable')
-            {
-                $(ev.currentTarget).next().remove(".o_academic_data_subtable")
-            }
-            else
-            {
-                this._rpc({
-                    model: this.model_name, // Replace with your actual model name
-                    method: 'retrieve_employee_academic_data', // Use 'search_read' to retrieve records
-                    args: [
-                        employee_id,fromDate,endDate
-                    ], 
-                    // Define search domain if needed
-                    // kwargs: {},
-                }).then(function (values) {
-                    // Set the state with the retrieved data
-                    console.log(values)
-                    var coordinator_subdata = QWeb.render('logic_performance_tracker.academic_coordinator_data', {
-                        values: values
-                    });
-                    $(ev.currentTarget).after(coordinator_subdata)
-                    
-                }).catch(function(err){
-                    console.log(err)
-                });
-            }
-
         },
 
         _onPerformanceFilterActionClicked: function (ev) {
@@ -270,6 +223,7 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
             var self = this;
         },
 
+
         filter_reset : function(){
             var self = this;
     
@@ -291,6 +245,7 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
                 self.render_organisation_chart()
             });
         },
+
 
         on_reverse_breadcrumb : function(){
             // )
@@ -315,52 +270,9 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
             });
         
         },
-
-
-        _onCardActionClicked: function (ev) {
-            // let record_state = $(ev.currentTarget).find('.state').text()
-            // let state_title = $(ev.currentTarget).find('.stat-title').text()
-            let model_title = $(ev.currentTarget).find('.model-title').text()
-            let model_name = $(ev.currentTarget).find('.model_name').text()
-
-            var self = this
-            console.log(this)
-            var options = {
-                on_reverse_breadcrumb: this.on_reverse_breadcrumb,
-            };
-            var action = {
-                type: 'ir.actions.act_window',
-                name: model_title,
-                res_model: model_name,
-                views: [[false, 'list'],[false,'form']],
-                // view_type: 'tree',
-                view_mode: 'tree,form',
-                domain: [],
-                // target: 'main',
-                target: 'current',
-                // nodestroy: true
-                // context: {'no_breadcrumbs': true},
-            }
-            return self.do_action(action,options);
-        },
-
-        _render: function () {
-            let values = this.data;
-            console.log("_render called")
-            console.log(this)
-    
-            var academic_dashboard = QWeb.render('logic_performance_tracker.academic_dashboard_template', {
-                values: values
-            });
-            // this.$el.parent().find(".o_dashboard_card").remove();
-    
-            this.$el.html(academic_dashboard);
-                    
-                return $.when();
-        },
-
     });
-    core.action_registry.add('academic_dashboard', DashboardCardAction);
+
+        core.action_registry.add('marketing_dashboard', DashboardCardAction);
     return DashboardCardAction;
     
     })

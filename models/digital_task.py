@@ -21,6 +21,10 @@ class DigitalTaskInherit(models.Model):
 
     @api.model
     def retrieve_dashboard_data(self,start_date=False,end_date=False):
+
+        if start_date and end_date:
+            start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
+
         logger = logging.getLogger("Debugger")
         tasks = self.env['digital.task'].sudo().search([])
         try:
@@ -32,49 +36,27 @@ class DigitalTaskInherit(models.Model):
 
         dashboard_data['states_data'] = self.get_states_data(tasks)
         
+        dashboard_data['qualitatives'] = actions_common.get_raw_qualitative_data(self,manager,False,start_date,end_date)
+
+
         if not start_date or not end_date:
-            dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(manager=manager)
+            # dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(manager=manager)
             dashboard_data['performances'] = self.env['digital.executive.performance'].action_executive_performance(dashboard_data['qualitatives'])
-            dashboard_data['other_performances'] = self.env['logic.task.other'].retrieve_performance(manager)
+            # dashboard_data['other_performances'] = self.env['logic.task.other'].retrieve_performance(manager)
         else:
-            start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
-            dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(manager=manager,start_date=start_date,end_date=end_date)
+            # dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(manager=manager,start_date=start_date,end_date=end_date)
             dashboard_data['performances'] = self.env['digital.executive.performance'].action_executive_performance(dashboard_data['qualitatives'],start_date,end_date)
-            dashboard_data['other_performances'] = self.env['logic.task.other'].retrieve_performance(manager,False,start_date,end_date)
+            # dashboard_data['other_performances'] = self.env['logic.task.other'].retrieve_performance(manager,False,start_date,end_date)
+        
+
+        dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self,manager,False,start_date,end_date)
 
         for employee in employees:  
 
-            qualitative_average = 0
-            qualitative_values = {}
-            if dashboard_data['qualitatives'].get(employee.name):
-                for attribute in dashboard_data['qualitatives'][employee.name].keys():
-                    qualitative_average += dashboard_data['qualitatives'][employee.name][attribute]['average_rating']
-                    qualitative_values[attribute] = dashboard_data['qualitatives'][employee.name][attribute]['average_rating']
-                qualitative_average = round(qualitative_average/len(dashboard_data['qualitatives'][employee.name].keys()), 2)
-                logger.error("qual aver: "+str(qualitative_average))
-            logger.error("qual values: "+str(qualitative_values))
-            
-            emp_qual_obj = self.env['employee.qualitative.performance'].search([('employee','=',employee.id)])
-            if emp_qual_obj:
-                emp_qual_obj.write({
-                    'overall_average': qualitative_average
-                })
-            else:
-                self.env['employee.qualitative.performance'].create({
-                    'employee': employee.id,
-                    'overall_average': qualitative_average,
-                })
-        
-        qualitative_overall_objs = self.env['employee.qualitative.performance'].search([('employee','in',employees.ids)],order="overall_average desc")
-        qualitative_overall_average_datas = {}
-        for qualitative_overall_obj in qualitative_overall_objs:
-            qualitative_overall_average_datas[qualitative_overall_obj.employee.name] = qualitative_overall_obj.overall_average
-            if not dashboard_data['qualitatives'].get(qualitative_overall_obj.employee.name):
-                dashboard_data['qualitatives'][qualitative_overall_obj.employee.name] = {}
-        logger.error("qualitative_overall_average_datas: "+str(qualitative_overall_average_datas))
-        logger.error("dashboard_data['qualitatives']: "+str(dashboard_data['qualitatives']))
+            actions_common.create_employee_qualitative_performance(self,dashboard_data,employee)
 
-        dashboard_data['qualitative_overall_averages'] = qualitative_overall_average_datas
+        dashboard_data['qualitatives'],dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data,employees)
+        
         org_datas=[]
         if manager:
             org_datas = [manager.get_organisation_data(manager)]

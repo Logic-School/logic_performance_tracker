@@ -27,7 +27,7 @@
 
                         <div class="col">
                             <div class="tracker-heading1 m-3 ml-0" style="">
-                                <h1 class="text-center">Digital Marketing</h1>
+                                <h1 class="text-center">Digital</h1>
                             </div>
                             <div class="organisation_charts">
                                 <t t-set="index_id" t-value="0"/>

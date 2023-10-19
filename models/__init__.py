@@ -6,4 +6,5 @@ from . import other_works
 from . import academic_tracker
 from . import academic_performance
 from . import hr_employee
+from . import marketing_performance
 from . import employee_performance

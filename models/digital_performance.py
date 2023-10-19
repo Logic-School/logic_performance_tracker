@@ -23,7 +23,7 @@ class DigitalPerformance(models.Model):
 
     @api.model
     def action_executive_performance(self,qualitatives,from_date=False,end_date=False,order="completed_tasks desc"):
-        self.env['digital.executive.performance'].sudo().search([]).unlink()
+        # self.env['digital.executive.performance'].sudo().search([]).unlink()
         executives_performance = {}
         if not from_date or not end_date:
             digital_tasks = self.env['digital.task'].sudo().search([('state','in',('completed','to_post','posted'))])
@@ -69,15 +69,18 @@ class DigitalPerformance(models.Model):
             else:
                 tasks_average_rating = 0
 
-            self.env['digital.executive.performance'].create({
+            values = {
                 'digital_executive': exec_id,
                 'average_rating':tasks_average_rating,
                 'completed_tasks': executives_performance[exec_id]['completed_tasks'],
                 'qualitative_average': qualitative_average,
                 'total_score': executives_performance[exec_id]['total_score'],
                 'overall_rating': round((tasks_average_rating+qualitative_average)/2,2) if qualitative_average>0 else tasks_average_rating
-
-            })
+            }
+            current_exec_performance_obj = self.env['digital.executive.performance'].sudo().search([('digital_executive','=',exec_id)])
+            if current_exec_performance_obj:
+                current_exec_performance_obj.write(values)
+            self.env['digital.executive.performance'].sudo().create(values)
         
         performances = self.env['digital.executive.performance'].sudo().search([],order=order)
         

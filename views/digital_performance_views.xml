@@ -10,6 +10,8 @@
 
             <script type="text/javascript" src="/logic_performance_tracker/static/src/js/digital_performance.js"/>
             <script type="text/javascript" src="/logic_performance_tracker/static/src/js/academic_performance.js"/>
+            <script type="text/javascript" src="/logic_performance_tracker/static/src/js/marketing_performance.js"/>
+
             <script type="text/javascript" src="/logic_performance_tracker/static/src/js/employee_performance.js"/>
             <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
 
@@ -45,6 +47,11 @@
         <field name="tag">academic_dashboard</field>
     </record>
 
+    <record id="marketing_performance_action" model="ir.actions.client">
+        <field name="name">Marketing</field>
+        <field name="tag">marketing_dashboard</field>
+    </record>
+
 
     <menuitem name="Performance Tracker" id="menu_performance_tracker"
               action="open_perf_tracker_action"
@@ -62,6 +69,13 @@
               sequence="9"
               parent="menu_performance_tracker"
               action="academic_performance_action"
+              groups="group_perf_academic_head,group_perf_admin"
+              />
+
+    <menuitem name="Marketing" id="menu_marketing_performance"
+              sequence="9"
+              parent="menu_performance_tracker"
+              action="marketing_performance_action"
               groups="group_perf_academic_head,group_perf_admin"
               />
 

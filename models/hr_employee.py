@@ -11,7 +11,6 @@ class HrEmployeeInherit(models.Model):
     in_charge_child_ids = fields.One2many("hr.employee","in_charge_id",string="In Charge Childs")
 
 
-
     def get_organisation_data(self,employee, processed_ids=None):
             if processed_ids is None:
                 processed_ids = set()

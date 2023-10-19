@@ -21,9 +21,9 @@ class AcademicTracker(models.Model):
         dashboard_data = {}
         employees_data = {}
         department_obj = self.env['hr.department'].sudo().search([('name','=','ACADEMICS')])
-        managers=False
-        manager=False
-        employees = False
+
+        manager,managers,department_heads_data = actions_common.get_manager_managers_heads_data(self,department_obj,manager_id)
+        
         upaya_domain = [('state','=','complete')]
         yes_plus_domain = [('state','=','complete')]
         sfc_domain = [('state','=','confirm')]
@@ -35,39 +35,6 @@ class AcademicTracker(models.Model):
 
         logger.error(department_obj)
 
-        if self.env.user.has_group('logic_performance_tracker.group_perf_admin'):
-
-            academic_depts = self.env['hr.department'].search([('parent_id','=',department_obj[0].id)])
-            academic_heads = []
-            for academic_dept in academic_depts:
-                if academic_dept.manager_id:
-                    academic_heads.append(academic_dept.manager_id)
-            academic_heads_data = [{'head_id':'all','department_name':'All'}]
-            for academic_head in academic_heads:
-                head_data = {}
-                head_data['head_id'] = academic_head.id
-                head_data['department_name'] = academic_head.department_id.name
-                academic_heads_data.append(head_data)
-            logger.error(academic_heads_data)
-
-
-            if manager_id:
-                manager = self.env['hr.employee'].sudo().browse(int(manager_id))
-            elif department_obj:
-
-                managers = self.env['hr.employee'].sudo().search([('id','in',[academic_head.id for academic_head in academic_heads])])
-                
-                logger.error("managers")
-                logger.error(managers)
-                logger.error("department childs: "+str(department_obj[0].child_ids))
-            logger.error("manager")
-            logger.error(manager)
-
-
-        elif self.env.user.has_group('logic_performance_tracker.group_perf_academic_head'):
-            manager = self.env.user.employee_id
-            academic_heads_data = [{'head_id':manager.id,'name':manager.name}]
-            
         if start_date and end_date:
             upaya_domain.extend([('date','>=',start_date),('date','<=',end_date)])
             yes_plus_domain.extend([('date_one','>=',start_date),('date_one','<=',end_date)])
@@ -81,15 +48,7 @@ class AcademicTracker(models.Model):
         logger.error(str(managers))
         if manager or managers:
             logger.error("inside ss")
-            if managers:
-                logger.error("dept childs: "+str(department_obj[0].child_ids.ids))
-                employees = self.env['hr.employee'].sudo().search([('department_id','in',department_obj[0].child_ids.ids),('parent_id','in',managers.ids)])
-                employees+=managers
-
-            else:
-                logger.error("inside else, manager: "+manager.name)
-                employees = self.env['hr.employee'].sudo().search([('department_id','=',manager.department_id.id),('parent_id','=',manager.id)])
-                employees+=manager
+            employees = actions_common.get_employees(self,department_obj,manager,managers)
 
             logger.error("employees: "+str(employees))
             employee_user_ids = employees.mapped('user_id.id')
@@ -122,7 +81,7 @@ class AcademicTracker(models.Model):
             'mock_interview_count':mock_interview_count,
             'cip_excel_count':cip_excel_count,
             'bring_buddy_count':bring_buddy_count,
-            'academic_heads': academic_heads_data,
+            'department_heads': department_heads_data,
             }
 
         employee_upaya_domain = [('state','=','complete')]
@@ -146,15 +105,17 @@ class AcademicTracker(models.Model):
             employee_cip_domain.extend([('date', '>=',start_date), ('date','<=',end_date)])
             employee_bring_buddy_domain.append(('coordinator_id','in',employee_user_ids))
 
-            if managers:
-                dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(managers=managers,start_date=start_date,end_date=end_date)
-            elif manager:
-                dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(manager=manager,start_date=start_date,end_date=end_date)
-        else:
-            if managers:
-                dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(managers=managers)
-            elif manager:
-                dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(manager=manager)
+
+        dashboard_data['qualitatives'] = actions_common.get_raw_qualitative_data(self,manager,managers,start_date,end_date)
+        #     if managers:
+        #         dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(managers=managers,start_date=start_date,end_date=end_date)
+        #     elif manager:
+        #         dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(manager=manager,start_date=start_date,end_date=end_date)
+        # else:
+        #     if managers:
+        #         dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(managers=managers)
+        #     elif manager:
+        #         dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(manager=manager)
         
         for employee in employees:
             total_completed=0
@@ -192,35 +153,7 @@ class AcademicTracker(models.Model):
             else:
                 self.env['academic.coordinator.performance'].create(values)
 
-            qualitative_average = 0
-            qualitative_values = {}
-            if dashboard_data['qualitatives'].get(employee.name):
-                for attribute in dashboard_data['qualitatives'][employee.name].keys():
-                    qualitative_average += dashboard_data['qualitatives'][employee.name][attribute]['average_rating']
-                    qualitative_values[attribute] = dashboard_data['qualitatives'][employee.name][attribute]['average_rating']
-                qualitative_average = round(qualitative_average/len(dashboard_data['qualitatives'][employee.name].keys()), 2)
-                logger.error("qual aver: "+str(qualitative_average))
-            logger.error("qual values: "+str(qualitative_values))
-            
-            emp_qual_obj = self.env['employee.qualitative.performance'].sudo().search([('employee','=',employee.id)])
-            if emp_qual_obj:
-                emp_qual_obj.write({
-                    'overall_average': qualitative_average
-                })
-            else:
-                self.env['employee.qualitative.performance'].sudo().create({
-                    'employee': employee.id,
-                    'overall_average': qualitative_average,
-                })
-        qualitative_overall_objs = self.env['employee.qualitative.performance'].sudo().search([('employee','in',employees.ids)],order="overall_average desc")
-        qualitative_overall_average_datas = {}
-        for qualitative_overall_obj in qualitative_overall_objs:
-            qualitative_overall_average_datas[qualitative_overall_obj.employee.name] = qualitative_overall_obj.overall_average
-            if not dashboard_data['qualitatives'].get(qualitative_overall_obj.employee.name):
-                dashboard_data['qualitatives'][qualitative_overall_obj.employee.name] = {}
-        logger.error("qualitative_overall_average_datas: "+str(qualitative_overall_average_datas))
-        logger.error("dashboard_data['qualitatives']: "+str(dashboard_data['qualitatives']))
-
+            actions_common.create_employee_qualitative_performance(self,dashboard_data,employee)
 
         academic_coord_perfs = self.env['academic.coordinator.performance'].sudo().search([('employee','in',employees.ids)])
         logger.error(academic_coord_perfs)
@@ -240,30 +173,11 @@ class AcademicTracker(models.Model):
             # coord_perf.total_completed = 
 
         dashboard_data['coordinator_data'] = employees_data
-        dashboard_data['qualitative_overall_averages'] = qualitative_overall_average_datas
-        
-        acad_org_datas = []
-        dept_names = []
-        if managers:
-            acad_org_datas = [manager.get_organisation_data(manager) for manager in managers]
-            dept_names = [manager.department_id.name for manager in managers]
-
-            if start_date or end_date:
-                dashboard_data['other_performances'] = self.env['logic.task.other'].retrieve_performance(False,managers,start_date,end_date)
-            else:
-                dashboard_data['other_performances'] =  self.env['logic.task.other'].retrieve_performance(False,managers)
-        elif manager:
-            acad_org_datas = [manager.get_organisation_data(manager)]
-            dept_names = [manager.department_id.name]
-
-            if start_date or end_date:
-                dashboard_data['other_performances'] = self.env['logic.task.other'].retrieve_performance(manager,False,start_date,end_date)
-            else:
-                dashboard_data['other_performances'] =  self.env['logic.task.other'].retrieve_performance(manager,False)
+        dashboard_data['qualitatives'],dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data,employees)    
+        dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self,manager,managers,start_date,end_date)
         logger.error("dashboard_data['other_performances'] "+str(dashboard_data['other_performances']))
 
-        dashboard_data['org_datas'] = acad_org_datas
-        dashboard_data['dept_names'] = dept_names
+        dashboard_data['org_datas'],dashboard_data['dept_names'] = actions_common.get_org_datas_dept_names(manager,managers)
         return dashboard_data
     
     @api.model
