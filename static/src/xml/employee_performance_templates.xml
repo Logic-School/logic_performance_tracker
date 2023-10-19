@@ -84,7 +84,7 @@
             <div class="container-fluid mt-3">
                 <div class="row justify-content-center">
                     <div class="col-auto" style="">
-                        <div class="canvas-container" style="position: relative; width:600px; height:350px;">
+                        <div class="linechart-canvas-container" style="position: relative; width:600px; height:350px;">
                             <canvas id="LineChart1" style="width:600px;height:350px;"></canvas>
                         </div>
                     </div>
@@ -93,6 +93,16 @@
                             <canvas id="LineChart2"></canvas>
                         </div>
                     </div> -->
+                    <div class="col-auto">
+                        <div style="margin-left: auto; margin-right: 0;">
+                            <span class="font-weight-bold">Year </span>
+                            <select class="graph_year form-control mr-2" style="display: inline-block; width: auto;background-color:#bfc1c2;">
+                                <t t-foreach="values['years']" t-as="year">
+                                    <option t-att-value="year" t-esc="year"/>
+                                </t>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
 

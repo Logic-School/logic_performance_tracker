@@ -147,6 +147,8 @@ class LogicEmployeePerformance(models.Model):
         logger = logging.getLogger("Debugger: ")
         employee = self.env['hr.employee'].sudo().browse(int(employee_id))
         employee_data = {}
+        employee_data['years'] = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037]
+
         employee_data['personal_data'] = self.get_employee_personal_data(employee)
         employee_data['academic_data'] = self.get_employee_academic_data(employee)
         employee_data['common_performance'] = self.get_common_performance_data(employee)

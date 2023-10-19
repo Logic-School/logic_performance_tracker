@@ -39,12 +39,13 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             
         events:{
             'click .model_record_card': '_onModelCardClickAction',
-
+            'change .graph_year': '_onGraphYearChange'
         },
     
         init: function(parent, context) {
             this._super(parent, context);
             console.log("context",context)
+            this.LineChart1 = undefined
             this.line_chart_datasets = []
             this.employee_id = context.params.employee_id
             this.data = {};
@@ -67,12 +68,17 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             });
         },
 
-        retrieve_line_chart_data: function(){
+        retrieve_line_chart_data: function(year){
+            if(!year)
+            {
+                var curDate = new Date();
+                var year = curDate.getFullYear();
+            }
             var self = this;
                 var def = self._rpc({
                     model: 'logic.employee.performance', // Replace with your actual model name
                     method: 'get_line_chart_datasets', // Use 'search_read' to retrieve records
-                    args: [self.employee_id,'2023'], // Define search domain if needed
+                    args: [self.employee_id,year], // Define search domain if needed
                     // kwargs: {},
                 }).then(function (data) {
                     self.line_chart_datasets = data;
@@ -89,6 +95,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             this._super.apply(this, arguments)
             console.log("action cont: ",this.action)
             this.render_dashboards()
+            // retrieve line chart data and render it
             this.retrieve_line_chart_data()
             // this.render_line_chart();
         },
@@ -111,16 +118,20 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                     }
                 }
             };
-
-            var canvas1 = this.$('#LineChart1')
+            
             // var canvas2 = this.$('#LineChart2')
 
             // Create a new chart with jQuery
-            var LineChart1 = new Chart(canvas1, {
+            var canvas_container = this.$('.linechart-canvas-container');
+            canvas_container.empty()
+            canvas_container.append('<canvas id="LineChart1" style="width:600px;height:350px;"></canvas>')
+            var canvas1 = this.$('#LineChart1');
+            this.LineChart1 = new Chart(canvas1, {
                 type: 'line',
                 data: data,
                 options: options
             });
+
             // var LineChart2 = new Chart(canvas2, {
             //     type: 'line',
             //     data: data,
@@ -163,6 +174,13 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                 return $.when(def);
         },
 
+        _onGraphYearChange: function(ev){
+
+            var self = this;
+            var selected_year = this.$('.graph_year').val();
+            console.log(selected_year)
+            self.retrieve_line_chart_data(selected_year)
+        },
 
 
         render_dashboards: function() {
