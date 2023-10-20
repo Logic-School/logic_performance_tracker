@@ -4,11 +4,11 @@ from datetime import date
 import logging
 
 def get_date_obj_from_string(from_date,end_date):
-        from_date = from_date.split("-")
-        from_date = date(year=int(from_date[0]),month=int(from_date[1]), day=int(from_date[2]))
-        end_date = end_date.split("-")
-        end_date = date(year=int(end_date[0]),month=int(end_date[1]), day=int(end_date[2]))
-        return from_date,end_date
+    from_date = from_date.split("-")
+    from_date = date(year=int(from_date[0]),month=int(from_date[1]), day=int(from_date[2]))
+    end_date = end_date.split("-")
+    end_date = date(year=int(end_date[0]),month=int(end_date[1]), day=int(end_date[2]))
+    return from_date,end_date
 
 def get_manager_managers_heads_data(self,department_obj,manager_id=False):
     logger = logging.getLogger("Debugger: ")
@@ -101,16 +101,16 @@ def get_raw_qualitative_data(self,manager=False,managers=False,start_date=False,
 
 def get_ordered_qualitative_data(self,dashboard_data,employees):
 
-        logger = logging.getLogger("Debugger: ")
-        qualitative_overall_objs = self.env['employee.qualitative.performance'].sudo().search([('employee','in',employees.ids)],order="overall_average desc")
-        qualitative_overall_average_datas = {}
-        for qualitative_overall_obj in qualitative_overall_objs:
-            qualitative_overall_average_datas[qualitative_overall_obj.employee.name] = qualitative_overall_obj.overall_average
-            if not dashboard_data['qualitatives'].get(qualitative_overall_obj.employee.name):
-                dashboard_data['qualitatives'][qualitative_overall_obj.employee.name] = {}
-        logger.error("qualitative_overall_average_datas: "+str(qualitative_overall_average_datas))
-        logger.error("dashboard_data['qualitatives']: "+str(dashboard_data['qualitatives']))
-        return dashboard_data['qualitatives'],qualitative_overall_average_datas 
+    logger = logging.getLogger("Debugger: ")
+    qualitative_overall_objs = self.env['employee.qualitative.performance'].sudo().search([('employee','in',employees.ids)],order="overall_average desc")
+    qualitative_overall_average_datas = {}
+    for qualitative_overall_obj in qualitative_overall_objs:
+        qualitative_overall_average_datas[qualitative_overall_obj.employee.name] = qualitative_overall_obj.overall_average
+        if not dashboard_data['qualitatives'].get(qualitative_overall_obj.employee.name):
+            dashboard_data['qualitatives'][qualitative_overall_obj.employee.name] = {}
+    logger.error("qualitative_overall_average_datas: "+str(qualitative_overall_average_datas))
+    logger.error("dashboard_data['qualitatives']: "+str(dashboard_data['qualitatives']))
+    return dashboard_data['qualitatives'],qualitative_overall_average_datas 
 
 def get_org_datas_dept_names(manager,managers):
     if managers:
@@ -144,6 +144,9 @@ class StateAction(models.Model):
             return action
         elif self.env.user.has_group('logic_performance_tracker.group_perf_admin') or self.env.user.has_group('logic_performance_tracker.group_perf_academic_head'):
             action = self.env.ref("logic_performance_tracker.academic_performance_action").sudo().read()[0]
+            return action
+        elif self.env.user.has_group('logic_performance_tracker.group_perf_marketing_head') or self.env.user.has_group('logic_performance_tracker.group_perf_academic_head'):
+            action = self.env.ref("logic_performance_tracker.marketing_performance_action").sudo().read()[0]
             return action
 
         else:

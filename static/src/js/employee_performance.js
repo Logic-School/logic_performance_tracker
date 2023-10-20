@@ -97,6 +97,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             this.render_dashboards()
             // retrieve line chart data and render it
             this.retrieve_line_chart_data()
+            this.render_districtwise_leads_chart()
             // this.render_line_chart();
         },
 
@@ -109,6 +110,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
 
             // Configuration options
             var options = {
+
                 responsive: true,
                 maintainAspectRatio: true,
 
@@ -137,6 +139,55 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             //     data: data,
             //     options: options
             // });
+        },
+
+        render_districtwise_leads_chart: function() {
+            var self = this
+            if (this.data.leads_data)
+            {
+                console.log("inside if",this.data)
+                var data = {
+                    labels: this.data.leads_data['districts'],
+                    datasets: this.data.leads_data['leads_dataset'],
+                }
+                // Configuration options
+                var options = {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        title: {
+                          display: true,
+                          text: 'Seminar Leads'
+                        },
+                      },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            },
+                            y: {
+                            beginAtZero: true,
+
+                            stacked: true
+                            }
+
+                    }
+                };
+                
+
+                // Create a new chart with jQuery
+                var canvas_container = self.$('.districtchart-canvas-container');
+                canvas_container.empty()
+                canvas_container.append('<canvas id="districtWiseLeadChart" style="width:850px;height:500px;"></canvas>')
+                var canvas1 = self.$('#districtWiseLeadChart');
+                self.LineChart1 = new Chart(canvas1, {
+                    type: 'bar',
+                    data: data,
+                    options: options
+                });            
+
+
+
+        }
         },
 
         _onModelCardClickAction: function(ev) {

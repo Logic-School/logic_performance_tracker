@@ -106,6 +106,20 @@
                 </div>
             </div>
 
+            <div t-if="values['leads_data']">
+                <div class="col">
+                    <div class="container-fluid mt-3">
+                        <div class="row justify-content-center">
+                            <div class="col-auto" style="">
+                                <div class="districtchart-canvas-container" style="width:850px;height:500px;">
+                                    <canvas id="districtWiseLeadChart" style="width:700px;height:450px;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div t-if="values['academic_data']">
                 <div t-if="values">
                     <div class="row m-2">

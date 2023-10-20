@@ -80,7 +80,8 @@ class DigitalPerformance(models.Model):
             current_exec_performance_obj = self.env['digital.executive.performance'].sudo().search([('digital_executive','=',exec_id)])
             if current_exec_performance_obj:
                 current_exec_performance_obj.write(values)
-            self.env['digital.executive.performance'].sudo().create(values)
+            else:
+                self.env['digital.executive.performance'].sudo().create(values)
         
         performances = self.env['digital.executive.performance'].sudo().search([],order=order)
         
