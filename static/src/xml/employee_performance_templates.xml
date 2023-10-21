@@ -10,6 +10,21 @@
         <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/other_styles.css"/>
         <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/employee_performance_styles.css"/>
         <div t-if="values">
+
+
+            <div class="container-fluid mt-3">
+                <div class="row justify-content-center">
+                    <div class="col-auto" style="margin-left: auto; margin-right: 0;">   
+                        <span class="font-weight-bold">From: </span>
+                        <input class="from_date date-picker-icon custom-date-input" type="date"/>
+                        <span class="font-weight-bold"> To: </span>
+                        <input placeholder="From: " class="end_date date-picker-icon custom-date-input" type="date"/>
+                        <button class="ml-2 filter-button btn-md o_filter_performance" type="button">Filter</button>
+                        <button class="rounded btn-md btn-warning o_filter_reset" type="button">Reset</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="container-fluid mt-3">
                 <div class="row justify-content-center">
                     <div class="col-auto">
@@ -107,15 +122,15 @@
             </div>
 
             <div t-if="values['leads_data']">
-                <div class="col">
-                    <div class="container-fluid mt-3">
-                        <div class="row justify-content-center">
-                            <div class="col-auto" style="">
-                                <div class="districtchart-canvas-container" style="width:850px;height:500px;">
-                                    <canvas id="districtWiseLeadChart" style="width:700px;height:450px;"></canvas>
-                                </div>
+
+                <div class="container-fluid mt-3">
+                    <div class="row justify-content-center">
+                        <div class="col-auto" style="">
+                            <div class="districtchart-canvas-container" style="width:850px;height:500px;">
+                                <canvas id="districtWiseLeadChart" style="width:700px;height:450px;"></canvas>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>

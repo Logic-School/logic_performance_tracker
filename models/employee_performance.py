@@ -11,20 +11,44 @@ class LogicEmployeePerformance(models.Model):
         employee = self.env['hr.employee'].browse(int(employee_id))
         if model_name=="upaya.form":
             domain = [['coordinator_id','=',employee.user_id.id]]
+            if start_date and end_date:
+                domain.extend([('date','>=',start_date),('date','<=',end_date)])
+
         elif model_name=="yes_plus.logic":
             domain = [['coordinator_id','=',employee.user_id.id]]
+            if start_date and end_date:
+                domain.extend([('date_one','>=',start_date),('date_one','<=',end_date)])
+
         elif model_name=="student.faculty":
             domain = [['coordinator','=',employee.user_id.id]]
+            if start_date and end_date:
+                domain.extend([('date','>=',start_date),('date','<=',end_date)])
+
         elif model_name=="exam.details":
             domain = [['coordinator','=',employee.user_id.id]]
+            if start_date and end_date:
+                domain.extend([('date','>=',start_date),('date','<=',end_date)])
+
         elif model_name=="one_to_one.meeting":
             domain = [['coordinator_id','=',employee.user_id.id]]
+            if start_date and end_date:
+                domain.extend([('added_date','>=',start_date),('added_date','<=',end_date)])
+
         elif model_name=="logic.mock_interview":
             domain = [['coordinator','=',employee.user_id.id]]
+            if start_date and end_date:
+                domain.extend([('date','>=',start_date),('date','<=',end_date)])
+
         elif model_name=="logic.cip.form":
             domain = [['coordinator_id','=',employee.user_id.id]]
+            if start_date and end_date:
+                domain.extend([('date','>=',start_date),('date','<=',end_date)])
+
         elif model_name=="bring.your.buddy":
             domain = [['coordinator_id','=',employee.user_id.id]]
+            if start_date and end_date:
+                domain.extend([('date','>=',start_date),('date','<=',end_date)])
+
         logger.error("domain: "+str(domain))
         return domain
     
@@ -149,7 +173,7 @@ class LogicEmployeePerformance(models.Model):
                 'data': [0 for i in range(len(district_names))]
             }            
             for district in districts.keys():
-                district_lead_count = self.env['marketing.tracker'].retrieve_employee_district_wise_lead_count(district,employee)
+                district_lead_count = self.env['marketing.tracker'].retrieve_employee_district_wise_lead_count(district,employee,start_date,end_date)
                 lead_counts.append(district_lead_count)
             leads_data['data'] = lead_counts
             employee_leads_data['leads_dataset'].append(leads_data)
@@ -157,18 +181,19 @@ class LogicEmployeePerformance(models.Model):
         else:
             return False
 
-    def get_common_performance_data(self,employee):
+    def get_common_performance_data(self,employee,start_date=False,end_date=False):
         common_performance = {}
         common_performance['qualitative_rating'] = 0
         qualitative_perf = self.env['employee.qualitative.performance'].sudo().search([('employee','=',employee.id)])
         if qualitative_perf:
             common_performance['qualitative_rating'] = qualitative_perf[0].overall_average
-        common_performance['misc_task_count'] = self.env['logic.task.other'].sudo().search_count([('task_creator','=',employee.user_id.id),('state','=','completed')])
+        common_performance['misc_task_count'] = self.env['logic.task.other'].sudo().search_count([('task_creator','=',employee.user_id.id),('state','=','completed')])    
         common_performance['to_do_count'] = self.env['to_do.tasks'].sudo().search_count([('state','=','completed'),'|',('assigned_to','=',employee.user_id.id),('coworkers_ids','in',[employee.user_id.id] ), ('state','=','completed')])        
+            
         return common_performance
 
     @api.model
-    def retrieve_employee_performance(self,employee_id):
+    def retrieve_employee_performance(self,employee_id,start_date=False,end_date=False):
         logger = logging.getLogger("Debugger: ")
         employee = self.env['hr.employee'].sudo().browse(int(employee_id))
         employee_data = {}
@@ -178,5 +203,5 @@ class LogicEmployeePerformance(models.Model):
         employee_data['academic_data'] = self.get_employee_academic_data(employee)
         employee_data['common_performance'] = self.get_common_performance_data(employee)
         employee_data['line_chart_datasets'] = self.get_line_chart_datasets(employee)
-        employee_data['leads_data'] = self.get_employee_marketing_data(employee)
+        employee_data['leads_data'] = self.get_employee_marketing_data(employee,start_date,end_date)
         return employee_data

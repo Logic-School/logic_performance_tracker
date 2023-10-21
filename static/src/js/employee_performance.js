@@ -39,7 +39,10 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             
         events:{
             'click .model_record_card': '_onModelCardClickAction',
-            'change .graph_year': '_onGraphYearChange'
+            'change .graph_year': '_onGraphYearChange',
+            'click .o_filter_reset': 'filter_reset',
+            'click .o_filter_performance': '_onPerformanceFilterActionClicked',
+
         },
     
         init: function(parent, context) {
@@ -66,6 +69,21 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                 })
                 return $.when(def)
             });
+        },
+
+        fetch_data: function(){
+            var self = this;
+            var def = self._rpc({
+                model: 'logic.employee.performance', // Replace with your actual model name
+                method: 'retrieve_employee_performance', // Use 'search_read' to retrieve records
+                args: [self.employee_id], // Define search domain if needed
+                // kwargs: {},
+            }).then(function (data) {
+                self.data = data;
+            }).catch(function(err){
+                console.log(err)
+            })
+            return $.when(def)
         },
 
         retrieve_line_chart_data: function(year){
@@ -188,6 +206,64 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
 
 
         }
+        },
+
+        _onPerformanceFilterActionClicked: function (ev) {
+            var self = this;
+    
+            // Get the date field's value
+            var fromDate = this.$('.from_date').val();
+            var endDate = this.$('.end_date').val();
+            if (fromDate=='' || endDate=='')
+            {
+                fromDate=false
+                endDate=false
+            }
+            // var fun_args = [fromDate,endDate]
+
+            // this.$(".date_val").text(fromDate)
+    
+            var self = this;
+            var def = self._rpc({
+                model: 'logic.employee.performance', // Replace with your actual model name
+                method: 'retrieve_employee_performance', // Use 'search_read' to retrieve records
+                args: [self.employee_id,fromDate,endDate], // Define search domain if needed
+                // kwargs: {},
+            }).then(function (data) {
+                self.data = data;
+                self.render_dashboards()
+                // retrieve line chart data and render it
+                self.retrieve_line_chart_data()
+                self.render_districtwise_leads_chart()
+                self.$(".from_date").val(fromDate)
+                self.$(".end_date").val(endDate)
+            }).catch(function(err){
+                console.log(err)
+            })
+
+        },
+
+        filter_reset : function(){
+            var self = this;
+    
+            // Save the current state
+            var currentState = _.extend({}, this.state);
+        
+            console.log("Current State:", currentState);
+            // console.log("state",self.state)
+    
+        
+            web_client.do_push_state({});
+            this.fetch_data().then(function(){
+                self.$el.empty()
+                console.log(self.data,"datat")
+                // console.log("state",self.state)
+                // self.updateState(self.state,false)
+                self.render_dashboards()
+                // retrieve line chart data and render it
+                self.retrieve_line_chart_data()
+                self.render_districtwise_leads_chart()
+            });
         },
 
         _onModelCardClickAction: function(ev) {

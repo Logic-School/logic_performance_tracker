@@ -37,7 +37,7 @@ class MarketingTracker(models.Model):
                 'data': [0 for i in range(len(district_names))]
             }            
             for district in districts.keys():
-                district_lead_count = self.retrieve_employee_district_wise_lead_count(district,employee)
+                district_lead_count = self.retrieve_employee_district_wise_lead_count(district,employee,start_date,end_date)
                 lead_counts.append(district_lead_count)
             leads_data['data'] = lead_counts
             dashboard_data['leads_data']['leads_dataset'].append(leads_data)
@@ -48,14 +48,15 @@ class MarketingTracker(models.Model):
         dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self,manager,managers,start_date,end_date)
 
         return dashboard_data
-    
-# class SeminarInherit(models.Model):
-#     _inherit = "seminar.leads"
+
     def retrieve_employee_district_wise_lead_count(self,district,employee,start_date=False,end_date=False):
 
         logger = logging.getLogger("Debugger: ")
         lead_count = 0
-        seminars = self.env['seminar.leads'].sudo().search([('district','=',district),('state','=','done'),('create_uid','=',employee.user_id.id)])
+        seminar_domain = [('district','=',district),('state','=','done'),('create_uid','=',employee.user_id.id)]
+        if start_date and end_date:
+            seminar_domain.extend([('seminar_date','>=',start_date),('seminar_date','<=',end_date)])
+        seminars = self.env['seminar.leads'].sudo().search(seminar_domain)
         for seminar in seminars:
             lead_count+=len(seminar.seminar_ids)
         return lead_count
