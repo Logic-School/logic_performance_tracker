@@ -17,7 +17,7 @@ def get_manager_managers_heads_data(self,department_obj,manager_id=False):
     manager=False
     if self.env.user.has_group('logic_performance_tracker.group_perf_admin'):
 
-        depts = self.env['hr.department'].search([('parent_id','=',department_obj[0].id)])
+        depts = self.env['hr.department'].sudo().search([('parent_id','=',department_obj[0].id)])
         dept_heads = []
         for dept in depts:
             if dept.manager_id:

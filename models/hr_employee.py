@@ -24,8 +24,8 @@ class HrEmployeeInherit(models.Model):
 
             # Determine the set of children based on availability of in_charge_child_ids
             # children_ids = employee.in_charge_child_ids if employee.in_charge_child_ids else employee.child_ids
-            in_charge_child_ids = self.env['hr.employee'].search([('in_charge_id','=',employee.id)],order="name asc")
-            child_ids = self.env['hr.employee'].search([('parent_id','=',employee.id)],order="name asc")
+            in_charge_child_ids = self.env['hr.employee'].sudo().search([('in_charge_id','=',employee.id)],order="name asc")
+            child_ids = self.env['hr.employee'].sudo().search([('parent_id','=',employee.id)],order="name asc")
             children_ids = in_charge_child_ids + child_ids
             children_ids = sorted(children_ids, key=lambda record: len(record.in_charge_child_ids), reverse=True)
 

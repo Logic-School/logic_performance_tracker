@@ -26,7 +26,7 @@
                     <div style="margin-left: auto; margin-right: 0;">
                         <span class="font-weight-bold">Department </span>
                         <select class="department_head form-control mr-2" style="display: inline-block; width: auto;background-color:#bfc1c2;">
-                            <t t-foreach="values['department_heads']" t-as="department_head">
+                            <t t-if="values['department_heads']" t-foreach="values['department_heads']" t-as="department_head">
                                 <option t-att-value="department_head['head_id']" t-esc="department_head['department_name']"/>
                             </t>
                         </select>
@@ -78,7 +78,7 @@
                                         <td t-esc="index"/>
                                         <td t-esc="employee"/>
                                         <td style="color: brown" class="">
-                                            <t t-foreach="Object.keys(values['qualitatives'][employee])" t-as="attribute">
+                                            <t t-if="values['qualitatives'][employee]" t-foreach="Object.keys(values['qualitatives'][employee])" t-as="attribute">
                                                 <span class="ml-4">
                                                     <span class="text-center" t-esc="values['qualitatives'][employee][attribute]['attribute_type']"/>
                                                     <t t-set="star_count" t-value="Math.round(values['qualitatives'][employee][attribute]['average_rating'])"/>
@@ -177,7 +177,7 @@
                             </thead>
                             <tbody >
                                 <t t-set="index" t-value="1"/>
-                                <t t-foreach="Object.keys(values['coordinator_data'])" t-as="employee">
+                                <t t-if="values['coordinator_data']" t-foreach="Object.keys(values['coordinator_data'])" t-as="employee">
                                     <div t-att-id="employee">
                                         <tr class="o_employee_name">
                                             <td class="d-none o_employee_id" t-att-data-empid="employee"/>
@@ -225,7 +225,7 @@
                             </thead>
                             <tbody style="font-size:14px;">
                                 <t t-set="index" t-value="1"/>
-                                <t t-foreach="Object.keys(values['other_performances'])" t-as="employee">
+                                <t t-if="values['other_performances']" t-foreach="Object.keys(values['other_performances'])" t-as="employee">
 
                                     <tr>
                                         <td t-esc="index"/>

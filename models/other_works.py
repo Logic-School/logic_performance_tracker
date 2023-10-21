@@ -46,7 +46,7 @@ class OtherTaskInherit(models.Model):
             if employee_performances[employee_id]['rated_tasks']>0:
                 employee_performances[employee_id]['average_rating'] = round(employee_performances[employee_id]['rating'] / employee_performances[employee_id]['rated_tasks'],2)
 
-            other_task_perf_obj = self.env['other.task.performance'].search([('employee','=',employee_id)])
+            other_task_perf_obj = self.env['other.task.performance'].sudo().search([('employee','=',employee_id)])
             if other_task_perf_obj:
                 other_task_perf_obj.write({
                     'total_completed': employee_performances[employee_id]['completed_tasks'],
@@ -58,7 +58,7 @@ class OtherTaskInherit(models.Model):
                     'total_completed': employee_performances[employee_id]['completed_tasks'],
                     'average_rating': employee_performances[employee_id]['average_rating'],
                 })
-        other_task_perf_objs = self.env['other.task.performance'].search([('employee','in',employees)], order="average_rating desc")
+        other_task_perf_objs = self.env['other.task.performance'].sudo().search([('employee','in',employees)], order="average_rating desc")
         employee_performances = {}
         logger.error('other_task_perf_objs '+str(other_task_perf_objs))
 
