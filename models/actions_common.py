@@ -176,3 +176,53 @@ class StateAction(models.Model):
     #     dashboard_data['states'] = states
     #     dashboard_data['performances'] = self.env['digital.executive.performance'].action_executive_performance()
     #     return dashboard_data
+
+def get_academic_domains(self,department_obj,start_date=False,end_date=False,manager=False,managers=False,single_employee=False):
+    logger = logging.getLogger("Debugger: ")
+    upaya_domain = [('state','=','complete')]
+    yes_plus_domain = [('state','=','complete')]
+    sfc_domain = [('state','=','confirm')]
+    exam_domain = []
+    one_to_one_domain = []
+    mock_interview_domain = [('state','=','done')]
+    cip_domain = [('state','=','completed')]
+    bring_buddy_domain = [('state','=','done')]
+
+    logger.error(department_obj)
+
+    if start_date and end_date:
+        upaya_domain.extend([('date','>=',start_date),('date','<=',end_date)])
+        yes_plus_domain.extend([('date_one','>=',start_date),('date_one','<=',end_date)])
+        sfc_domain.extend([('date','>=',start_date),('date','<=',end_date)])
+        exam_domain.extend([('date','>=',start_date),('date','<=',end_date)])
+        one_to_one_domain.extend([('added_date','>=',start_date),('added_date','<=',end_date)])
+        mock_interview_domain.extend([('date','>=',start_date),('date','<=',end_date)])
+        cip_domain.extend([('date','>=',start_date),('date','<=',end_date)])
+        bring_buddy_domain.extend([('date','>=',start_date),('date','<=',end_date)])
+
+    if (manager or managers) and not single_employee:
+        logger.error("inside ss")
+        employees = get_employees(self,department_obj,manager,managers)
+
+        logger.error("employees: "+str(employees))
+        employee_user_ids = employees.mapped('user_id.id')
+        logger.error("employee_user_ids: "+str(employee_user_ids))
+        
+        upaya_domain.extend([('coordinator_id','in',employee_user_ids),('coordinator_id','!=',False)])
+        yes_plus_domain.extend([('coordinator_id','in',employee_user_ids),('coordinator_id','!=',False)])
+        sfc_domain.extend([('coordinator','in',employee_user_ids),('coordinator','!=',False)])
+        exam_domain.extend([('coordinator','in',employee_user_ids),('coordinator','!=',False)])
+        one_to_one_domain.extend([('coordinator_id','in',employee_user_ids),('coordinator_id','!=',False)])
+        mock_interview_domain.extend([('coordinator','in',employee_user_ids),('coordinator','!=',False)])
+        cip_domain.extend([('coordinator_id','in',employee_user_ids),('coordinator_id','!=',False)])
+        bring_buddy_domain.extend([('coordinator_id','in',employee_user_ids),('coordinator_id','!=',False)])
+    return {
+        'upaya_domain':upaya_domain,
+        'yes_plus_domain':yes_plus_domain,
+        'sfc_domain':sfc_domain,
+        'exam_domain':exam_domain,
+        'one_to_one_domain':one_to_one_domain,
+        'mock_interview_domain':mock_interview_domain,
+        'cip_domain':cip_domain,
+        'bring_buddy_domain':bring_buddy_domain
+    }

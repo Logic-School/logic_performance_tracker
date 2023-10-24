@@ -23,54 +23,16 @@ class AcademicTracker(models.Model):
         department_obj = self.env['hr.department'].sudo().search([('name','=','ACADEMICS')])
 
         manager,managers,department_heads_data = actions_common.get_manager_managers_heads_data(self,department_obj,manager_id)
-        
-        upaya_domain = [('state','=','complete')]
-        yes_plus_domain = [('state','=','complete')]
-        sfc_domain = [('state','=','confirm')]
-        exam_domain = []
-        one_to_one_domain = []
-        mock_interview_domain = [('state','=','done')]
-        cip_domain = [('state','=','completed')]
-        bring_buddy_domain = [('state','=','done')]
 
-        logger.error(department_obj)
-
-        if start_date and end_date:
-            upaya_domain.extend([('date','>=',start_date),('date','<=',end_date)])
-            yes_plus_domain.extend([('date_one','>=',start_date),('date_one','<=',end_date)])
-            sfc_domain.extend([('date','>=',start_date),('date','<=',end_date)])
-            exam_domain.extend([('date','>=',start_date),('date','<=',end_date)])
-            one_to_one_domain.extend([('added_date','>=',start_date),('added_date','<=',end_date)])
-            mock_interview_domain.extend([('date','>=',start_date),('date','<=',end_date)])
-            cip_domain.extend([('date','>=',start_date),('date','<=',end_date)])
-            bring_buddy_domain.extend([('date','>=',start_date),('date','<=',end_date)])
-
-        logger.error(str(managers))
-        if manager or managers:
-            logger.error("inside ss")
-            employees = actions_common.get_employees(self,department_obj,manager,managers)
-
-            logger.error("employees: "+str(employees))
-            employee_user_ids = employees.mapped('user_id.id')
-            logger.error("employee_user_ids: "+str(employee_user_ids))
-            
-            upaya_domain.extend([('coordinator_id','in',employee_user_ids),('coordinator_id','!=',False)])
-            yes_plus_domain.extend([('coordinator_id','in',employee_user_ids),('coordinator_id','!=',False)])
-            sfc_domain.extend([('coordinator','in',employee_user_ids),('coordinator','!=',False)])
-            exam_domain.extend([('coordinator','in',employee_user_ids),('coordinator','!=',False)])
-            one_to_one_domain.extend([('coordinator_id','in',employee_user_ids),('coordinator_id','!=',False)])
-            mock_interview_domain.extend([('coordinator','in',employee_user_ids),('coordinator','!=',False)])
-            cip_domain.extend([('coordinator_id','in',employee_user_ids),('coordinator_id','!=',False)])
-            bring_buddy_domain.extend([('coordinator_id','in',employee_user_ids),('coordinator_id','!=',False)])
-
-        upaya_count = self.env['upaya.form'].sudo().search_count(upaya_domain)
-        yes_plus_count = self.env['yes_plus.logic'].sudo().search_count(yes_plus_domain)
-        sfc_count = self.env['student.faculty'].sudo().search_count(sfc_domain)
-        exam_count = self.env['exam.details'].sudo().search_count(exam_domain)
-        one_to_one_count = self.env['one_to_one.meeting'].sudo().search_count(one_to_one_domain)
-        mock_interview_count = self.env['logic.mock_interview'].sudo().search_count(mock_interview_domain)
-        cip_excel_count = self.env['logic.cip.form'].sudo().search_count(cip_domain)
-        bring_buddy_count = self.env['bring.your.buddy'].sudo().search_count(bring_buddy_domain)
+        academic_domains = actions_common.get_academic_domains(self,department_obj=department_obj,start_date=start_date,end_date=end_date,manager=manager,managers=managers,single_employee=False)
+        upaya_count = self.env['upaya.form'].sudo().search_count(academic_domains['upaya_domain'])
+        yes_plus_count = self.env['yes_plus.logic'].sudo().search_count(academic_domains['yes_plus_domain'])
+        sfc_count = self.env['student.faculty'].sudo().search_count(academic_domains['sfc_domain'])
+        exam_count = self.env['exam.details'].sudo().search_count(academic_domains['exam_domain'])
+        one_to_one_count = self.env['one_to_one.meeting'].sudo().search_count(academic_domains['one_to_one_domain'])
+        mock_interview_count = self.env['logic.mock_interview'].sudo().search_count(academic_domains['mock_interview_domain'])
+        cip_excel_count = self.env['logic.cip.form'].sudo().search_count(academic_domains['cip_domain'])
+        bring_buddy_count = self.env['bring.your.buddy'].sudo().search_count(academic_domains['bring_buddy_domain'])
         logger.error("bvring: "+str(type(upaya_count)))
         dashboard_data = {
             'upaya_count':upaya_count,
@@ -84,27 +46,6 @@ class AcademicTracker(models.Model):
             'department_heads': department_heads_data,
             }
 
-        employee_upaya_domain = [('state','=','complete')]
-        employee_yes_plus_domain = [('state','=','complete')]
-        employee_one_to_one_domain = []
-        employee_sfc_domain = [('state','=','confirm')]
-        employee_exam_domain = []
-        employee_mock_interview_domain = [('state','=','done')]
-        employee_cip_domain = [('state','=','completed')]
-        employee_bring_buddy_domain = [('state','=','done')]
-
-
-
-        if start_date and end_date:
-            employee_upaya_domain.extend([('date', '>=',start_date), ('date','<=',end_date)])
-            employee_yes_plus_domain.extend([('date_one', '>=',start_date), ('date_one','<=',end_date)])
-            employee_one_to_one_domain.extend([('added_date', '>=',start_date), ('added_date','<=',end_date)])
-            employee_sfc_domain.extend([('date', '>=',start_date), ('date','<=',end_date)])
-            employee_exam_domain.extend([('date', '>=',start_date), ('date','<=',end_date)])
-            employee_mock_interview_domain.extend([('date', '>=',start_date), ('date','<=',end_date)])
-            employee_cip_domain.extend([('date', '>=',start_date), ('date','<=',end_date)])
-            employee_bring_buddy_domain.append(('coordinator_id','in',employee_user_ids))
-
 
         dashboard_data['qualitatives'] = actions_common.get_raw_qualitative_data(self,manager,managers,start_date,end_date)
         #     if managers:
@@ -116,19 +57,19 @@ class AcademicTracker(models.Model):
         #         dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(managers=managers)
         #     elif manager:
         #         dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(manager=manager)
-        
+        employees = actions_common.get_employees(self,department_obj,manager,managers)
+        employee_academic_domains = actions_common.get_academic_domains(self,department_obj=department_obj,start_date=start_date,end_date=end_date,manager=False,managers=False,single_employee=True)
         for employee in employees:
             total_completed=0
 
-            emp_upaya_count =  self.env['upaya.form'].sudo().search_count(employee_upaya_domain+[('coordinator_id','=',employee.user_id.id),('coordinator_id','!=',False)])
-            emp_yes_plus_count = self.env['yes_plus.logic'].sudo().search_count(employee_yes_plus_domain+[('coordinator_id','=',employee.user_id.id),('coordinator_id','!=',False)])
-            emp_one2one_count = self.env['one_to_one.meeting'].sudo().search_count(employee_one_to_one_domain+[('coordinator_id','=',employee.user_id.id),('coordinator_id','!=',False)])
-            emp_sfc_count = self.env['student.faculty'].sudo().search_count(employee_sfc_domain+[('coordinator','=',employee.user_id.id),('coordinator','!=',False)])
-            emp_exam_count = self.env['exam.details'].sudo().search_count(employee_exam_domain+[('coordinator','=',employee.user_id.id),('coordinator','!=',False)])
-            emp_mock_interview_count = self.env['logic.mock_interview'].sudo().search_count(employee_mock_interview_domain+[('coordinator','=',employee.user_id.id),('coordinator','!=',False)])
-            emp_cip_excel_count = self.env['logic.cip.form'].sudo().search_count(employee_cip_domain+[('coordinator_id','=',employee.user_id.id),('coordinator_id','!=',False)])
-            emp_bring_buddy_count = self.env['bring.your.buddy'].sudo().search_count(employee_bring_buddy_domain+[('coordinator_id','=',employee.user_id.id),('coordinator_id','!=',False)])
-            logger.error("upay dom: "+str(employee_upaya_domain+[('coordinator_id','=',employee.user_id.id),('coordinator_id','!=',False)]))
+            emp_upaya_count =  self.env['upaya.form'].sudo().search_count(employee_academic_domains['upaya_domain']+[('coordinator_id','=',employee.user_id.id),('coordinator_id','!=',False)])
+            emp_yes_plus_count = self.env['yes_plus.logic'].sudo().search_count(employee_academic_domains['yes_plus_domain']+[('coordinator_id','=',employee.user_id.id),('coordinator_id','!=',False)])
+            emp_one2one_count = self.env['one_to_one.meeting'].sudo().search_count(employee_academic_domains['one_to_one_domain']+[('coordinator_id','=',employee.user_id.id),('coordinator_id','!=',False)])
+            emp_sfc_count = self.env['student.faculty'].sudo().search_count(employee_academic_domains['sfc_domain']+[('coordinator','=',employee.user_id.id),('coordinator','!=',False)])
+            emp_exam_count = self.env['exam.details'].sudo().search_count(employee_academic_domains['exam_domain']+[('coordinator','=',employee.user_id.id),('coordinator','!=',False)])
+            emp_mock_interview_count = self.env['logic.mock_interview'].sudo().search_count(employee_academic_domains['mock_interview_domain']+[('coordinator','=',employee.user_id.id),('coordinator','!=',False)])
+            emp_cip_excel_count = self.env['logic.cip.form'].sudo().search_count(employee_academic_domains['cip_domain']+[('coordinator_id','=',employee.user_id.id),('coordinator_id','!=',False)])
+            emp_bring_buddy_count = self.env['bring.your.buddy'].sudo().search_count(employee_academic_domains['bring_buddy_domain']+[('coordinator_id','=',employee.user_id.id),('coordinator_id','!=',False)])
             logger.error("upay count_type:" +str(type(emp_upaya_count)))
             logger.error("upay count:" +str(emp_upaya_count))
 

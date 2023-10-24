@@ -7,250 +7,253 @@
 
             <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/orgchart_styles.css"/>
             <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/other_styles.css"/>
-            <div class="o_dashboard_card">
-                <script type="text/javascript" src="/logic_performance_tracker/static/src/js/org_chart_component.js"/>
- 
-                <div class="tracker-heading1 mt-3">
-                    <h1 class="text-center">Department Hierarchy</h1>
-                </div>
-                <div class="organisation_charts row">
-                    <t t-set="index_id" t-value="0"/>
-                    <t t-foreach="Object.keys(values['org_datas'])" t-as="acad_org_data">
-                        <div class="m-3 col chart-container" t-att-id="'chart-container-'+index_id">
+            <div t-if="values">
 
-                        </div>
-                        <t t-set="index_id" t-value="index_id+1"/>
-                    </t>
-                </div>
-                <div class="inline-container mt-2">
-                    <div style="margin-left: auto; margin-right: 0;">
-                        <span class="font-weight-bold">Department </span>
-                        <select class="department_head form-control mr-2" style="display: inline-block; width: auto;background-color:#bfc1c2;">
-                            <t t-if="values['department_heads']" t-foreach="values['department_heads']" t-as="department_head">
-                                <option t-att-value="department_head['head_id']" t-esc="department_head['department_name']"/>
-                            </t>
-                        </select>
-                        <span class="font-weight-bold">From: </span>
-                        <input class="from_date date-picker-icon custom-date-input" type="date"/>
-                        <span class="font-weight-bold"> To: </span>
-                        <input placeholder="From: " class="end_date date-picker-icon custom-date-input" type="date"/>
-                        <button class="ml-2 filter-button btn-md o_filter_performance" type="button">Filter</button>
-                        <button class="rounded btn-md btn-warning o_filter_reset" type="button">Reset</button>
+                <div class="o_dashboard_card">
+                    <script type="text/javascript" src="/logic_performance_tracker/static/src/js/org_chart_component.js"/>
+    
+                    <div class="tracker-heading1 mt-3">
+                        <h1 class="text-center">Department Hierarchy</h1>
                     </div>
-                </div>
+                    <div class="organisation_charts row">
+                        <t t-set="index_id" t-value="0"/>
+                        <t t-foreach="Object.keys(values['org_datas'])" t-as="acad_org_data">
+                            <div class="m-3 col chart-container" t-att-id="'chart-container-'+index_id">
 
-                <div class="m-3" t-if="values['qualitatives']">
-                    <!-- <h1 class="inline">Qualitative Analysis</h1> -->
-                    <div class="h-100 table-responsive card" style="border-radius:10px;"> 
-                        <table style="font-size:14px;" class="table table-striped table-hover rounded-table table-borderless">
-                            <thead>
-                                <tr class="rounded" style="background-color:#78787859;">
-                                    <td colspan="4" class="text-center"><h2>Qualitative Analysis</h2></td>
-                                </tr>
-                            </thead>
-                            <thead style="background-color:#e0e0de" class="">
-                            <tr>
-                                <th scope="col" width="7%">#</th>
-                                <th scope="col" width="20%">
-                                    <div class="">
-                                        <img src="/logic_performance_tracker/static/src/icons/employees.png" alt="" height='25' width='25'/>
-                                        Employee
-                                    </div>
-                                </th>
-                                <th scope="col" width="60%">
-                                    <div class="">
-                                        <img src="/logic_performance_tracker/static/src/icons/performances.png" alt="" height='25' width='25'/>
-                                        Performances
-                                    </div>
-                                </th>
-                                <th scope="col" width="13%">
-                                    <div class="">
-                                        <img src="/logic_performance_tracker/static/src/icons/performances.png" alt="" height='25' width='25'/>
-                                        Overall Rating
-                                    </div>
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody >
-                                <t t-set="index" t-value="1"/>
-                                <t t-foreach="Object.keys(values['qualitative_overall_averages'])" t-as="employee">
-                                    <tr>
-                                        <td t-esc="index"/>
-                                        <td t-esc="employee"/>
-                                        <td style="color: brown" class="">
-                                            <t t-if="values['qualitatives'][employee]" t-foreach="Object.keys(values['qualitatives'][employee])" t-as="attribute">
-                                                <span class="ml-4">
-                                                    <span class="text-center" t-esc="values['qualitatives'][employee][attribute]['attribute_type']"/>
-                                                    <t t-set="star_count" t-value="Math.round(values['qualitatives'][employee][attribute]['average_rating'])"/>
-                                                        <t t-foreach="Array.from(Array(star_count).keys())" t-as="star_ind">
-                                                            <span class="text-right fa fa-star checked"></span>
-                                                        </t>
-                                                        <t t-foreach="Array.from(Array(5-star_count).keys())" t-as="star_ind">
-                                                            <span class="text-right fa fa-star"></span>
-                                                        </t>
-                                                        <span t-esc="values['qualitatives'][employee][attribute]['average_rating']"/>
-                                                    </span>
-                                            </t>
-                                        </td>
-                                        <t t-set="current_avg" t-value="values['qualitative_overall_averages'][employee]"/>
-                                        <td t-if="current_avg>=4" t-esc="current_avg" class="text-success"/>
-                                        <td t-elif="current_avg>=2.5" t-esc="current_avg" class="text-warning"/>
-                                        <td t-else="" t-esc="current_avg" class="text-danger"/>
-                                    </tr>
-                                    <t t-set="index" t-value="index+1"/>
+                            </div>
+                            <t t-set="index_id" t-value="index_id+1"/>
+                        </t>
+                    </div>
+                    <div class="inline-container mt-2">
+                        <div style="margin-left: auto; margin-right: 0;">
+                            <span class="font-weight-bold">Department </span>
+                            <select class="department_head form-control mr-2" style="display: inline-block; width: auto;background-color:#bfc1c2;">
+                                <t t-if="values['department_heads']" t-foreach="values['department_heads']" t-as="department_head">
+                                    <option t-att-value="department_head['head_id']" t-esc="department_head['department_name']"/>
                                 </t>
-                            </tbody>
-                        </table>
+                            </select>
+                            <span class="font-weight-bold">From: </span>
+                            <input class="from_date date-picker-icon custom-date-input" type="date"/>
+                            <span class="font-weight-bold"> To: </span>
+                            <input placeholder="From: " class="end_date date-picker-icon custom-date-input" type="date"/>
+                            <button class="ml-2 filter-button btn-md o_filter_performance" type="button">Filter</button>
+                            <button class="rounded btn-md btn-warning o_filter_reset" type="button">Reset</button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="m-3" t-if="values['coordinator_data']">
-                    <!-- <h1 class="inline">Coordinator Performances</h1> -->
-                    <div class="h-100 table-responsive card" style="border-radius:10px;">
-                        <table style="font-size:14px;" class="table table-striped  table-hover rounded-table table-borderless">
-                            <thead>
-                                <tr class="rounded" style="background-color:#78787859;">
-                                    <td class="text-center" colspan="11"><h2>Coordinator Performances</h2></td>
+                    <div class="m-3" t-if="values['qualitatives']">
+                        <!-- <h1 class="inline">Qualitative Analysis</h1> -->
+                        <div class="h-100 table-responsive card" style="border-radius:10px;"> 
+                            <table style="font-size:14px;" class="table table-striped table-hover rounded-table table-borderless">
+                                <thead>
+                                    <tr class="rounded" style="background-color:#78787859;">
+                                        <td colspan="4" class="text-center"><h2>Qualitative Analysis</h2></td>
+                                    </tr>
+                                </thead>
+                                <thead style="background-color:#e0e0de" class="">
+                                <tr>
+                                    <th scope="col" width="7%">#</th>
+                                    <th scope="col" width="20%">
+                                        <div class="">
+                                            <img src="/logic_performance_tracker/static/src/icons/employees.png" alt="" height='25' width='25'/>
+                                            Employee
+                                        </div>
+                                    </th>
+                                    <th scope="col" width="60%">
+                                        <div class="">
+                                            <img src="/logic_performance_tracker/static/src/icons/performances.png" alt="" height='25' width='25'/>
+                                            Performances
+                                        </div>
+                                    </th>
+                                    <th scope="col" width="13%">
+                                        <div class="">
+                                            <img src="/logic_performance_tracker/static/src/icons/performances.png" alt="" height='25' width='25'/>
+                                            Overall Rating
+                                        </div>
+                                    </th>
                                 </tr>
-                            </thead>
-                            <thead style="background-color:#e0e0de" class="">
-                            <tr>
-                                <th width="6%" scope="col">#</th>
-                                <th width="20%" scope="col">Employee</th>
-                                <th scope="col">
-                                    <div class="">
-                                        <img src="/logic_performance_tracker/static/src/icons/upaya.png" alt="" height='25' width='25'/>
-                                        Upaya
-                                    </div>
-                                </th>
-                                <th scope="col">
-                                    <div class="">
-                                        <img src="/logic_performance_tracker/static/src/icons/yes_plus.png" alt="" height='25' width='25'/>
-                                        Yes Plus
-                                    </div>
-                                </th>
-                                <th scope="col">
-                                    <div class="">
-                                        <img src="/logic_performance_tracker/static/src/icons/sfc.png" alt="" height='25' width='25'/>
-                                        SFC
-                                    </div>
-                                </th>
-                                <th scope="col">
-                                    <div class="">
-                                        <img src="/logic_performance_tracker/static/src/icons/exam.png" alt="" height='25' width='25'/>
-                                        Exams
-                                    </div>
-                                </th>
-                                <th scope="col">
-                                    <div class="">
-                                        <img src="/logic_performance_tracker/static/src/icons/one_to_one.png" alt="" height='25' width='25'/>
-                                        One To One
-                                    </div>
-                                </th>
-                                <th scope="col">
-                                    <div class="">
-                                        <img src="/logic_performance_tracker/static/src/icons/mock_interview.png" alt="" height='25' width='25'/>
-                                        Mock Interview
-                                    </div>
-                                </th>
-                                <th scope="col">
-                                    <div class="">
-                                        <img src="/logic_performance_tracker/static/src/icons/cip_excel.png" alt="" height='25' width='25'/>
-                                        CIP/Excel
-                                    </div>
-                                </th>
-                                <th scope="col">
-                                    <div class="">
-                                        <img src="/logic_performance_tracker/static/src/icons/bring_your_buddy.png" alt="" height='25' width='25'/>
-                                        BB
-                                    </div>
-                                </th>
-                                <th scope="col">
-                                    <div class="">
-                                        <img src="/logic_performance_tracker/static/src/icons/total_completed.png" alt="" height='25' width='25'/>
-                                        Total
-                                    </div>
-                                </th>
+                                </thead>
+                                <tbody >
+                                    <t t-set="index" t-value="1"/>
+                                    <t t-foreach="Object.keys(values['qualitative_overall_averages'])" t-as="employee">
+                                        <tr>
+                                            <td t-esc="index"/>
+                                            <td t-esc="employee"/>
+                                            <td style="color: brown" class="">
+                                                <t t-if="values['qualitatives'][employee]" t-foreach="Object.keys(values['qualitatives'][employee])" t-as="attribute">
+                                                    <span class="ml-4">
+                                                        <span class="text-center" t-esc="values['qualitatives'][employee][attribute]['attribute_type']"/>
+                                                        <t t-set="star_count" t-value="Math.round(values['qualitatives'][employee][attribute]['average_rating'])"/>
+                                                            <t t-foreach="Array.from(Array(star_count).keys())" t-as="star_ind">
+                                                                <span class="text-right fa fa-star checked"></span>
+                                                            </t>
+                                                            <t t-foreach="Array.from(Array(5-star_count).keys())" t-as="star_ind">
+                                                                <span class="text-right fa fa-star"></span>
+                                                            </t>
+                                                            <span t-esc="values['qualitatives'][employee][attribute]['average_rating']"/>
+                                                        </span>
+                                                </t>
+                                            </td>
+                                            <t t-set="current_avg" t-value="values['qualitative_overall_averages'][employee]"/>
+                                            <td t-if="current_avg>=4" t-esc="current_avg" class="text-success"/>
+                                            <td t-elif="current_avg>=2.5" t-esc="current_avg" class="text-warning"/>
+                                            <td t-else="" t-esc="current_avg" class="text-danger"/>
+                                        </tr>
+                                        <t t-set="index" t-value="index+1"/>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="m-3" t-if="values['coordinator_data']">
+                        <!-- <h1 class="inline">Coordinator Performances</h1> -->
+                        <div class="h-100 table-responsive card" style="border-radius:10px;">
+                            <table style="font-size:14px;" class="table table-striped  table-hover rounded-table table-borderless">
+                                <thead>
+                                    <tr class="rounded" style="background-color:#78787859;">
+                                        <td class="text-center" colspan="11"><h2>Coordinator Performances</h2></td>
+                                    </tr>
+                                </thead>
+                                <thead style="background-color:#e0e0de" class="">
+                                <tr>
+                                    <th width="6%" scope="col">#</th>
+                                    <th width="20%" scope="col">Employee</th>
+                                    <th scope="col">
+                                        <div class="">
+                                            <img src="/logic_performance_tracker/static/src/icons/upaya.png" alt="" height='25' width='25'/>
+                                            Upaya
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="">
+                                            <img src="/logic_performance_tracker/static/src/icons/yes_plus.png" alt="" height='25' width='25'/>
+                                            Yes Plus
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="">
+                                            <img src="/logic_performance_tracker/static/src/icons/sfc.png" alt="" height='25' width='25'/>
+                                            SFC
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="">
+                                            <img src="/logic_performance_tracker/static/src/icons/exam.png" alt="" height='25' width='25'/>
+                                            Exams
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="">
+                                            <img src="/logic_performance_tracker/static/src/icons/one_to_one.png" alt="" height='25' width='25'/>
+                                            One To One
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="">
+                                            <img src="/logic_performance_tracker/static/src/icons/mock_interview.png" alt="" height='25' width='25'/>
+                                            Mock Interview
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="">
+                                            <img src="/logic_performance_tracker/static/src/icons/cip_excel.png" alt="" height='25' width='25'/>
+                                            CIP/Excel
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="">
+                                            <img src="/logic_performance_tracker/static/src/icons/bring_your_buddy.png" alt="" height='25' width='25'/>
+                                            BB
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="">
+                                            <img src="/logic_performance_tracker/static/src/icons/total_completed.png" alt="" height='25' width='25'/>
+                                            Total
+                                        </div>
+                                    </th>
 
 
-                            </tr>
-                            </thead>
-                            <tbody >
-                                <t t-set="index" t-value="1"/>
-                                <t t-if="values['coordinator_data']" t-foreach="Object.keys(values['coordinator_data'])" t-as="employee">
-                                    <div t-att-id="employee">
-                                        <tr class="o_employee_name">
-                                            <td class="d-none o_employee_id" t-att-data-empid="employee"/>
-                                            <td t-esc="index+'.'"/>
-                                            <td t-esc="values['coordinator_data'][employee]['name']"/>
-                                            <td style="color: green" t-esc="values['coordinator_data'][employee]['upaya_count']"/>
-                                            <td style="color: green" t-esc="values['coordinator_data'][employee]['yes_plus_count']"/>
-                                            <td style="color: green" t-esc="values['coordinator_data'][employee]['sfc_count']"/>
-                                            <td style="color: green" t-esc="values['coordinator_data'][employee]['exam_count']"/>
-                                            <td style="color: green" t-esc="values['coordinator_data'][employee]['one2one_count']"/>
-                                            <td style="color: green" t-esc="values['coordinator_data'][employee]['mock_interview_count']"/>
-                                            <td style="color: green" t-esc="values['coordinator_data'][employee]['cip_excel_count']"/>
-                                            <td style="color: green" t-esc="values['coordinator_data'][employee]['bring_buddy_count']"/>
-                                            <td style="color: green" t-esc="values['coordinator_data'][employee]['total_completed']"/>
+                                </tr>
+                                </thead>
+                                <tbody >
+                                    <t t-set="index" t-value="1"/>
+                                    <t t-if="values['coordinator_data']" t-foreach="Object.keys(values['coordinator_data'])" t-as="employee">
+                                        <div t-att-id="employee">
+                                            <tr class="o_employee_name">
+                                                <td class="d-none o_employee_id" t-att-data-empid="employee"/>
+                                                <td t-esc="index+'.'"/>
+                                                <td t-esc="values['coordinator_data'][employee]['name']"/>
+                                                <td style="color: green" t-esc="values['coordinator_data'][employee]['upaya_count']"/>
+                                                <td style="color: green" t-esc="values['coordinator_data'][employee]['yes_plus_count']"/>
+                                                <td style="color: green" t-esc="values['coordinator_data'][employee]['sfc_count']"/>
+                                                <td style="color: green" t-esc="values['coordinator_data'][employee]['exam_count']"/>
+                                                <td style="color: green" t-esc="values['coordinator_data'][employee]['one2one_count']"/>
+                                                <td style="color: green" t-esc="values['coordinator_data'][employee]['mock_interview_count']"/>
+                                                <td style="color: green" t-esc="values['coordinator_data'][employee]['cip_excel_count']"/>
+                                                <td style="color: green" t-esc="values['coordinator_data'][employee]['bring_buddy_count']"/>
+                                                <td style="color: green" t-esc="values['coordinator_data'][employee]['total_completed']"/>
+
+                                            </tr>
+                                        </div>
+                                        <t t-set="index" t-value="index+1"/>
+
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="m-3">
+                        <!-- <h1 class="inline">Miscellaneous Works</h1> -->
+                        <div class="h-100 table-responsive card" style="border-radius:10px;"> 
+                            <table style="font-size:14px;" class="table table-striped table-hover rounded-table table-borderless">
+                                <thead>
+                                    <tr class="rounded" style="background-color:#78787859;">
+                                        <td colspan="4" class="text-center"><h2>Miscellaneous Works</h2></td>
+                                    </tr>
+                                </thead>
+                                <thead style="background-color:#e0e0de" class="">
+                                <tr>
+                                    <th scope="col" width="7%">#</th>
+                                    <th scope="col" width="25%">Employee</th>
+                                    <th class="text-center" width="34%" scope="col">Completed Tasks</th>
+
+                                    <th scope="col" width="34%">Average Rating</th>
+
+
+                                </tr>
+                                </thead>
+                                <tbody style="font-size:14px;">
+                                    <t t-set="index" t-value="1"/>
+                                    <t t-if="values['other_performances']" t-foreach="Object.keys(values['other_performances'])" t-as="employee">
+
+                                        <tr>
+                                            <td t-esc="index"/>
+                                            <td t-esc="values['other_performances'][employee]['name']"/>
+                                            <td style="color: green" t-esc="values['other_performances'][employee]['total_completed']" class="text-center"/>
+                                            <!-- <td t-esc="exec_performance['average_rating']"/> -->
+                                            <t t-set="star_count" t-value="Math.round(values['other_performances'][employee]['average_rating'])"/>
+                                            <td>
+                                                <t t-foreach="Array.from(Array(star_count).keys())" t-as="star_ind">
+                                                    <span class="fa fa-star checked"></span>
+                                                </t>
+                                                <t t-foreach="Array.from(Array(5-star_count).keys())" t-as="star_ind">
+                                                    <span class="fa fa-star"></span>
+                                                </t>
+                                                <span class="ml-2" t-esc="values['other_performances'][employee]['average_rating']"/>
+                                            </td>
 
                                         </tr>
-                                    </div>
-                                    <t t-set="index" t-value="index+1"/>
-
-                                </t>
-                            </tbody>
-                        </table>
+                                        <t t-set="index" t-value="index+1"/>
+                                        </t>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+                                    
                 </div>
-
-                <div class="m-3">
-                    <!-- <h1 class="inline">Miscellaneous Works</h1> -->
-                    <div class="h-100 table-responsive card" style="border-radius:10px;"> 
-                        <table style="font-size:14px;" class="table table-striped table-hover rounded-table table-borderless">
-                            <thead>
-                                <tr class="rounded" style="background-color:#78787859;">
-                                    <td colspan="4" class="text-center"><h2>Miscellaneous Works</h2></td>
-                                </tr>
-                            </thead>
-                            <thead style="background-color:#e0e0de" class="">
-                            <tr>
-                                <th scope="col" width="7%">#</th>
-                                <th scope="col" width="25%">Employee</th>
-                                <th class="text-center" width="34%" scope="col">Completed Tasks</th>
-
-                                <th scope="col" width="34%">Average Rating</th>
-
-
-                            </tr>
-                            </thead>
-                            <tbody style="font-size:14px;">
-                                <t t-set="index" t-value="1"/>
-                                <t t-if="values['other_performances']" t-foreach="Object.keys(values['other_performances'])" t-as="employee">
-
-                                    <tr>
-                                        <td t-esc="index"/>
-                                        <td t-esc="values['other_performances'][employee]['name']"/>
-                                        <td style="color: green" t-esc="values['other_performances'][employee]['total_completed']" class="text-center"/>
-                                        <!-- <td t-esc="exec_performance['average_rating']"/> -->
-                                        <t t-set="star_count" t-value="Math.round(values['other_performances'][employee]['average_rating'])"/>
-                                        <td>
-                                            <t t-foreach="Array.from(Array(star_count).keys())" t-as="star_ind">
-                                                <span class="fa fa-star checked"></span>
-                                            </t>
-                                            <t t-foreach="Array.from(Array(5-star_count).keys())" t-as="star_ind">
-                                                <span class="fa fa-star"></span>
-                                            </t>
-                                            <span class="ml-2" t-esc="values['other_performances'][employee]['average_rating']"/>
-                                        </td>
-
-                                    </tr>
-                                    <t t-set="index" t-value="index+1"/>
-                                    </t>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                                
             </div>
         </t>
 
