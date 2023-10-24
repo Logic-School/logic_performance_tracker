@@ -62,16 +62,16 @@ def get_employees(self,department_obj,manager=False,managers=False):
         employees+=manager
     return employees
 
-def create_employee_qualitative_performance(self,dashboard_data,employee):
+def create_employee_qualitative_performance(self,qualitatives,employee):
     logger = logging.getLogger("Debugger: ")
 
     qualitative_average = 0
     qualitative_values = {}
-    if dashboard_data['qualitatives'].get(employee.name):
-        for attribute in dashboard_data['qualitatives'][employee.name].keys():
-            qualitative_average += dashboard_data['qualitatives'][employee.name][attribute]['average_rating']
-            qualitative_values[attribute] = dashboard_data['qualitatives'][employee.name][attribute]['average_rating']
-        qualitative_average = round(qualitative_average/len(dashboard_data['qualitatives'][employee.name].keys()), 2)
+    if qualitatives.get(employee.name):
+        for attribute in qualitatives[employee.name].keys():
+            qualitative_average += qualitatives[employee.name][attribute]['average_rating']
+            qualitative_values[attribute] = qualitatives[employee.name][attribute]['average_rating']
+        qualitative_average = round(qualitative_average/len(qualitatives[employee.name].keys()), 2)
         logger.error("qual aver: "+str(qualitative_average))
     logger.error("qual values: "+str(qualitative_values))
     
@@ -86,31 +86,25 @@ def create_employee_qualitative_performance(self,dashboard_data,employee):
             'overall_average': qualitative_average,
         })
 
-def get_raw_qualitative_data(self,manager=False,managers=False,start_date=False,end_date=False):
+def get_raw_qualitative_data(self,employees=False,start_date=False,end_date=False):
     if start_date and end_date:
-        if managers:
-            qualitatives = self.env['base.qualitative.analysis'].retrieve_performance(managers=managers,start_date=start_date,end_date=end_date)
-        elif manager:
-            qualitatives = self.env['base.qualitative.analysis'].retrieve_performance(manager=manager,start_date=start_date,end_date=end_date)
+        qualitatives = self.env['base.qualitative.analysis'].retrieve_performance(employees=employees,start_date=start_date,end_date=end_date)
     else:
-        if managers:
-            qualitatives = self.env['base.qualitative.analysis'].retrieve_performance(managers=managers)
-        elif manager:
-            qualitatives = self.env['base.qualitative.analysis'].retrieve_performance(manager=manager)
+        qualitatives = self.env['base.qualitative.analysis'].retrieve_performance(employees=employees)
     return qualitatives
 
-def get_ordered_qualitative_data(self,dashboard_data,employees):
+def get_ordered_qualitative_data(self,qualitatives,employees):
 
     logger = logging.getLogger("Debugger: ")
     qualitative_overall_objs = self.env['employee.qualitative.performance'].sudo().search([('employee','in',employees.ids)],order="overall_average desc")
     qualitative_overall_average_datas = {}
     for qualitative_overall_obj in qualitative_overall_objs:
         qualitative_overall_average_datas[qualitative_overall_obj.employee.name] = qualitative_overall_obj.overall_average
-        if not dashboard_data['qualitatives'].get(qualitative_overall_obj.employee.name):
-            dashboard_data['qualitatives'][qualitative_overall_obj.employee.name] = {}
+        if not qualitatives.get(qualitative_overall_obj.employee.name):
+            qualitatives[qualitative_overall_obj.employee.name] = {}
     logger.error("qualitative_overall_average_datas: "+str(qualitative_overall_average_datas))
-    logger.error("dashboard_data['qualitatives']: "+str(dashboard_data['qualitatives']))
-    return dashboard_data['qualitatives'],qualitative_overall_average_datas 
+    logger.error("dashboard_data['qualitatives']: "+str(qualitatives))
+    return qualitatives,qualitative_overall_average_datas 
 
 def get_org_datas_dept_names(manager,managers):
     if managers:
@@ -121,17 +115,11 @@ def get_org_datas_dept_names(manager,managers):
         dept_names = [manager.department_id.name]
     return org_datas,dept_names
 
-def get_miscellaneous_performances(self,manager,managers,start_date,end_date):
-    if managers:
-        if start_date or end_date:
-            other_performances = self.env['logic.task.other'].retrieve_performance(False,managers,start_date,end_date)
-        else:
-            other_performances =  self.env['logic.task.other'].retrieve_performance(False,managers)
-    elif manager:
-        if start_date or end_date:
-            other_performances = self.env['logic.task.other'].retrieve_performance(manager,False,start_date,end_date)
-        else:
-            other_performances =  self.env['logic.task.other'].retrieve_performance(manager,False)
+def get_miscellaneous_performances(self,employees,start_date,end_date):
+    if start_date or end_date:
+        other_performances = self.env['logic.task.other'].retrieve_performance(employees,start_date,end_date)
+    else:
+        other_performances =  self.env['logic.task.other'].retrieve_performance(employees)
     return other_performances
 
 class StateAction(models.Model):

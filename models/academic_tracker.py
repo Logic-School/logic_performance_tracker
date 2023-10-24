@@ -19,6 +19,8 @@ class AcademicTracker(models.Model):
 
         manager,managers,department_heads_data = actions_common.get_manager_managers_heads_data(self,department_obj,manager_id)
 
+        employees = actions_common.get_employees(self,department_obj,manager,managers)
+
         academic_domains = actions_common.get_academic_domains(self,department_obj=department_obj,start_date=start_date,end_date=end_date,manager=manager,managers=managers,employee_user_ids=False)
 
         academic_counts = actions_common.get_academic_counts(self,academic_domains)
@@ -34,9 +36,9 @@ class AcademicTracker(models.Model):
             'department_heads': department_heads_data,
             }
 
-        dashboard_data['qualitatives'] = actions_common.get_raw_qualitative_data(self,manager,managers,start_date,end_date)
 
-        employees = actions_common.get_employees(self,department_obj,manager,managers)
+        dashboard_data['qualitatives'] = actions_common.get_raw_qualitative_data(self,employees,start_date,end_date)
+
         for employee in employees:
             total_completed=0
             employee_academic_domains = actions_common.get_academic_domains(self,department_obj=department_obj,start_date=start_date,end_date=end_date,manager=False,managers=False,employee_user_ids=[employee.user_id.id])
@@ -61,7 +63,7 @@ class AcademicTracker(models.Model):
             else:
                 self.env['academic.coordinator.performance'].create(values)
 
-            actions_common.create_employee_qualitative_performance(self,dashboard_data,employee)
+            actions_common.create_employee_qualitative_performance(self,dashboard_data['qualitatives'],employee)
 
         academic_coord_perfs = self.env['academic.coordinator.performance'].sudo().search([('employee','in',employees.ids)])
         logger.error(academic_coord_perfs)
@@ -81,8 +83,8 @@ class AcademicTracker(models.Model):
             # coord_perf.total_completed = 
 
         dashboard_data['coordinator_data'] = employees_data
-        dashboard_data['qualitatives'],dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data,employees)    
-        dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self,manager,managers,start_date,end_date)
+        dashboard_data['qualitatives'],dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data['qualitatives'],employees)    
+        dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self,employees,start_date,end_date)
         logger.error("dashboard_data['other_performances'] "+str(dashboard_data['other_performances']))
 
         dashboard_data['org_datas'],dashboard_data['dept_names'] = actions_common.get_org_datas_dept_names(manager,managers)

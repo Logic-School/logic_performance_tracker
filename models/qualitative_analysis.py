@@ -11,35 +11,37 @@ class QualitativeInherit(models.Model):
     _inherit = "base.qualitative.analysis"
 
     @api.model
-    def retrieve_performance(self, manager=False, start_date=False,end_date=False,managers=False):
-        performances = {}
-        if managers:
-            # raise UserError(managers)
-            child_ids = set()
-            for manager_rec in managers:
-                for id in manager_rec.child_ids.ids:
-                    child_ids.add(id)
-            child_ids = tuple(child_ids)
-        elif manager:
-            child_ids = manager.child_ids.ids
-
-        if not start_date or not end_date:
-            if manager or managers:
-                records = self.env['base.qualitative.analysis'].sudo().search([('name','in',child_ids)])
-            else:
-                records = self.env['base.qualitative.analysis'].sudo().search([])
-        else:
-            if manager or managers:
-                records = self.env['base.qualitative.analysis'].sudo().search([('name','in',child_ids),('added_date','>=',start_date),('added_date','<=',end_date)])
-            else:
-                records = self.env['base.qualitative.analysis'].sudo().search([('added_date','>=',start_date),('added_date','<=',end_date)])  
-        employees = []
+    def retrieve_performance(self, employees=False,start_date=False,end_date=False):
         # if managers:
-        #     raise UserError(records)
+        #     # raise UserError(managers)
+        #     child_ids = set()
+        #     for manager_rec in managers:
+        #         for id in manager_rec.child_ids.ids:
+        #             child_ids.add(id)
+        #     child_ids = tuple(child_ids)
+        # elif manager:
+        #     child_ids = manager.child_ids.ids
 
-        for record in records:
-            # name field is employee m2o field
-            employees.append(record.name.id)
+        # if not start_date or not end_date:
+        #     if manager or managers:
+        #         records = self.env['base.qualitative.analysis'].sudo().search([('name','in',child_ids)])
+        #     else:
+        #         records = self.env['base.qualitative.analysis'].sudo().search([])
+        # else:
+        #     if manager or managers:
+        #         records = self.env['base.qualitative.analysis'].sudo().search([('name','in',child_ids),('added_date','>=',start_date),('added_date','<=',end_date)])
+        #     else:
+        #         records = self.env['base.qualitative.analysis'].sudo().search([('added_date','>=',start_date),('added_date','<=',end_date)])  
+        # employees = []
+        # # if managers:
+        # #     raise UserError(records)
+
+        # for record in records:
+        #     # name field is employee m2o field
+        #     employees.append(record.name.id)
+        performances = {}
+        employees = employees.ids
+
         for employee_id in employees:
             if not start_date or not end_date:
                 quality_records = self.env['base.qualitative.analysis'].sudo().search([('name','=',employee_id)])
@@ -55,7 +57,6 @@ class QualitativeInherit(models.Model):
                             employee_attributes[attribute.attribute.id]['rating'] = int(attribute.performance)
                             employee_attributes[attribute.attribute.id]['count'] = 1
                             employee_attributes[attribute.attribute.id]['average_rating'] = int(attribute.performance)
-
 
                         else:
                             employee_attributes[attribute.attribute.id]['rating'] += int(attribute.performance)

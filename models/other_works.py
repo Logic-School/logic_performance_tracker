@@ -7,18 +7,10 @@ class OtherTaskInherit(models.Model):
     _inherit = "logic.task.other"
 
     @api.model
-    def retrieve_performance(self, manager=False, managers=False, start_date=False,end_date=False):
+    def retrieve_performance(self, employees, start_date=False,end_date=False):
         logger = logging.getLogger("Debugger: ")
         employee_performances = {}
-        employees = []
-        if manager:
-            employees += manager.child_ids.ids
-        elif managers:
-            for manager in managers:
-                employees+=manager.child_ids.ids
-
-        logger.error("Other works Emps: "+str(employees))
-        # self.env['other.task.performance'].sudo().search([]).unlink()
+        employees = employees.ids
 
         for employee_id in employees:
             employee_performances[employee_id] = {}

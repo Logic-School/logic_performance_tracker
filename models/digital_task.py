@@ -36,26 +36,22 @@ class DigitalTaskInherit(models.Model):
 
         dashboard_data['states_data'] = self.get_states_data(tasks)
         
-        dashboard_data['qualitatives'] = actions_common.get_raw_qualitative_data(self,manager,False,start_date,end_date)
+        dashboard_data['qualitatives'] = actions_common.get_raw_qualitative_data(self,employees,start_date,end_date)
 
 
         if not start_date or not end_date:
-            # dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(manager=manager)
             dashboard_data['performances'] = self.env['digital.executive.performance'].action_executive_performance(dashboard_data['qualitatives'])
-            # dashboard_data['other_performances'] = self.env['logic.task.other'].retrieve_performance(manager)
         else:
-            # dashboard_data['qualitatives'] = self.env['base.qualitative.analysis'].retrieve_performance(manager=manager,start_date=start_date,end_date=end_date)
             dashboard_data['performances'] = self.env['digital.executive.performance'].action_executive_performance(dashboard_data['qualitatives'],start_date,end_date)
-            # dashboard_data['other_performances'] = self.env['logic.task.other'].retrieve_performance(manager,False,start_date,end_date)
         
 
-        dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self,manager,False,start_date,end_date)
+        dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self,employees,start_date,end_date)
 
         for employee in employees:  
 
-            actions_common.create_employee_qualitative_performance(self,dashboard_data,employee)
+            actions_common.create_employee_qualitative_performance(self,dashboard_data['qualitatives'],employee)
 
-        dashboard_data['qualitatives'],dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data,employees)
+        dashboard_data['qualitatives'],dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data['qualitatives'],employees)
         
         org_datas=[]
         if manager:

@@ -195,6 +195,10 @@ class LogicEmployeePerformance(models.Model):
     def get_common_performance_data(self,employee,start_date=False,end_date=False):
         common_performance = {}
         common_performance['qualitative_rating'] = 0
+        
+        # qualitatives = actions_common.get_raw_qualitative_data(self,manager=employee.parent_id,managers=False,start_date=start_date,end_date=end_date)
+        # actions_common.create_employee_qualitative_performance(self,qualitatives,employee)
+
         qualitative_perf = self.env['employee.qualitative.performance'].sudo().search([('employee','=',employee.id)])
         if qualitative_perf:
             common_performance['qualitative_rating'] = qualitative_perf[0].overall_average

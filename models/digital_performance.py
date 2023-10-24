@@ -98,13 +98,3 @@ class DigitalPerformance(models.Model):
             executives_performances.append(current_performance)
 
         return executives_performances
-
-
-
-        # return {
-        #     'type': 'ir.actions.act_window',
-        #     'name': 'Executives Performance',
-        #     'view_mode': 'tree',
-        #     'res_model': 'digital.executive.performance',
-        #     'target': 'current',
-        # }
