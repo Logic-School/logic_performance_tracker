@@ -177,7 +177,7 @@ class StateAction(models.Model):
     #     dashboard_data['performances'] = self.env['digital.executive.performance'].action_executive_performance()
     #     return dashboard_data
 
-def get_academic_domains(self,department_obj,start_date=False,end_date=False,manager=False,managers=False,single_employee=False):
+def get_academic_domains(self,department_obj,start_date=False,end_date=False,manager=False,managers=False,employee_user_ids=False):
     logger = logging.getLogger("Debugger: ")
     upaya_domain = [('state','=','complete')]
     yes_plus_domain = [('state','=','complete')]
@@ -200,12 +200,12 @@ def get_academic_domains(self,department_obj,start_date=False,end_date=False,man
         cip_domain.extend([('date','>=',start_date),('date','<=',end_date)])
         bring_buddy_domain.extend([('date','>=',start_date),('date','<=',end_date)])
 
-    if (manager or managers) and not single_employee:
+    if (manager or managers or employee_user_ids):
         logger.error("inside ss")
-        employees = get_employees(self,department_obj,manager,managers)
-
-        logger.error("employees: "+str(employees))
-        employee_user_ids = employees.mapped('user_id.id')
+        if not employee_user_ids:
+            employees = get_employees(self,department_obj,manager,managers)
+            logger.error("employees: "+str(employees))
+            employee_user_ids = employees.mapped('user_id.id')
         logger.error("employee_user_ids: "+str(employee_user_ids))
         
         upaya_domain.extend([('coordinator_id','in',employee_user_ids),('coordinator_id','!=',False)])
@@ -225,4 +225,16 @@ def get_academic_domains(self,department_obj,start_date=False,end_date=False,man
         'mock_interview_domain':mock_interview_domain,
         'cip_domain':cip_domain,
         'bring_buddy_domain':bring_buddy_domain
+    }
+
+def get_academic_counts(self,academic_domains):
+    return {
+        'upaya_count' : self.env['upaya.form'].sudo().search_count(academic_domains['upaya_domain']),
+        'yes_plus_count' : self.env['yes_plus.logic'].sudo().search_count(academic_domains['yes_plus_domain']),
+        'sfc_count' : self.env['student.faculty'].sudo().search_count(academic_domains['sfc_domain']),
+        'exam_count' : self.env['exam.details'].sudo().search_count(academic_domains['exam_domain']),
+        'one_to_one_count' : self.env['one_to_one.meeting'].sudo().search_count(academic_domains['one_to_one_domain']),
+        'mock_interview_count' : self.env['logic.mock_interview'].sudo().search_count(academic_domains['mock_interview_domain']),
+        'cip_excel_count' : self.env['logic.cip.form'].sudo().search_count(academic_domains['cip_domain']),
+        'bring_buddy_count' : self.env['bring.your.buddy'].sudo().search_count(academic_domains['bring_buddy_domain']),
     }
