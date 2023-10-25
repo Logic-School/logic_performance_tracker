@@ -130,7 +130,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             var options = {
 
                 responsive: true,
-                maintainAspectRatio: true,
+                maintainAspectRatio: false,
 
                 scales: {
                     y: {
@@ -267,16 +267,26 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
         },
 
         _onModelCardClickAction: function(ev) {
+            var self = this;
+
             var model_name = $(ev.currentTarget).attr('id')
             var action_model_name = $(ev.currentTarget).attr('name')
-            var self = this;
+            var fromDate = this.$('.from_date').val();
+            var endDate = this.$('.end_date').val();
+            console.log("fromDate",fromDate)
+            console.log("endDate",endDate)
+            if (fromDate=='' || endDate=='')
+            {
+                fromDate=false
+                endDate=false
+            }
             var options = {
                 on_reverse_breadcrumb: this.on_reverse_breadcrumb,
             };
             var def = self._rpc({
                     model: 'logic.employee.performance', // Replace with your actual model name
                     method: 'model_records_open_action', // Use 'search_read' to retrieve records
-                    args: [self.employee_id,model_name], // Define search domain if needed
+                    args: [self.employee_id,model_name,fromDate,endDate], // Define search domain if needed
                     // kwargs: {},
                 }).then(function (domain) {
 

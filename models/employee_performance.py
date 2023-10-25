@@ -8,6 +8,9 @@ class LogicEmployeePerformance(models.Model):
     def model_records_open_action(self,employee_id,model_name,start_date=False,end_date=False):
         domain=[]
         logger = logging.getLogger("Debugger: ")
+        if start_date and end_date:
+            start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
+        logger.error("start date, end date: "+str(start_date)+ " "+str(end_date))
 
         employee = self.env['hr.employee'].browse(int(employee_id))
         if model_name=="upaya.form":
@@ -50,7 +53,18 @@ class LogicEmployeePerformance(models.Model):
             if start_date and end_date:
                 domain.extend([('date','>=',start_date),('date','<=',end_date)])
 
+        elif model_name=='logic.task.other':
+            domain = [['task_creator','=',employee.user_id.id]]
+            if start_date and end_date:
+                domain.extend([('date_completed','>=',start_date),('date_completed','<=',end_date)])
+        
+        elif model_name=='to_do.tasks':
+            domain = [('state','=','completed'),'|',('assigned_to','=',employee.user_id.id),('coworkers_ids','in',[employee.user_id.id] ), ('state','=','completed')]
+            if start_date and end_date:
+                domain.extend([('completed_date','>=',start_date),('completed_date','<=',end_date)])
         logger.error("domain: "+str(domain))
+        logger.error("model: "+str(model_name))
+
         return domain
     
     def get_monthly_misc_counts(self,employee,year):
@@ -163,7 +177,6 @@ class LogicEmployeePerformance(models.Model):
                 else:
                     self.env['academic.coordinator.performance'].create(values)
                 values['name'] = employee.name
-                    
                 values['student_feedback_rating'] = self.get_student_feedback_average(employee)
                 return values
         return False
@@ -193,17 +206,25 @@ class LogicEmployeePerformance(models.Model):
             return False
 
     def get_common_performance_data(self,employee,start_date=False,end_date=False):
+
         common_performance = {}
         common_performance['qualitative_rating'] = 0
         
-        # qualitatives = actions_common.get_raw_qualitative_data(self,manager=employee.parent_id,managers=False,start_date=start_date,end_date=end_date)
-        # actions_common.create_employee_qualitative_performance(self,qualitatives,employee)
+        qualitatives = actions_common.get_raw_qualitative_data(self,employee,start_date,end_date)
+        actions_common.create_employee_qualitative_performance(self,qualitatives,employee)
 
         qualitative_perf = self.env['employee.qualitative.performance'].sudo().search([('employee','=',employee.id)])
         if qualitative_perf:
             common_performance['qualitative_rating'] = qualitative_perf[0].overall_average
-        common_performance['misc_task_count'] = self.env['logic.task.other'].sudo().search_count([('task_creator','=',employee.user_id.id),('state','=','completed')])    
-        common_performance['to_do_count'] = self.env['to_do.tasks'].sudo().search_count([('state','=','completed'),'|',('assigned_to','=',employee.user_id.id),('coworkers_ids','in',[employee.user_id.id] ), ('state','=','completed')])        
+        
+        misc_domain = [('task_creator','=',employee.user_id.id),('state','=','completed')]
+        to_do_domain = [('state','=','completed'),'|',('assigned_to','=',employee.user_id.id),('coworkers_ids','in',[employee.user_id.id] ), ('state','=','completed')]
+        if start_date and end_date:
+            misc_domain.extend([('date_completed','>=',start_date),('date_completed','<=',end_date)])
+            to_do_domain.extend([('completed_date','>=',start_date),('completed_date','<=',end_date)])
+
+        common_performance['misc_task_count'] = self.env['logic.task.other'].sudo().search_count(misc_domain)    
+        common_performance['to_do_count'] = self.env['to_do.tasks'].sudo().search_count(to_do_domain)        
             
         return common_performance
 
@@ -211,14 +232,14 @@ class LogicEmployeePerformance(models.Model):
     def retrieve_employee_performance(self,employee_id,start_date=False,end_date=False):
         logger = logging.getLogger("Debugger: ")
         if start_date and end_date:
-            actions_common.get_date_obj_from_string(start_date,end_date)
+            start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
         employee = self.env['hr.employee'].sudo().browse(int(employee_id))
         employee_data = {}
         employee_data['years'] = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037]
 
         employee_data['personal_data'] = self.get_employee_personal_data(employee)
         employee_data['academic_data'] = self.get_employee_academic_data(employee,start_date,end_date)
-        employee_data['common_performance'] = self.get_common_performance_data(employee)
+        employee_data['common_performance'] = self.get_common_performance_data(employee,start_date,end_date)
         employee_data['line_chart_datasets'] = self.get_line_chart_datasets(employee)
         employee_data['leads_data'] = self.get_employee_marketing_data(employee,start_date,end_date)
         return employee_data

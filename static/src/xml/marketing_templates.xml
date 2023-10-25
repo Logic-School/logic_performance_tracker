@@ -26,8 +26,8 @@
                 <div class="col">
                     <div class="container-fluid mt-3">
                         <div class="row justify-content-center">
-                            <div class="col-auto" style="">
-                                <div class="districtchart-canvas-container" style="width:850px;height:500px;">
+                            <div class="col" style="width:100%">                            
+                                <div class="districtchart-canvas-container" style="position:relative;height:500px;">
                                     <canvas id="districtWiseLeadChart" style="width:700px;height:450px;"></canvas>
                                 </div>
                             </div>
