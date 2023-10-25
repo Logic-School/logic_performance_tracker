@@ -133,8 +133,11 @@ class StateAction(models.Model):
         elif self.env.user.has_group('logic_performance_tracker.group_perf_admin') or self.env.user.has_group('logic_performance_tracker.group_perf_academic_head'):
             action = self.env.ref("logic_performance_tracker.academic_performance_action").sudo().read()[0]
             return action
-        elif self.env.user.has_group('logic_performance_tracker.group_perf_marketing_head') or self.env.user.has_group('logic_performance_tracker.group_perf_academic_head'):
+        elif self.env.user.has_group('logic_performance_tracker.group_perf_admin') or self.env.user.has_group('logic_performance_tracker.group_perf_marketing_head'):
             action = self.env.ref("logic_performance_tracker.marketing_performance_action").sudo().read()[0]
+            return action
+        elif self.env.user.has_group('logic_performance_tracker.group_perf_admin') or self.env.user.has_group('logic_performance_tracker.group_perf_sales_head'):
+            action = self.env.ref("logic_performance_tracker.sales_performance_action").sudo().read()[0]
             return action
 
         else:

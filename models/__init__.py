@@ -8,3 +8,4 @@ from . import academic_performance
 from . import hr_employee
 from . import marketing_performance
 from . import employee_performance
+from . import sales_tracker
