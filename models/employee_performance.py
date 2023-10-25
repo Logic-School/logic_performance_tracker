@@ -1,6 +1,7 @@
 from odoo import models,api,fields
 import logging
 import random
+from datetime import date
 from . import actions_common
 class LogicEmployeePerformance(models.Model):
     _name = "logic.employee.performance"
@@ -97,8 +98,12 @@ class LogicEmployeePerformance(models.Model):
                 digital_data[date.month]+=1
         return list(digital_data.values())
 
-    @api.model
-    def get_line_chart_datasets(self,employee_id,year="2023"):
+    # @api.model
+    def get_line_chart_datasets(self,employee_id,start_date,end_date):
+        if start_date and end_date:
+            year = start_date.year
+        else:
+            year = date.today().year
         employee = self.env['hr.employee'].sudo().browse(int(employee_id))
         logger = logging.getLogger("Debugger: ")
         year = int(year)
@@ -188,19 +193,40 @@ class LogicEmployeePerformance(models.Model):
             districts = dict(self.env['seminar.leads'].fields_get()['district']['selection'])
             district_names = list(dict(self.env['seminar.leads'].fields_get()['district']['selection']).values())
             employee_leads_data = {'districts':district_names, 'leads_dataset': [] }
-            lead_counts = []
-            leads_data = {
-                'label': employee.name,
-                'backgroundColor': rgba_colors.pop(random.randint(0,20)),
-                'borderColor': 'rgba(27, 92, 196, 0.95)',
+            leads_count = []
+            conversion_rates = []
+            leads_count_data = {
+                'label': 'Leads Count',
+                'yAxisID': 'leads_count',
+                'fill': True,
+                'backgroundColor': 'rgba(255, 255, 255, 0)',
+                'borderColor': 'rgba(49, 150, 76, 0.68)',
                 'borderWidth': 1,
-                'data': [0 for i in range(len(district_names))]
-            }            
+                'data': []
+            }  
+
+            leads_conversion_data = {
+                'label': 'Conversion Rate (%)',
+                'yAxisID': 'conversion_rates',
+                'fill': True,
+                'backgroundColor': 'rgba(255, 255, 255, 0)',
+                'borderColor': 'rgba(249, 83, 0, 0.83)',
+                'borderWidth': 1,
+                'data': []
+            }  
+
             for district in districts.keys():
-                district_lead_count = self.env['marketing.tracker'].retrieve_employee_district_wise_lead_count(district,employee,start_date,end_date)
-                lead_counts.append(district_lead_count)
-            leads_data['data'] = lead_counts
-            employee_leads_data['leads_dataset'].append(leads_data)
+                district_leads_data = self.env['marketing.tracker'].retrieve_employee_district_wise_lead_data(district,employee,start_date,end_date)
+                leads_count.append(district_leads_data['leads_count'])
+                conversion_rates.append(district_leads_data['leads_conversion_rate'])
+            leads_count_data['data'] = leads_count
+            leads_conversion_data['data'] = conversion_rates
+            employee_leads_data['leads_dataset'].append(leads_count_data)
+            employee_leads_data['leads_dataset'].append(leads_conversion_data)
+
+            year_target_data = self.env['marketing.tracker'].retrieve_leads_target_count(employee,start_date,end_date)
+            employee_leads_data['year_leads_count'] = year_target_data['year_leads_count']
+            employee_leads_data['year_leads_target'] = year_target_data['year_leads_target']
             return employee_leads_data
         else:
             return False
@@ -233,13 +259,18 @@ class LogicEmployeePerformance(models.Model):
         logger = logging.getLogger("Debugger: ")
         if start_date and end_date:
             start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
+            year = start_date.year
+        else:
+            year = date.today().year
         employee = self.env['hr.employee'].sudo().browse(int(employee_id))
         employee_data = {}
         employee_data['years'] = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037]
 
+        employee_data['misc_to_do_chart_dataset'] = self.get_line_chart_datasets(employee.id,start_date,end_date)
         employee_data['personal_data'] = self.get_employee_personal_data(employee)
         employee_data['academic_data'] = self.get_employee_academic_data(employee,start_date,end_date)
         employee_data['common_performance'] = self.get_common_performance_data(employee,start_date,end_date)
-        employee_data['line_chart_datasets'] = self.get_line_chart_datasets(employee)
-        employee_data['leads_data'] = self.get_employee_marketing_data(employee,start_date,end_date)
+        # employee_data['line_chart_datasets'] = self.get_line_chart_datasets(employee)
+        employee_data['marketing_data'] = self.get_employee_marketing_data(employee,start_date,end_date)
+        employee_data['year'] = year
         return employee_data

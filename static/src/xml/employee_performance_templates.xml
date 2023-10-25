@@ -83,6 +83,16 @@
                                                     <span class="label1">Miscellaneous Tasks:</span>
                                                     <span class="number-value" t-esc="values['common_performance']['misc_task_count']"/>
                                                 </div>
+                                                <div class="detail-item">
+                                                    <span class="label1">To Do Tasks:</span>
+                                                    <span class="number-value" t-esc="values['common_performance']['to_do_count']"/>
+                                                </div>
+                                                <div class="detail-item" t-if="values['marketing_data']">
+                                                    <span class="label1">Leads Target:</span>
+                                                    <span class="number-value" t-esc="values['marketing_data']['year_leads_count']"/>
+                                                    <span>/</span>
+                                                    <span t-esc="values['marketing_data']['year_leads_target']"/>
+                                                </div>
                                                 <div class="detail-item" t-if="values['academic_data']">
                                                     <span class="label1">Student rating:</span>
                                                     <span class="number-value" t-esc="values['academic_data']['student_feedback_rating']"/>
@@ -93,41 +103,12 @@
                                                     <span class="number-value" t-esc="values['common_performance']['qualitative_rating']"/>
                                                     <span>/ 5</span>
                                                 </div>
-                                                <div class="detail-item">
-                                                    <span class="label1">To Do Completed:</span>
-                                                    <span class="number-value" t-esc="values['common_performance']['to_do_count']"/>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="col-auto">
-                            <div class="employee_details_card card mt-3">
-                                <div class="card-body">
-                                    <h2 class="card-title"><u>Performance Details</u></h2>
-                                    <div class="detail-item" t-if="values['common_performance']">
-                                        <span class="label1">Miscellaneous Tasks:</span>
-                                        <span class="number-value" t-esc="values['common_performance']['misc_task_count']"/>
-                                    </div>
-                                    <div class="detail-item" t-if="values['academic_data']">
-                                        <span class="label1">Student rating:</span>
-                                        <span class="number-value" t-esc="values['academic_data']['student_feedback_rating']"/>
-                                        <span>/ 5</span>
-                                    </div>
-                                    <div class="detail-item" t-if="values['common_performance']">
-                                        <span class="label1">Qualitative rating:</span>
-                                        <span class="number-value" t-esc="values['common_performance']['qualitative_rating']"/>
-                                        <span>/ 5</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <span class="label1">To Do Completed:</span>
-                                        <span class="number-value" t-esc="values['common_performance']['to_do_count']"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
 
                         <div class="col m-2">
                             <div class="container-fluid mt-3">
@@ -140,12 +121,15 @@
 
                                     <div class="col-xs-1 inline-block" >
                                         <div style="margin-left: auto; margin-right: 0;">
-                                            <span class="font-weight-bold">Year </span>
-                                            <select class="graph_year form-control mr-2" style="display: inline-block; width: auto;background-color:#bfc1c2;">
+                                            <span class="font-weight-bold">Year: </span>
+                                            <span class="filter_year font-weight-bold" t-esc="values['year']"/>
+
+                                            <!-- <select class="graph_year form-control mr-2" style="display: inline-block; width: auto;background-color:#bfc1c2;">
                                                 <t t-foreach="values['years']" t-as="year">
                                                     <option t-att-value="year" t-esc="year"/>
                                                 </t>
-                                            </select>
+                                            </select> -->
+
                                         </div>
                                     </div>
                                 </div>
@@ -156,7 +140,7 @@
             </div>
 
 
-            <div class="row" t-if="values['leads_data']">
+            <div class="row" t-if="values['marketing_data']">
                 <div class="container-fluid">
                     <div class="row justify-content-start">
                         <div class="col m-2">

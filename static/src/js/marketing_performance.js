@@ -236,11 +236,11 @@ odoo.define('logic_performance_tracker.marketing_dashboard', function (require) 
                     x: {
                         stacked: true,
                         },
-                        y: {
+                    y: {
                         beginAtZero: true,
 
                         stacked: true
-                        }
+                    }
 
                 }
             };

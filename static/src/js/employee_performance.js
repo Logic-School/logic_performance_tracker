@@ -39,7 +39,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             
         events:{
             'click .model_record_card': '_onModelCardClickAction',
-            'change .graph_year': '_onGraphYearChange',
+            // 'change .graph_year': '_onGraphYearChange',
             'click .o_filter_reset': 'filter_reset',
             'click .o_filter_performance': '_onPerformanceFilterActionClicked',
 
@@ -86,27 +86,27 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             return $.when(def)
         },
 
-        retrieve_line_chart_data: function(year){
-            if(!year)
-            {
-                var curDate = new Date();
-                var year = curDate.getFullYear();
-            }
-            var self = this;
-                var def = self._rpc({
-                    model: 'logic.employee.performance', // Replace with your actual model name
-                    method: 'get_line_chart_datasets', // Use 'search_read' to retrieve records
-                    args: [self.employee_id,year], // Define search domain if needed
-                    // kwargs: {},
-                }).then(function (data) {
-                    self.line_chart_datasets = data;
-                    self.render_line_chart();
+        // retrieve_line_chart_data: function(year){
+        //     if(!year)
+        //     {
+        //         var curDate = new Date();
+        //         var year = curDate.getFullYear();
+        //     }
+        //     var self = this;
+        //         var def = self._rpc({
+        //             model: 'logic.employee.performance', // Replace with your actual model name
+        //             method: 'get_line_chart_datasets', // Use 'search_read' to retrieve records
+        //             args: [self.employee_id,year], // Define search domain if needed
+        //             // kwargs: {},
+        //         }).then(function (data) {
+        //             self.line_chart_datasets = data;
+        //             self.render_line_chart();
 
-                }).catch(function(err){
-                    console.log(err)
-                })
-                return $.when(def)
-        },
+        //         }).catch(function(err){
+        //             console.log(err)
+        //         })
+        //         return $.when(def)
+        // },
 
         start: function() {
     
@@ -114,7 +114,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             console.log("action cont: ",this.action)
             this.render_dashboards()
             // retrieve line chart data and render it
-            this.retrieve_line_chart_data()
+            this.render_line_chart()
             this.render_districtwise_leads_chart()
             // this.render_line_chart();
         },
@@ -123,7 +123,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             var self = this
             var data = {
                 labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                datasets: this.line_chart_datasets
+                datasets: this.data.misc_to_do_chart_dataset
             };
 
             // Configuration options
@@ -161,35 +161,49 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
 
         render_districtwise_leads_chart: function() {
             var self = this
-            if (this.data.leads_data)
+            if (this.data.marketing_data)
             {
                 console.log("inside if",this.data)
                 var data = {
-                    labels: this.data.leads_data['districts'],
-                    datasets: this.data.leads_data['leads_dataset'],
+                    labels: this.data.marketing_data['districts'],
+                    datasets: this.data.marketing_data['leads_dataset'],
                 }
                 // Configuration options
-                var options = {
+                var  options = {
                     responsive: true,
-                    maintainAspectRatio: true,
+                    interaction: {
+                      mode: 'index',
+                      intersect: false,
+                    },
+                    stacked: false,
                     plugins: {
-                        title: {
-                          display: true,
-                          text: 'Seminar Leads'
+                      title: {
+                        display: true,
+                        text: 'Seminar Leads'
+                      }
+                    },
+                    scales: {
+                      leads_count: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        beginAtZero: true,
+
+                      },
+                      conversion_rates: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        beginAtZero: true,
+
+                
+                        // grid line settings
+                        grid: {
+                          drawOnChartArea: false, // only want the grid lines for one axis to show up
                         },
                       },
-                    scales: {
-                        x: {
-                            stacked: true,
-                            },
-                            y: {
-                            beginAtZero: true,
-
-                            stacked: true
-                            }
-
                     }
-                };
+                  }
                 
 
                 // Create a new chart with jQuery
@@ -198,7 +212,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                 canvas_container.append('<canvas id="districtWiseLeadChart" style="width:850px;height:500px;"></canvas>')
                 var canvas1 = self.$('#districtWiseLeadChart');
                 self.LineChart1 = new Chart(canvas1, {
-                    type: 'bar',
+                    type: 'line',
                     data: data,
                     options: options
                 });            
@@ -233,7 +247,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                 self.data = data;
                 self.render_dashboards()
                 // retrieve line chart data and render it
-                self.retrieve_line_chart_data()
+                self.render_line_chart()
                 self.render_districtwise_leads_chart()
                 self.$(".from_date").val(fromDate)
                 self.$(".end_date").val(endDate)
@@ -261,7 +275,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                 // self.updateState(self.state,false)
                 self.render_dashboards()
                 // retrieve line chart data and render it
-                self.retrieve_line_chart_data()
+                self.render_line_chart()
                 self.render_districtwise_leads_chart()
             });
         },
@@ -311,13 +325,13 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                 return $.when(def);
         },
 
-        _onGraphYearChange: function(ev){
+        // _onGraphYearChange: function(ev){
 
-            var self = this;
-            var selected_year = this.$('.graph_year').val();
-            console.log(selected_year)
-            self.retrieve_line_chart_data(selected_year)
-        },
+        //     var self = this;
+        //     var selected_year = this.$('.graph_year').val();
+        //     console.log(selected_year)
+        //     self.retrieve_line_chart_data(selected_year)
+        // },
 
 
         render_dashboards: function() {
