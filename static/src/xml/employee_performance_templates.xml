@@ -92,6 +92,7 @@
                                                     <span class="number-value" t-esc="values['marketing_data']['year_leads_count']"/>
                                                     <span>/</span>
                                                     <span t-esc="values['marketing_data']['year_leads_target']"/>
+                                                    <span class="font-weight-bold" t-esc="' ('+values['year']+')'"/>
                                                 </div>
                                                 <div class="detail-item" t-if="values['academic_data']">
                                                     <span class="label1">Student rating:</span>
@@ -193,7 +194,38 @@
                         </div>
                     </div>
                 </t>
+                
+                <t t-if="values['digital_data']">
+                    <div class="col-md-2 col-sm-6 oh-payslip" >
+                        <div class="oh-card model_record_card" id="digital.task" name="Digital Tasks">
+                            <div class="oh-card-body">
+                                <div class="stat-widget-one">
+                                    <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/digital.png"/></div>
+                                    <div class="stat-content">
+                                        <div class="stat-text">Digital</div>
+                                        <div class="stat-digit"><t t-esc="values['digital_data']['digital_task_count']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
 
+                <t t-if="values['marketing_data']">
+                    <div class="col-md-2 col-sm-6 oh-payslip" >
+                        <div class="oh-card model_record_card" id="seminar.leads" name="Seminar">
+                            <div class="oh-card-body">
+                                <div class="stat-widget-one">
+                                    <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/seminar.png"/></div>
+                                    <div class="stat-content">
+                                        <div class="stat-text">Seminar</div>
+                                        <div class="stat-digit"><t t-esc="values['marketing_data']['leads_count']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
 
                 <t t-if="values['academic_data']">
     

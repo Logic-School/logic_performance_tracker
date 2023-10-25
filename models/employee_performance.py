@@ -63,6 +63,16 @@ class LogicEmployeePerformance(models.Model):
             domain = [('state','=','completed'),'|',('assigned_to','=',employee.user_id.id),('coworkers_ids','in',[employee.user_id.id] ), ('state','=','completed')]
             if start_date and end_date:
                 domain.extend([('completed_date','>=',start_date),('completed_date','<=',end_date)])
+
+        elif model_name=='digital.task':
+            domain = [('state','in',('completed','to_post','posted')), ('assigned_execs','in',[employee.user_id.id] ),('assigned_execs','!=',False)]
+            if start_date and end_date:
+                domain.extend([('date_completed', '>=',start_date), ('date_completed','<=',end_date)])
+
+        elif model_name=='seminar.leads':
+            domain = [('state','=','done'), ('create_uid','=',employee.user_id.id )]
+            if start_date and end_date:
+                domain.extend([('seminar_date', '>=',start_date), ('seminar_date','<=',end_date)])
         logger.error("domain: "+str(domain))
         logger.error("model: "+str(model_name))
 
@@ -227,6 +237,8 @@ class LogicEmployeePerformance(models.Model):
             year_target_data = self.env['marketing.tracker'].retrieve_leads_target_count(employee,start_date,end_date)
             employee_leads_data['year_leads_count'] = year_target_data['year_leads_count']
             employee_leads_data['year_leads_target'] = year_target_data['year_leads_target']
+
+            employee_leads_data['leads_count'] = self.env['marketing.tracker'].get_employee_seminar_count(employee,start_date,end_date)            
             return employee_leads_data
         else:
             return False
@@ -253,6 +265,19 @@ class LogicEmployeePerformance(models.Model):
         common_performance['to_do_count'] = self.env['to_do.tasks'].sudo().search_count(to_do_domain)        
             
         return common_performance
+    
+    def get_digital_performance_data(self,employee,start_date=False,end_date=False):
+        digital_dept_obj = self.env['hr.department'].sudo().search([('name','=','Digital')])
+        if employee.department_id.id == digital_dept_obj.id:
+            digital_domain = [('state','in',('completed','to_post','posted')), ('assigned_execs','in',[employee.user_id.id] ), ('assigned_execs','!=',False)]
+            if start_date and end_date:
+                digital_domain.extend([('date_completed', '>=',start_date), ('date_completed','<=',end_date)])
+            task_count = self.env['digital.task'].search_count(digital_domain)
+
+            digital_data = {'digital_task_count':task_count}
+            return digital_data
+        else:
+            return False
 
     @api.model
     def retrieve_employee_performance(self,employee_id,start_date=False,end_date=False):
@@ -271,6 +296,7 @@ class LogicEmployeePerformance(models.Model):
         employee_data['academic_data'] = self.get_employee_academic_data(employee,start_date,end_date)
         employee_data['common_performance'] = self.get_common_performance_data(employee,start_date,end_date)
         # employee_data['line_chart_datasets'] = self.get_line_chart_datasets(employee)
+        employee_data['digital_data'] = self.get_digital_performance_data(employee,start_date,end_date)
         employee_data['marketing_data'] = self.get_employee_marketing_data(employee,start_date,end_date)
         employee_data['year'] = year
         return employee_data

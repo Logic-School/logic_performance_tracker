@@ -49,16 +49,23 @@ class MarketingTracker(models.Model):
         dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self,employees,start_date,end_date)
 
         return dashboard_data
+    
+    def get_employee_seminar_count(self,employee,start_date,end_date):
+        seminar_domain = [('state','=','done'), ('create_uid','=',employee.user_id.id)]
+        if start_date and end_date:
+            seminar_domain.extend([('seminar_date', '>=',start_date), ('seminar_date','<=',end_date)])
+        seminar_count = self.env['seminar.leads'].search_count(seminar_domain)
+        return seminar_count
 
     def retrieve_leads_target_count(self,employee,start_date,end_date):
         if start_date and end_date:
             year=start_date.year
         else:
             year = date.today().year
-        year_lead_target_obj = self.env['seminar.target'].search([('year','=',year),('user_id','=',employee.user_id.id)])
+        year_lead_target_obj = self.env['seminar.target'].sudo().search([('year','=',year),('user_id','=',employee.user_id.id)])
         if year_lead_target_obj:
             year_lead_target = year_lead_target_obj[0].lead_target
-            seminars = self.env['seminar.leads'].search([('create_uid','=',employee.user_id.id),('seminar_date','!=',False)])
+            seminars = self.env['seminar.leads'].sudo().search([('create_uid','=',employee.user_id.id),('seminar_date','!=',False)])
             year_filtered_seminars = seminars.filtered(lambda seminar: seminar.seminar_date.year==year)
             leads_count = 0
             for seminar_lead in year_filtered_seminars:
