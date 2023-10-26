@@ -154,6 +154,7 @@ class LogicEmployeePerformance(models.Model):
 
     def get_employee_personal_data(self,employee):
         personal_data = {}
+        personal_data['id'] = employee.id
         personal_data['name'] = employee.name
         personal_data['job_title'] = employee.job_title
         personal_data['department_name'] = employee.department_id.name
@@ -335,6 +336,19 @@ class LogicEmployeePerformance(models.Model):
             return digital_data
         else:
             return False
+        
+    # get all other employees in the department
+    def get_department_employees(self,employee):
+        employees = self.env['hr.employee'].sudo().search([('department_id','=',employee.department_id.id),('id','!=',employee.id)])
+        employees_data = []
+        for employee in employees:
+            data = {}
+            data['id'] = employee.id
+            data['name'] = employee.name
+            data['image'] = employee.image_1920
+            employees_data.append(data)
+        return employees_data
+
 
     @api.model
     def retrieve_employee_performance(self,employee_id,start_date=False,end_date=False):
@@ -346,8 +360,9 @@ class LogicEmployeePerformance(models.Model):
             year = date.today().year
         employee = self.env['hr.employee'].sudo().browse(int(employee_id))
         employee_data = {}
-        employee_data['years'] = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037]
 
+        employee_data['years'] = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037]
+        employee_data['department_employees'] = self.get_department_employees(employee)
         employee_data['misc_to_do_chart_dataset'] = self.get_line_chart_datasets(employee.id,start_date,end_date)
         employee_data['personal_data'] = self.get_employee_personal_data(employee)
         employee_data['academic_data'] = self.get_employee_academic_data(employee,start_date,end_date)

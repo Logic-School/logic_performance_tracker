@@ -14,6 +14,16 @@
             <div class="row">
                 <div class="container-fluid mt-3">
                     <div class="row justify-content-center">
+                        <div class="col-auto ml-4" style="">   
+                            <!-- <span class="font-weight-bold">Employee </span> -->
+                            <select class="department_employee form-control mr-2" style="display: inline-block; width: auto;background-color:#bfc1c2;">
+                                <option t-if="values['personal_data']" t-att-value="values['personal_data']['id']" t-esc="values['personal_data']['name']"/>
+
+                                <t t-if="values['department_employees']" t-foreach="values['department_employees']" t-as="department_employee">
+                                    <option t-if="department_employee" t-att-value="department_employee['id']" t-esc="department_employee['name']"/>
+                                </t>
+                            </select>
+                        </div>
                         <div class="col-auto" style="margin-left: auto; margin-right: 0;">   
                             <span class="font-weight-bold">From: </span>
                             <input class="from_date date-picker-icon custom-date-input" type="date"/>

@@ -16,7 +16,6 @@
             <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/orgchart_styles.css"/>
             <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/other_styles.css"/>
             <div class="o_dashboard_card" style="overflow-x: auto;">
-                <script type="text/javascript" src="/logic_performance_tracker/static/src/js/org_chart_component.js"/> 
 
             <div t-if="values">
                 <div t-if="values">

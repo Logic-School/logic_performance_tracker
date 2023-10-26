@@ -42,7 +42,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             // 'change .graph_year': '_onGraphYearChange',
             'click .o_filter_reset': 'filter_reset',
             'click .o_filter_performance': '_onPerformanceFilterActionClicked',
-
+            'change .department_employee': '_onSelectedEmployeeChanged',
         },
     
         init: function(parent, context) {
@@ -51,6 +51,9 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             this.LineChart1 = undefined
             this.line_chart_datasets = []
             this.employee_id = context.params.employee_id
+            this.start_date = context.context.start_date
+            this.end_date = context.context.end_date
+
             this.data = {};
         },
     
@@ -60,10 +63,11 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                 var def = self._rpc({
                     model: 'logic.employee.performance', // Replace with your actual model name
                     method: 'retrieve_employee_performance', // Use 'search_read' to retrieve records
-                    args: [self.employee_id], // Define search domain if needed
+                    args: [self.employee_id,self.start_date,self.end_date], // Define search domain if needed
                     // kwargs: {},
                 }).then(function (data) {
                     self.data = data;
+
                 }).catch(function(err){
                     console.log(err)
                 })
@@ -76,7 +80,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             var def = self._rpc({
                 model: 'logic.employee.performance', // Replace with your actual model name
                 method: 'retrieve_employee_performance', // Use 'search_read' to retrieve records
-                args: [self.employee_id], // Define search domain if needed
+                args: [self.employee_id,self.start_date,self.end_date], // Define search domain if needed
                 // kwargs: {},
             }).then(function (data) {
                 self.data = data;
@@ -86,27 +90,42 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             return $.when(def)
         },
 
-        // retrieve_line_chart_data: function(year){
-        //     if(!year)
-        //     {
-        //         var curDate = new Date();
-        //         var year = curDate.getFullYear();
-        //     }
-        //     var self = this;
-        //         var def = self._rpc({
-        //             model: 'logic.employee.performance', // Replace with your actual model name
-        //             method: 'get_line_chart_datasets', // Use 'search_read' to retrieve records
-        //             args: [self.employee_id,year], // Define search domain if needed
-        //             // kwargs: {},
-        //         }).then(function (data) {
-        //             self.line_chart_datasets = data;
-        //             self.render_line_chart();
+        _onSelectedEmployeeChanged: function (ev){
+            var self = this
+            var fromDate = this.$('.from_date').val();
+            var endDate = this.$('.end_date').val();
 
-        //         }).catch(function(err){
-        //             console.log(err)
-        //         })
-        //         return $.when(def)
-        // },
+            if (fromDate=='' || endDate=='')
+            {
+                fromDate=false
+                endDate=false
+            }
+
+            let emp_id = $(ev.currentTarget).val()
+            console.log("empt id: ",emp_id)
+            this._rpc({
+                model: "hr.employee", // Replace with your actual model name
+                method: 'search_read', // Use 'search_read' to retrieve records
+                domain: [['id','=',emp_id]],
+            }).then(function (employee) {
+            var action = {
+                type: 'ir.actions.client',
+                name: employee[0].name,
+                // res_model: self.model_name,
+                // view_type: 'tree',
+                // target: 'main',
+                tag: 'employee_performance',
+                target: 'current',
+                // nodestroy: true
+                params: {'employee_id': emp_id},
+                context: {'start_date': fromDate, 'end_date':endDate},
+
+            }
+            return self.do_action(action,{'hello': true});
+        }).catch(function(err){
+            console.log(err)
+        })
+        },
 
         start: function() {
     
@@ -324,7 +343,8 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
 
         filter_reset : function(){
             var self = this;
-    
+            self.start_date = false
+            self.end_date = false
             // Save the current state
             var currentState = _.extend({}, this.state);
         
@@ -407,6 +427,11 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                 values: this.data
             });
             this.$el.html(dashboard)
+            if (self.start_date && self.end_date)
+            {
+                self.$(".from_date").val(self.start_date)
+                self.$(".end_date").val(self.end_date)
+            }
             return $.when()
         },
 

@@ -148,7 +148,7 @@ odoo.define('logic_performance_tracker.marketing_dashboard', function (require) 
                 target: 'current',
                 // nodestroy: true
                 params: {'employee_id': emp_id},
-                context: {'hello1': true},
+                params: {'employee_id': emp_id},
 
             }
             return self.do_action(action,{'hello': true});
