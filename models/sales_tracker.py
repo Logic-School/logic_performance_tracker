@@ -21,27 +21,28 @@ class SalesTracker(models.Model):
 
         dashboard_data['qualitatives'] = actions_common.get_raw_qualitative_data(self,employees,start_date,end_date)
 
-        # districts = dict(self.env['seminar.leads'].fields_get()['district']['selection'])
-        # district_names = list(dict(self.env['seminar.leads'].fields_get()['district']['selection']).values())
+        lead_sources = self.env['leads.sources'].sudo().search([])
+        lead_source_names = lead_sources.mapped('name')
+        logger.error("lead_sources: "+str(lead_source_names))
 
-        # dashboard_data['leads_data'] = {'districts':district_names,'leads_dataset':[]}
+        dashboard_data['leads_data'] = {'lead_sources':lead_source_names,'leads_dataset':[]}
         for employee in employees:
             actions_common.create_employee_qualitative_performance(self,dashboard_data['qualitatives'],employee)
-            # leads_count = []
-            # conversion_rates = []
-            # leads_data = {
-            #     'label': employee.name,
-            #     'backgroundColor': rgba_colors.pop(random.randint(0,20)),
-            #     'borderColor': 'rgba(27, 92, 196, 0.95)',
-            #     'borderWidth': 1,
-            #     'data': []
-            # }            
-            # # for district in districts.keys():
-            # #     district_leads_data = self.env['marketing.tracker'].retrieve_employee_district_wise_lead_data(district,employee,start_date,end_date)
-            # #     leads_count.append(district_leads_data['leads_count'])
-            # #     conversion_rates.append(district_leads_data['leads_conversion_rate'])
-            # # leads_data['data'] = leads_count
-            # # dashboard_data['leads_data']['leads_dataset'].append(leads_data)
+            leads_count = []
+            conversion_rates = []
+            leads_data = {
+                'label': employee.name,
+                'backgroundColor': rgba_colors.pop(random.randint(0,20)),
+                'borderColor': 'rgba(27, 92, 196, 0.95)',
+                'borderWidth': 1,
+                'data': []
+            }            
+            for lead_source in lead_sources:
+                source_leads_data = self.env['sales.tracker'].retrieve_employee_source_wise_lead_data(lead_source,employee,start_date,end_date)
+                leads_count.append(source_leads_data['leads_count'])
+                conversion_rates.append(source_leads_data['leads_conversion_rate'])
+            leads_data['data'] = leads_count
+            dashboard_data['leads_data']['leads_dataset'].append(leads_data)
 
         dashboard_data['org_datas'],dashboard_data['dept_names'] = actions_common.get_org_datas_dept_names(manager,managers)
 
@@ -49,3 +50,45 @@ class SalesTracker(models.Model):
         dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self,employees,start_date,end_date)
 
         return dashboard_data
+    
+    
+    def retrieve_employee_source_wise_lead_data(self,lead_source,employee,start_date=False,end_date=False):
+        logger = logging.getLogger("Debugger: ")
+        leads_count = 0
+        lead_conversion_rate = 0
+        lead_domain = [('leads_source','=',lead_source.id),('state','in',('done','crm')),('leads_assign','=',employee.id)]
+        if start_date and end_date:
+            lead_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
+        leads = self.env['leads.logic'].sudo().search(lead_domain)
+        converted_lead_count = 0
+        for lead in leads:
+            leads_count+=1
+            if lead.admission_status == True:
+                converted_lead_count+=1
+        if leads_count>0:
+            lead_conversion_rate = 100 * round(converted_lead_count/leads_count,3)
+        return {'leads_count':leads_count, 'leads_conversion_rate': lead_conversion_rate}
+    
+
+    def retrieve_leads_target_count(self,employee,start_date,end_date):
+        if start_date and end_date:
+            year=start_date.year
+        else:
+            year = date.today().year
+        year_lead_target_obj = self.env['leads.target'].sudo().search([('year','=',year),('user_id','=',employee.user_id.id)])
+        if year_lead_target_obj:
+            year_lead_target = year_lead_target_obj[0].admission_target
+            leads = self.env['leads.logic'].sudo().search([('leads_assign','=',employee.id),('date_of_adding','!=',False)])
+            year_filtered_leads = leads.filtered(lambda lead: lead.date_of_adding.year==year)
+            leads_count = 0
+            for lead in year_filtered_leads:
+                leads_count+=1
+            return {'year_leads_target': year_lead_target, 'year_leads_count': leads_count}
+        return {'year_leads_target': 0, 'year_leads_count': 0}
+
+    def get_employee_lead_count(self,employee,start_date,end_date):
+        lead_domain = [('state','in',('done','crm')), ('leads_assign','=',employee.id)]
+        if start_date and end_date:
+            lead_domain.extend([('date_of_adding', '>=',start_date), ('date_of_adding','<=',end_date)])
+        lead_count = self.env['leads.logic'].search_count(lead_domain)
+        return lead_count

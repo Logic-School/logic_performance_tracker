@@ -76,7 +76,7 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
             this._super.apply(this, arguments)
             this.render_dashboards()
             this.render_organisation_chart()
-            // this.render_districtwise_chart()
+            this.render_sourcewise_chart()
         },
 
         render_organisation_chart: function(){
@@ -125,6 +125,45 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
 
             return $.when()
     
+        },
+
+        render_sourcewise_chart: function() {
+            var self = this
+            var data = {
+                labels: this.data.leads_data['lead_sources'],
+                datasets: this.data.leads_data['leads_dataset'],
+            }
+            // Configuration options
+            var options = {
+                responsive: true,
+                maintainAspectRatio: true,
+
+                scales: {
+                    x: {
+                        stacked: true,
+                        },
+                    y: {
+                        beginAtZero: true,
+
+                        stacked: true
+                    }
+
+                }
+            };
+            
+
+            // Create a new chart with jQuery
+            var canvas_container = self.$('.sourcechart-canvas-container');
+            canvas_container.empty()
+            canvas_container.append('<canvas id="sourceWiseLeadChart" style="width:850px;height:500px;"></canvas>')
+            var canvas1 = self.$('#sourceWiseLeadChart');
+            self.LineChart1 = new Chart(canvas1, {
+                type: 'bar',
+                data: data,
+                options: options
+            });            
+
+
         },
 
         _onEmployeeNodeClicked: function (ev){
@@ -209,7 +248,7 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
                 self.data = data
                 self.render_dashboards()
                 self.render_organisation_chart()
-                // self.render_districtwise_chart();
+                self.render_sourcewise_chart()
                 self.$(".from_date").val(fromDate)
                 self.$(".end_date").val(endDate)
                 self.$(".department_head").val(department_head_id)
@@ -243,7 +282,7 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
                 // self.updateState(self.state,false)
                 self.render_dashboards();
                 self.render_organisation_chart()
-                // self.render_districtwise_chart();
+                self.render_sourcewise_chart()
 
             });
         },
@@ -268,6 +307,8 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
                 // self.updateState(self.state,false)
                 self.render_dashboards();
                 self.render_organisation_chart()
+                self.render_sourcewise_chart()
+
             });
         
         },

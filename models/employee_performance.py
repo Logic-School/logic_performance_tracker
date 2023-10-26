@@ -73,6 +73,11 @@ class LogicEmployeePerformance(models.Model):
             domain = [('state','=','done'), ('create_uid','=',employee.user_id.id )]
             if start_date and end_date:
                 domain.extend([('seminar_date', '>=',start_date), ('seminar_date','<=',end_date)])
+
+        elif model_name=='leads.logic':
+            domain = [('state','=',('done','crm')), ('leads_assign','=',employee.id )]
+            if start_date and end_date:
+                domain.extend([('date_of_adding', '>=',start_date), ('date_of_adding','<=',end_date)])
         logger.error("domain: "+str(domain))
         logger.error("model: "+str(model_name))
 
@@ -196,6 +201,55 @@ class LogicEmployeePerformance(models.Model):
                 return values
         return False
         
+    def get_employee_sales_data(self,employee,start_date=False,end_date=False):
+        sales_dept_obj = self.env['hr.department'].sudo().search([('name','=','Sales')])
+        if employee.department_id.id in sales_dept_obj.child_ids.ids:
+            lead_sources = self.env['leads.sources'].sudo().search([])
+            lead_source_names = lead_sources.mapped('name')
+            employee_leads_data = {'lead_sources':lead_source_names, 'leads_dataset': [] }
+            leads_count = []
+            conversion_rates = []
+            leads_count_data = {
+                'type':'bar',
+                'label': 'Leads Count',
+                'yAxisID': 'leads_count',
+                'fill': True,
+                'backgroundColor': 'rgba(255, 255, 255, 0)',
+                'borderColor': 'rgba(49, 150, 76, 0.68)',
+                'borderWidth': 1,
+                'data': []
+            }  
+
+
+            leads_conversion_data = {
+                'type':'line',
+                'label': 'Conversion Rate (%)',
+                'yAxisID': 'conversion_rates',
+                'fill': True,
+                'backgroundColor': 'rgba(255, 255, 255, 0)',
+                'borderColor': 'rgba(249, 83, 0, 0.83)',
+                'borderWidth': 1,
+                'data': []
+            }  
+
+            for lead_source in lead_sources:
+                source_leads_data = self.env['sales.tracker'].retrieve_employee_source_wise_lead_data(lead_source,employee,start_date,end_date)
+                leads_count.append(source_leads_data['leads_count'])
+                conversion_rates.append(source_leads_data['leads_conversion_rate'])
+            leads_count_data['data'] = leads_count
+            leads_conversion_data['data'] = conversion_rates
+            employee_leads_data['leads_dataset'].append(leads_count_data)
+            employee_leads_data['leads_dataset'].append(leads_conversion_data)
+
+            year_target_data = self.env['sales.tracker'].retrieve_leads_target_count(employee,start_date,end_date)
+            employee_leads_data['year_leads_count'] = year_target_data['year_leads_count']
+            employee_leads_data['year_leads_target'] = year_target_data['year_leads_target']
+
+            employee_leads_data['leads_count'] = self.env['sales.tracker'].get_employee_lead_count(employee,start_date,end_date)            
+            return employee_leads_data
+        else:
+            return False
+
     def get_employee_marketing_data(self,employee,start_date=False,end_date=False):
         marketing_dept_obj = self.env['hr.department'].sudo().search([('name','=','Marketing')])
         if employee.department_id.id in marketing_dept_obj.child_ids.ids:
@@ -206,6 +260,8 @@ class LogicEmployeePerformance(models.Model):
             leads_count = []
             conversion_rates = []
             leads_count_data = {
+                'type':'bar',
+
                 'label': 'Leads Count',
                 'yAxisID': 'leads_count',
                 'fill': True,
@@ -216,6 +272,7 @@ class LogicEmployeePerformance(models.Model):
             }  
 
             leads_conversion_data = {
+                'type':'line',
                 'label': 'Conversion Rate (%)',
                 'yAxisID': 'conversion_rates',
                 'fill': True,
@@ -298,5 +355,7 @@ class LogicEmployeePerformance(models.Model):
         # employee_data['line_chart_datasets'] = self.get_line_chart_datasets(employee)
         employee_data['digital_data'] = self.get_digital_performance_data(employee,start_date,end_date)
         employee_data['marketing_data'] = self.get_employee_marketing_data(employee,start_date,end_date)
+        employee_data['sales_data'] = self.get_employee_sales_data(employee,start_date,end_date)
+
         employee_data['year'] = year
         return employee_data
