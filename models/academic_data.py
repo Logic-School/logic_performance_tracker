@@ -17,7 +17,7 @@ def get_yes_plus_data(self,batch):
     batch_yes_plus_obj = self.env['yes_plus.logic'].sudo().search([('batch_id','=',batch.id),('state','=','complete')])
     if batch_yes_plus_obj:
         yes_plus_data['is_conducted'] = True
-        yes_plus_data['average_attendance'] = batch_yes_plus_obj[0].yes_avg_attendance
+        yes_plus_data['average_attendance'] = round(batch_yes_plus_obj[0].yes_avg_attendance,2)
     else:
         yes_plus_data['is_conducted'] = False
         yes_plus_data['average_attendance'] = 0
@@ -63,7 +63,7 @@ def get_excel_data(self,batch):
                 average_attendance = total_attendance
         else:
             average_attendance = 0
-        excel_data['average_attendance'] = average_attendance
+        excel_data['average_attendance'] = round(average_attendance,2)
     return excel_data
 
 def get_cip_data(self,batch):

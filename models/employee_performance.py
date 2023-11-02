@@ -16,12 +16,12 @@ class LogicEmployeePerformance(models.Model):
 
         employee = self.env['hr.employee'].browse(int(employee_id))
         if model_name=="upaya.form":
-            domain = [['coordinator_id','=',employee.user_id.id]]
+            domain = [['coordinator_id','=',employee.user_id.id],['state','=','complete']]
             if start_date and end_date:
                 domain.extend([('date','>=',start_date),('date','<=',end_date)])
 
         elif model_name=="yes_plus.logic":
-            domain = [['coordinator_id','=',employee.user_id.id]]
+            domain = [['coordinator_id','=',employee.user_id.id],['state','=','complete']]
             if start_date and end_date:
                 domain.extend([('date_one','>=',start_date),('date_one','<=',end_date)])
 
