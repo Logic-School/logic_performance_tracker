@@ -3,6 +3,7 @@ import logging
 import random
 from datetime import date
 from . import actions_common
+from . import academic_data
 class LogicEmployeePerformance(models.Model):
     _name = "logic.employee.performance"
     @api.model
@@ -172,10 +173,37 @@ class LogicEmployeePerformance(models.Model):
         else:
             return 0
         
+    def get_employee_academic_batches(self,employee):
+        batch_objs = self.env['logic.base.batch'].search([('academic_coordinator','=',employee.user_id.id)])
+        batches = []
+        for batch_obj in batch_objs:
+            batch = {'id':batch_obj.id,'name':batch_obj.name}
+            batch['strength'] = self.env['logic.students'].search_count([('batch_id','=',batch_obj.id),('current_status','=',True)])
+            batches.append(batch)
+        return batches
+    
+    @api.model
+    def get_academic_batch_data(self,batch_id):
+        batch_obj = self.env['logic.base.batch'].sudo().browse(int(batch_id))
+        batch_strength = self.env['logic.students'].sudo().search_count([('batch_id','=',batch_obj.id)])
+        batch_data = {'batch_strength': batch_strength}
+
+        batch_data['upaya_data'] = academic_data.get_upaya_data(self,batch_obj)
+        batch_data['yes_plus_data'] = academic_data.get_yes_plus_data(self,batch_obj)
+        batch_data['presentation_data'] = academic_data.get_presentation_data(self,batch_obj)
+        batch_data['excel_data'] = academic_data.get_excel_data(self,batch_obj)
+        batch_data['cip_data'] = academic_data.get_cip_data(self,batch_obj)
+        batch_data['bb_data'] = academic_data.get_bb_data(self,batch_obj)
+        batch_data['mock_interview_data'] = academic_data.get_mock_interview_data(self,batch_obj)
+        batch_data['attendance_data'] = academic_data.get_attendance_data(self,batch_obj)
+        batch_data['exam_data'] = academic_data.get_exam_data(self,batch_obj)
+        return batch_data
+    
     def get_employee_academic_data(self,employee,start_date=False,end_date=False):
         department_obj = employee.department_id
         if department_obj.parent_id:
             if department_obj.parent_id.name=='ACADEMICS':
+
                 employee_academic_domains = actions_common.get_academic_domains(self,department_obj=department_obj,start_date=start_date,end_date=end_date,manager=False,managers=False,employee_user_ids=[employee.user_id.id])
                 employee_academic_counts = actions_common.get_academic_counts(self,employee_academic_domains)
                 total_completed = sum(list(employee_academic_counts.values()))
@@ -199,6 +227,8 @@ class LogicEmployeePerformance(models.Model):
                     self.env['academic.coordinator.performance'].create(values)
                 values['name'] = employee.name
                 values['student_feedback_rating'] = self.get_student_feedback_average(employee)
+                values['batches'] = self.get_employee_academic_batches(employee)
+                # values['academic_batch_data'] = self.get_academic_batch_data(values['batches'])
                 return values
         return False
         

@@ -1,0 +1,40 @@
+.ui-widget-header {
+	border: 1px solid #dddddd;
+	background: #72dfb1;
+	color: #333333;
+	font-weight: bold;
+}
+    .upaya_attended .ui-widget-header{
+        background: #ffcd83;
+    }
+    .yes_plus_average .ui-widget-header{
+        background: #9ccfff;
+
+    }
+    .presentation_attended .ui-widget-header{
+        background: #e430d5;
+    }
+    .cip_average .ui-widget-header{
+        background: #6981ee;
+    }
+    .bb_average .ui-widget-header{
+        background: #996a4a;
+    }
+    .mock_average .ui-widget-header{
+        background: #ffe65a;
+    }
+    .attendance_average .ui-widget-header{
+        background: #f0544e;
+    }
+.ui-progressbar {
+    width:100%;
+	height: 1.5em;
+	text-align: left;
+	overflow: hidden;
+}
+
+.ui-widget-content {
+	border: 1px solid #dddddd;
+	background: #ffffff;
+	color: #333333;
+}

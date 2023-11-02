@@ -3,6 +3,11 @@
     margin-right: 10px;
     font-size: 15px;
 }
+.label2 {
+    font-weight: bold;
+    margin-right: 10px;
+    font-size: 17px;
+}
 .number-value {
     color: #b65e24;
     font-size: 15px;
@@ -11,6 +16,11 @@
     font-size: 15px;
 
 }
+
+/* .detail-item{
+    display: flex;
+    justify-content: space-between;
+} */
 .employee_details_card {
     /* max-width: 800px; */
     border-radius: 10px;

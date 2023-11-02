@@ -5,9 +5,12 @@
     <t t-name="logic_performance_tracker.employee_performance_template">
         <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/dashboard_card_view.css"/>
         <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/lib/jquery.orgchart.css"/>
+        <!-- <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/lib/jquery-ui.css"/> -->
 
         <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/orgchart_styles.css"/>
         <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/other_styles.css"/>
+        <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/progressbar.css"/>
+
         <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/employee_performance_styles.css"/>
         <div t-if="values" class="container-fluid" style="margin:0;padding:0;">
 
@@ -17,10 +20,20 @@
                         <div class="col-auto ml-4" style="">   
                             <!-- <span class="font-weight-bold">Employee </span> -->
                             <select class="department_employee form-control mr-2" style="display: inline-block; width: auto;background-color:#bfc1c2;">
-                                <option t-if="values['personal_data']" t-att-value="values['personal_data']['id']" t-esc="values['personal_data']['name']"/>
+                                <option t-if="values['personal_data']" t-att-value="values['personal_data']['id']">
+                                    <div>
+                                        <span t-esc="values['personal_data']['name']" />
+                                        <img t-att-src="'data:image/png;base64,'+values['personal_data']['image']"/>
+                                    </div>
+                                </option>
 
                                 <t t-if="values['department_employees']" t-foreach="values['department_employees']" t-as="department_employee">
-                                    <option t-if="department_employee" t-att-value="department_employee['id']" t-esc="department_employee['name']"/>
+                                    <option t-if="department_employee" t-att-value="department_employee['id']">
+                                        <div>
+                                            <span t-esc="department_employee['name']" />
+                                            <img t-att-src="department_employee['image']"/>
+                                        </div>
+                                    </option>
                                 </t>
                             </select>
                         </div>
@@ -35,6 +48,8 @@
                     </div>
                 </div>
             </div>
+            
+
 
             <div class="row">
                 <div class="container-fluid">
@@ -148,6 +163,101 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="row m-4" t-if="values['academic_data']">
+                <div class="employee_details_card academic_batch_data" style="width:100%;height:auto;">
+                    <div class="card-header row px-0 mr-0 ml-0" style="border:0px">
+                        <div t-if="values['academic_data']" class="col">
+                            <select class="academic_batch form-control mr-2" style="display: inline-block; width: auto;background-color:#bfc1c2;">
+                                <t t-if="values['academic_data']['batches']" t-foreach="values['academic_data']['batches']" t-as="batch">
+                                    <option t-att-value="batch['id']" t-esc="batch['name'] + ' (' + batch['strength'] + ' Students)'"/>
+                                </t>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <h2>Batch Summary</h2>
+
+                        </div>
+                    </div>
+                </div>
+                    <!-- <div class="col-auto">
+                        <div class="card-body">
+                            <div class="detail-item" t-if="values['common_performance']">
+                                <span class="label2">Upaya Conducted:</span>
+                                <span class="number-value" t-esc="'No'"/>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="label2">Yes Plus Conducted:</span>
+                                <span class="number-value" t-esc="'No'"/>
+                            </div>
+                            <div class="row">
+                                <div class="col-auto">
+                                    <span class="label2">Upaya Attended:</span>
+                                </div>
+                                <div class="col p-0 mt-2 upaya_attended" style="margin-left:92px;">
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-auto">
+                                    <span class="label2">Presentation Attended:</span>
+                                </div>
+
+                                <div class="col p-0 mt-2 presentation_attended" style="margin-left:40px;">
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-auto">
+                                    <span class="label2">CIP Average Attendance:</span>
+                                </div>
+
+                                <div class="col p-0 mt-2 cip_average" style="margin-left:24px;">
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-auto">
+                                    <span class="label2 ml-0 mr-0">Excel Average Attendance:</span>
+                                </div>
+
+                                <div class="col p-0 mt-2 excel_average" style="margin-left:18px;">
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-auto">
+                                    <span class="label2">BB Attendance:</span>
+                                </div>
+
+                                <div class="col p-0 mt-2 bb_average" style="margin-left:97px;">
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-auto">
+                                    <span class="label2">Mock Interview Attendance:</span>
+                                </div>
+                                <div class="col p-0 mt-2 mock_average">
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-auto">
+                                    <span class="label2">Attendance Average:</span>
+                                </div>
+                                <div style="margin-left:54px;" class="col p-0 mt-2 attendance_average">
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div> -->
             </div>
 
 

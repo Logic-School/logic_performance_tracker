@@ -44,6 +44,7 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
         
         events:{
             'click .o_filter_performance': '_onPerformanceFilterActionClicked',
+            'change .department_head': '_onPerformanceFilterActionClicked',
             'click .o_filter_reset': 'filter_reset',
             'click .o_employee_name': '_onEmployeeNameClicked',
             'click .node':'_onEmployeeNodeClicked',

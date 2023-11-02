@@ -1,6 +1,6 @@
 odoo.define('logic_performance_tracker.employee_performance', function (require) {
     "use strict";
-    
+
     const ActionMenus = require('web.ActionMenus');
     const ComparisonMenu = require('web.ComparisonMenu');
     const ActionModel = require('web/static/src/js/views/action_model.js');
@@ -11,9 +11,9 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
     const Pager = require('web.Pager');
     const SearchBar = require('web.SearchBar');
     const { useModel } = require('web/static/src/js/model.js');
-    
+
     const { Component, hooks } = owl;
-    
+
     var concurrency = require('web.concurrency');
     var config = require('web.config');
     var field_utils = require('web.field_utils');
@@ -32,22 +32,23 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
     var QWeb = core.qweb;
 
     const { useRef, useSubEnv } = hooks;
-    
+
     var EmployeePerformanceAction = AbstractAction.extend({
-    
-        xmlDependencies: ['/logic_performance_tracker/static/src/xml/employee_performance_templates.xml'],
-            
-        events:{
+
+        xmlDependencies: ['/logic_performance_tracker/static/src/xml/employee_performance_templates.xml','/logic_performance_tracker/static/src/xml/batch_data_templates.xml'],
+
+        events: {
             'click .model_record_card': '_onModelCardClickAction',
             // 'change .graph_year': '_onGraphYearChange',
             'click .o_filter_reset': 'filter_reset',
             'click .o_filter_performance': '_onPerformanceFilterActionClicked',
             'change .department_employee': '_onSelectedEmployeeChanged',
+            'change .academic_batch': 'render_academic_batch_data_summary'
         },
-    
-        init: function(parent, context) {
+
+        init: function (parent, context) {
             this._super(parent, context);
-            console.log("context",context)
+            console.log("context", context)
             this.LineChart1 = undefined
             this.line_chart_datasets = []
             this.employee_id = context.params.employee_id
@@ -56,91 +57,239 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
 
             this.data = {};
         },
-    
-        willStart: function(){
+
+        willStart: function () {
             var self = this;
-            return this._super().then(function() {
+            return this._super().then(function () {
                 var def = self._rpc({
                     model: 'logic.employee.performance', // Replace with your actual model name
                     method: 'retrieve_employee_performance', // Use 'search_read' to retrieve records
-                    args: [self.employee_id,self.start_date,self.end_date], // Define search domain if needed
+                    args: [self.employee_id, self.start_date, self.end_date], // Define search domain if needed
                     // kwargs: {},
                 }).then(function (data) {
                     self.data = data;
 
-                }).catch(function(err){
+                }).catch(function (err) {
                     console.log(err)
                 })
                 return $.when(def)
             });
         },
 
-        fetch_data: function(){
+        fetch_data: function () {
             var self = this;
             var def = self._rpc({
                 model: 'logic.employee.performance', // Replace with your actual model name
                 method: 'retrieve_employee_performance', // Use 'search_read' to retrieve records
-                args: [self.employee_id,self.start_date,self.end_date], // Define search domain if needed
+                args: [self.employee_id, self.start_date, self.end_date], // Define search domain if needed
                 // kwargs: {},
             }).then(function (data) {
                 self.data = data;
-            }).catch(function(err){
+            }).catch(function (err) {
                 console.log(err)
             })
             return $.when(def)
         },
 
-        _onSelectedEmployeeChanged: function (ev){
+        _onSelectedEmployeeChanged: function (ev) {
             var self = this
             var fromDate = this.$('.from_date').val();
             var endDate = this.$('.end_date').val();
 
-            if (fromDate=='' || endDate=='')
-            {
-                fromDate=false
-                endDate=false
+            if (fromDate == '' || endDate == '') {
+                fromDate = false
+                endDate = false
             }
 
             let emp_id = $(ev.currentTarget).val()
-            console.log("empt id: ",emp_id)
+            console.log("empt id: ", emp_id)
             this._rpc({
                 model: "hr.employee", // Replace with your actual model name
                 method: 'search_read', // Use 'search_read' to retrieve records
-                domain: [['id','=',emp_id]],
+                domain: [['id', '=', emp_id]],
             }).then(function (employee) {
-            var action = {
-                type: 'ir.actions.client',
-                name: employee[0].name,
-                // res_model: self.model_name,
-                // view_type: 'tree',
-                // target: 'main',
-                tag: 'employee_performance',
-                target: 'current',
-                // nodestroy: true
-                params: {'employee_id': emp_id},
-                context: {'start_date': fromDate, 'end_date':endDate},
+                var action = {
+                    type: 'ir.actions.client',
+                    name: employee[0].name,
+                    // res_model: self.model_name,
+                    // view_type: 'tree',
+                    // target: 'main',
+                    tag: 'employee_performance',
+                    target: 'main',
+                    // clear_breadcrumb: true,
 
-            }
-            return self.do_action(action,{'hello': true});
-        }).catch(function(err){
-            console.log(err)
-        })
+                    // nodestroy: true
+                    params: { 'employee_id': emp_id },
+                    context: { 'start_date': fromDate, 'end_date': endDate },
+
+                }
+                return self.do_action(action, { 'hello': true });
+            }).catch(function (err) {
+                console.log(err)
+            })
         },
 
-        start: function() {
-    
+        start: function () {
+
             this._super.apply(this, arguments)
-            console.log("action cont: ",this.action)
+            console.log("action cont: ", this.action)
             this.render_dashboards()
             // retrieve line chart data and render it
             this.render_line_chart()
             this.render_districtwise_leads_chart()
             this.render_sourcewise_leads_chart();
+            this.render_academic_batch_data_summary();
             // this.render_line_chart();
         },
 
-        render_line_chart: function() {
+        render_academic_batch_data_summary: function () {
+            var self = this;
+            if (self.data.academic_data) {
+                var batch_id = self.$('.academic_batch').val()
+                if (batch_id)
+                {
+                var def = self._rpc({
+                    model: 'logic.employee.performance', // Replace with your actual model name
+                    method: 'get_academic_batch_data', // Use 'search_read' to retrieve records
+                    args: [batch_id], // Define search domain if needed
+                    // kwargs: {},
+                }).then(function (data) {
+                    var sub_div_elem = self.$('.academic_batch_data_sub_div')
+                    if(sub_div_elem)
+                    {
+                        sub_div_elem.remove()
+                    }
+                    var academic_batch_data = QWeb.render('logic_performance_tracker.batch_data_template', {
+                        values: data
+                    });
+                    self.$('.academic_batch_data').append(academic_batch_data)
+                    console.log('batch data: ',data)
+                    self.$(".upaya_attended").progressbar({
+                        value: data.upaya_data.attended_count,
+                        max: data.batch_strength,
+                        classes: {
+                            "ui-progressbar": "highlight"
+                        }
+                    })
+                    self.$(".upaya_attended").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span>${data.upaya_data.attended_count} / ${data.batch_strength}</span></div>`)
+                   
+                    self.$(".yes_plus_average").progressbar({
+                        value: data.yes_plus_data.average_attendance,
+                        max: data.batch_strength,
+                        classes: {
+                            "ui-progressbar": "highlight"
+                        }
+                    })
+                    self.$(".yes_plus_average").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span>${data.yes_plus_data.average_attendance} / ${data.batch_strength}</span></div>`)
+
+
+                    self.$(".presentation_attended").progressbar({
+                        value: data.presentation_data.presented_count,
+                        max: data.batch_strength,
+                        classes: {
+                            "ui-progressbar": "highlight"
+                        }
+                    })
+                    self.$(".presentation_attended").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span>${data.presentation_data.presented_count} / ${data.batch_strength}</span></div>`)
+                    
+                    self.$(".cip_average").progressbar({
+                        value: data.cip_data.average_attendance,
+                        max: data.batch_strength,
+                        classes: {
+                            "ui-progressbar": "highlight"
+                        }
+                    })
+                    self.$(".cip_average").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span>${data.cip_data.average_attendance} / ${data.batch_strength}</span></div>`)
+
+                    self.$(".excel_average").progressbar({
+                        value: data.excel_data.average_attendance,
+                        max: data.batch_strength,
+                        classes: {
+                            "ui-progressbar": "highlight"
+                        }
+                    })
+                    self.$(".excel_average").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span>${data.excel_data.average_attendance} / ${data.batch_strength}</span></div>`)
+
+                    self.$(".bb_average").progressbar({
+                        value: data.bb_data.attendance,
+                        max: data.batch_strength,
+                        classes: {
+                            "ui-progressbar": "highlight"
+                        }
+                    })
+                    self.$(".bb_average").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span>${data.bb_data.attendance} / ${data.batch_strength}</span></div>`)
+
+                    self.$(".mock_average").progressbar({
+                        value: data.mock_interview_data.total_conducted,
+                        max: data.batch_strength,
+                        classes: {
+                            "ui-progressbar": "highlight"
+                        }
+                    })
+                    self.$(".mock_average").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span>${data.mock_interview_data.total_conducted} / ${data.batch_strength}</span></div>`)
+
+                    self.$(".attendance_average").progressbar({
+                        value: data.attendance_data.average_attendance,
+                        max: data.batch_strength,
+                        classes: {
+                            "ui-progressbar": "highlight"
+                        }
+                    })
+                    self.$(".attendance_average").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span>${data.attendance_data.average_attendance} / ${data.batch_strength}</span></div>`)
+                
+                    var data = {
+                        labels: ['Pass (%)'],
+                        datasets: data.exam_data.exam_datasets
+                    };
+                    // Configuration options
+                    var options = {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        // scales: {
+                        //     x: {
+                        //         stacked: true,
+                        //         },
+                        //     y: {
+                        //         beginAtZero: true,
+        
+                        //         stacked: true
+                        //     }
+        
+                        // },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Exam Data'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    };
+
+                    var canvas_container = self.$('.examchart-canvas-container');
+                    canvas_container.empty()
+                    canvas_container.append('<canvas id="ExamChart1" style="width:600px;height:350px;"></canvas>')
+                    var canvas1 = self.$('#ExamChart1');
+                    self.LineChart1 = new Chart(canvas1, {
+                        type: 'bar',
+                        data: data,
+                        options: options
+                    });
+
+                }).catch(function(err){
+                    console.log(err)
+                });
+            }
+
+            }
+        },
+
+        render_line_chart: function () {
             var self = this
+
             var data = {
                 labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 datasets: this.data.misc_to_do_chart_dataset
@@ -158,7 +307,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                     }
                 }
             };
-            
+
             // var canvas2 = this.$('#LineChart2')
 
             // Create a new chart with jQuery
@@ -179,52 +328,51 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             // });
         },
 
-        render_districtwise_leads_chart: function() {
+        render_districtwise_leads_chart: function () {
             var self = this
-            if (this.data.marketing_data)
-            {
-                console.log("inside if",this.data)
+            if (this.data.marketing_data) {
+                console.log("inside if", this.data)
                 var data = {
                     labels: this.data.marketing_data['districts'],
                     datasets: this.data.marketing_data['leads_dataset'],
                 }
                 // Configuration options
-                var  options = {
+                var options = {
                     responsive: true,
                     interaction: {
-                      mode: 'index',
-                      intersect: false,
+                        mode: 'index',
+                        intersect: false,
                     },
                     stacked: false,
                     plugins: {
-                      title: {
-                        display: true,
-                        text: 'Seminar Leads'
-                      }
+                        title: {
+                            display: true,
+                            text: 'Seminar Leads'
+                        }
                     },
                     scales: {
-                      leads_count: {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        beginAtZero: true,
+                        leads_count: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            beginAtZero: true,
 
-                      },
-                      conversion_rates: {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        beginAtZero: true,
-
-                
-                        // grid line settings
-                        grid: {
-                          drawOnChartArea: false, // only want the grid lines for one axis to show up
                         },
-                      },
+                        conversion_rates: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            beginAtZero: true,
+
+
+                            // grid line settings
+                            grid: {
+                                drawOnChartArea: false, // only want the grid lines for one axis to show up
+                            },
+                        },
                     }
-                  }
-                
+                }
+
 
                 // Create a new chart with jQuery
                 var canvas_container = self.$('.districtchart-canvas-container');
@@ -235,59 +383,58 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                     type: 'line',
                     data: data,
                     options: options
-                });            
+                });
 
 
 
-        }
+            }
         },
 
-        render_sourcewise_leads_chart: function() {
+        render_sourcewise_leads_chart: function () {
             var self = this
-            if (this.data.sales_data)
-            {
-                console.log("inside if",this.data)
+            if (this.data.sales_data) {
+                console.log("inside if", this.data)
                 var data = {
                     labels: this.data.sales_data['lead_sources'],
                     datasets: this.data.sales_data['leads_dataset'],
                 }
                 // Configuration options
-                var  options = {
+                var options = {
                     responsive: true,
                     interaction: {
-                      mode: 'index',
-                      intersect: false,
+                        mode: 'index',
+                        intersect: false,
                     },
                     stacked: false,
                     plugins: {
-                      title: {
-                        display: true,
-                        text: 'Leads'
-                      }
+                        title: {
+                            display: true,
+                            text: 'Leads'
+                        }
                     },
                     scales: {
-                      leads_count: {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        beginAtZero: true,
+                        leads_count: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            beginAtZero: true,
 
-                      },
-                      conversion_rates: {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        beginAtZero: true,
-
-                
-                        // grid line settings
-                        grid: {
-                          drawOnChartArea: false, // only want the grid lines for one axis to show up
                         },
-                      },
+                        conversion_rates: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            beginAtZero: true,
+
+
+                            // grid line settings
+                            grid: {
+                                drawOnChartArea: false, // only want the grid lines for one axis to show up
+                            },
+                        },
                     }
-                  }
-                
+                }
+
 
                 // Create a new chart with jQuery
                 var canvas_container = self.$('.sourcechart-canvas-container');
@@ -298,33 +445,32 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                     type: 'bar',
                     data: data,
                     options: options
-                });            
+                });
 
 
 
-        }
+            }
         },
 
         _onPerformanceFilterActionClicked: function (ev) {
             var self = this;
-    
+
             // Get the date field's value
             var fromDate = this.$('.from_date').val();
             var endDate = this.$('.end_date').val();
-            if (fromDate=='' || endDate=='')
-            {
-                fromDate=false
-                endDate=false
+            if (fromDate == '' || endDate == '') {
+                fromDate = false
+                endDate = false
             }
             // var fun_args = [fromDate,endDate]
 
             // this.$(".date_val").text(fromDate)
-    
+
             var self = this;
             var def = self._rpc({
                 model: 'logic.employee.performance', // Replace with your actual model name
                 method: 'retrieve_employee_performance', // Use 'search_read' to retrieve records
-                args: [self.employee_id,fromDate,endDate], // Define search domain if needed
+                args: [self.employee_id, fromDate, endDate], // Define search domain if needed
                 // kwargs: {},
             }).then(function (data) {
                 self.data = data;
@@ -333,29 +479,31 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                 self.render_line_chart()
                 self.render_districtwise_leads_chart()
                 self.render_sourcewise_leads_chart();
+                self.render_academic_batch_data_summary();
+
                 self.$(".from_date").val(fromDate)
                 self.$(".end_date").val(endDate)
-            }).catch(function(err){
+            }).catch(function (err) {
                 console.log(err)
             })
 
         },
 
-        filter_reset : function(){
+        filter_reset: function () {
             var self = this;
             self.start_date = false
             self.end_date = false
             // Save the current state
             var currentState = _.extend({}, this.state);
-        
+
             console.log("Current State:", currentState);
             // console.log("state",self.state)
-    
-        
+
+
             web_client.do_push_state({});
-            this.fetch_data().then(function(){
+            this.fetch_data().then(function () {
                 self.$el.empty()
-                console.log(self.data,"datat")
+                console.log(self.data, "datat")
                 // console.log("state",self.state)
                 // self.updateState(self.state,false)
                 self.render_dashboards()
@@ -363,52 +511,53 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                 self.render_line_chart()
                 self.render_districtwise_leads_chart()
                 self.render_sourcewise_leads_chart()
+                self.render_academic_batch_data_summary();
+
             });
         },
 
-        _onModelCardClickAction: function(ev) {
+        _onModelCardClickAction: function (ev) {
             var self = this;
 
             var model_name = $(ev.currentTarget).attr('id')
             var action_model_name = $(ev.currentTarget).attr('name')
             var fromDate = this.$('.from_date').val();
             var endDate = this.$('.end_date').val();
-            console.log("fromDate",fromDate)
-            console.log("endDate",endDate)
-            if (fromDate=='' || endDate=='')
-            {
-                fromDate=false
-                endDate=false
+            console.log("fromDate", fromDate)
+            console.log("endDate", endDate)
+            if (fromDate == '' || endDate == '') {
+                fromDate = false
+                endDate = false
             }
             var options = {
                 on_reverse_breadcrumb: this.on_reverse_breadcrumb,
             };
             var def = self._rpc({
-                    model: 'logic.employee.performance', // Replace with your actual model name
-                    method: 'model_records_open_action', // Use 'search_read' to retrieve records
-                    args: [self.employee_id,model_name,fromDate,endDate], // Define search domain if needed
-                    // kwargs: {},
-                }).then(function (domain) {
+                model: 'logic.employee.performance', // Replace with your actual model name
+                method: 'model_records_open_action', // Use 'search_read' to retrieve records
+                args: [self.employee_id, model_name, fromDate, endDate], // Define search domain if needed
+                // kwargs: {},
+            }).then(function (domain) {
 
-                    var action = {
-                        type: 'ir.actions.act_window',
-                        name: action_model_name,
-                        res_model: model_name,
-                        view_type: 'tree',
-                        target: 'main',
-                        views: [[false, 'list'],[false,'form']],
+                var action = {
+                    type: 'ir.actions.act_window',
+                    name: action_model_name,
+                    res_model: model_name,
+                    view_type: 'tree',
+                    target: 'main',
+                    views: [[false, 'list'], [false, 'form']],
 
-                        // tag: 'employee_performance',
-                        target: 'current',
-                        // nodestroy: true
-                        domain: domain,
+                    // tag: 'employee_performance',
+                    target: 'current',
+                    // nodestroy: true
+                    domain: domain,
 
-                    }
-                    self.do_action(action,options)
-                }).catch(function(err){
-                    console.log(err)
-                })
-                return $.when(def);
+                }
+                self.do_action(action, options)
+            }).catch(function (err) {
+                console.log(err)
+            })
+            return $.when(def);
         },
 
         // _onGraphYearChange: function(ev){
@@ -420,15 +569,14 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
         // },
 
 
-        render_dashboards: function() {
+        render_dashboards: function () {
             var self = this
             console.log(this)
             var dashboard = QWeb.render('logic_performance_tracker.employee_performance_template', {
                 values: this.data
             });
             this.$el.html(dashboard)
-            if (self.start_date && self.end_date)
-            {
+            if (self.start_date && self.end_date) {
                 self.$(".from_date").val(self.start_date)
                 self.$(".end_date").val(self.end_date)
             }
@@ -444,5 +592,5 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
     });
     core.action_registry.add('employee_performance', EmployeePerformanceAction);
     return EmployeePerformanceAction;
-    
-    })
+
+})

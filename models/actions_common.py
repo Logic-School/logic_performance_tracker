@@ -22,7 +22,8 @@ def get_manager_managers_heads_data(self,department_obj,manager_id=False):
         for dept in depts:
             if dept.manager_id:
                 dept_heads.append(dept.manager_id)
-        heads_data = [{'head_id':'all','department_name':'All'}]
+        # heads_data = [{'head_id':'all','department_name':'All'}]
+        heads_data = []
         for dept_head in dept_heads:
             head_data = {}
             head_data['head_id'] = dept_head.id

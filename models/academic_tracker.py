@@ -17,6 +17,9 @@ class AcademicTracker(models.Model):
         employees_data = {}
         department_obj = self.env['hr.department'].sudo().search([('name','=','ACADEMICS')])
 
+        if not manager_id:
+            manager_id = department_obj.child_ids[0].manager_id.id
+
         manager,managers,department_heads_data = actions_common.get_manager_managers_heads_data(self,department_obj,manager_id)
 
         employees = actions_common.get_employees(self,department_obj,manager,managers)
