@@ -79,6 +79,16 @@ class LogicEmployeePerformance(models.Model):
             domain = [('state','=',('done','crm')), ('leads_assign','=',employee.id )]
             if start_date and end_date:
                 domain.extend([('date_of_adding', '>=',start_date), ('date_of_adding','<=',end_date)])
+
+        elif model_name=='logic.presentations':
+            domain = [('coordinator','=',employee.user_id.id )]
+            if start_date and end_date:
+                domain.extend([('date', '>=',start_date), ('date','<=',end_date)])
+
+        elif model_name=='attendance.session':
+            domain = [('coordinator','=',employee.user_id.id )]
+            if start_date and end_date:
+                domain.extend([('date', '>=',start_date), ('date','<=',end_date)])
         logger.error("domain: "+str(domain))
         logger.error("model: "+str(model_name))
 
@@ -217,6 +227,8 @@ class LogicEmployeePerformance(models.Model):
                     'mock_interview_count': employee_academic_counts['mock_interview_count'],
                     'cip_excel_count': employee_academic_counts['cip_excel_count'],
                     'bring_buddy_count': employee_academic_counts['bring_buddy_count'],
+                    'presentation_count': employee_academic_counts['presentation_count'],
+                    'attendance_count': employee_academic_counts['attendance_count'],
                     'total_completed': total_completed
                 }
 

@@ -179,6 +179,8 @@ def get_academic_domains(self,department_obj,start_date=False,end_date=False,man
     mock_interview_domain = [('state','=','done')]
     cip_domain = [('state','=','completed')]
     bring_buddy_domain = [('state','=','done')]
+    presentation_domain = []
+    attendance_domain = []
 
     logger.error(department_obj)
 
@@ -191,6 +193,8 @@ def get_academic_domains(self,department_obj,start_date=False,end_date=False,man
         mock_interview_domain.extend([('date','>=',start_date),('date','<=',end_date)])
         cip_domain.extend([('date','>=',start_date),('date','<=',end_date)])
         bring_buddy_domain.extend([('date','>=',start_date),('date','<=',end_date)])
+        presentation_domain.extend([('date','>=',start_date),('date','<=',end_date)])
+        attendance_domain.extend([('date','>=',start_date),('date','<=',end_date)])
 
     if (manager or managers or employee_user_ids):
         logger.error("inside ss")
@@ -208,6 +212,9 @@ def get_academic_domains(self,department_obj,start_date=False,end_date=False,man
         mock_interview_domain.extend([('coordinator','in',employee_user_ids),('coordinator','!=',False)])
         cip_domain.extend([('coordinator_id','in',employee_user_ids),('coordinator_id','!=',False)])
         bring_buddy_domain.extend([('coordinator_id','in',employee_user_ids),('coordinator_id','!=',False)])
+        presentation_domain.extend([('coordinator','in',employee_user_ids),('coordinator','!=',False)])
+        attendance_domain.extend([('coordinator','in',employee_user_ids),('coordinator','!=',False)])
+
     return {
         'upaya_domain':upaya_domain,
         'yes_plus_domain':yes_plus_domain,
@@ -216,7 +223,9 @@ def get_academic_domains(self,department_obj,start_date=False,end_date=False,man
         'one_to_one_domain':one_to_one_domain,
         'mock_interview_domain':mock_interview_domain,
         'cip_domain':cip_domain,
-        'bring_buddy_domain':bring_buddy_domain
+        'bring_buddy_domain':bring_buddy_domain,
+        'attendance_domain':attendance_domain,
+        'presentation_domain':presentation_domain
     }
 
 def get_academic_counts(self,academic_domains):
@@ -229,4 +238,7 @@ def get_academic_counts(self,academic_domains):
         'mock_interview_count' : self.env['logic.mock_interview'].sudo().search_count(academic_domains['mock_interview_domain']),
         'cip_excel_count' : self.env['logic.cip.form'].sudo().search_count(academic_domains['cip_domain']),
         'bring_buddy_count' : self.env['bring.your.buddy'].sudo().search_count(academic_domains['bring_buddy_domain']),
+        'presentation_count': self.env['logic.presentations'].sudo().search_count(academic_domains['presentation_domain']),
+        'attendance_count': self.env['attendance.session'].sudo().search_count(academic_domains['attendance_domain'])
+
     }
