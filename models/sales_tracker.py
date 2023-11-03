@@ -121,12 +121,17 @@ class SalesTracker(models.Model):
         if year_lead_target_obj:
             year_lead_target = year_lead_target_obj[0].admission_target
 
+        converted_target_ratio = 0
+        if year_lead_target>0:
+            converted_target_ratio = round(converted_lead_count/year_lead_target,3)
+
         values = {
             'employee': employee.id,
             'lead_count': leads_count,
             'conversion_rate': lead_conversion_rate,
             'lead_converted': converted_lead_count,
-            'lead_target': year_lead_target
+            'lead_target': year_lead_target,
+            'converted_target_ratio': converted_target_ratio,
         }
         emp_sales_perf_obj = self.env['logic.employee.sales.performance'].sudo().search([('employee','=',employee.id)])
         if emp_sales_perf_obj:
@@ -145,14 +150,17 @@ class SalesTracker(models.Model):
             employees_data[emp_id]['conversion_rate'] = round(perf_obj.conversion_rate,2)
             employees_data[emp_id]['lead_target'] = perf_obj.lead_target
             employees_data[emp_id]['lead_converted'] = perf_obj.lead_converted
+            employees_data[emp_id]['converted_target_ratio'] = perf_obj.converted_target_ratio
+
         return employees_data
 
 class EmployeeSalesPerformance(models.Model):
     _name = "logic.employee.sales.performance"
-    _order="conversion_rate desc"
+    _order="converted_target_ratio desc"
     employee = fields.Many2one("hr.employee",string="Employee")
     lead_count = fields.Integer(string="Lead Count")
     lead_target = fields.Integer(string="Lead Target")
     lead_converted = fields.Integer(string="Lead Achieved")
+    converted_target_ratio = fields.Float(string="Lead Converted Target Ratio")
     conversion_rate = fields.Float(string="Conversion Rate")
 
