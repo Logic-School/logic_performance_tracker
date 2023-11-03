@@ -183,8 +183,12 @@ class LogicEmployeePerformance(models.Model):
         else:
             return 0
         
-    def get_employee_academic_batches(self,employee):
-        batch_objs = self.env['logic.base.batch'].search([('academic_coordinator','=',employee.user_id.id)])
+    @api.model
+    def get_employee_academic_batches(self,employee_id,window=False):
+        employee = self.env['hr.employee'].sudo().browse(int(employee_id))
+        if not window:
+            window = 'january'
+        batch_objs = self.env['logic.base.batch'].search([('academic_coordinator','=',employee.user_id.id),('batch_window','=',window)])
         batches = []
         for batch_obj in batch_objs:
             batch = {'id':batch_obj.id,'name':batch_obj.name}
@@ -239,7 +243,8 @@ class LogicEmployeePerformance(models.Model):
                     self.env['academic.coordinator.performance'].create(values)
                 values['name'] = employee.name
                 values['student_feedback_rating'] = self.get_student_feedback_average(employee)
-                values['batches'] = self.get_employee_academic_batches(employee)
+                values['batches'] = self.get_employee_academic_batches(employee.id)
+                values['academic_windows'] = actions_common.get_academic_windows(self)
                 # values['academic_batch_data'] = self.get_academic_batch_data(values['batches'])
                 return values
         return False

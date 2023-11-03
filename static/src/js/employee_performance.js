@@ -43,7 +43,8 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             'click .o_filter_reset': 'filter_reset',
             'click .o_filter_performance': '_onPerformanceFilterActionClicked',
             'change .department_employee': '_onSelectedEmployeeChanged',
-            'change .academic_batch': 'render_academic_batch_data_summary'
+            'change .academic_batch': 'render_academic_batch_data_summary',
+            'change .academic_window': 'render_academic_batch_list',
         },
 
         init: function (parent, context) {
@@ -138,8 +139,42 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             this.render_line_chart()
             this.render_districtwise_leads_chart()
             this.render_sourcewise_leads_chart();
+            this.render_academic_batch_list()
             this.render_academic_batch_data_summary();
             // this.render_line_chart();
+        },
+
+        render_academic_batch_list: function(){
+            var self = this;
+            if (self.data.academic_data) {
+                var academic_window = self.$('.academic_window').val()
+                if (academic_window==='')
+                {
+                    academic_window = false;
+                }
+                var def = self._rpc({
+                    model: 'logic.employee.performance', // Replace with your actual model name
+                    method: 'get_employee_academic_batches', // Use 'search_read' to retrieve records
+                    args: [self.employee_id,academic_window], // Define search domain if needed        },
+                }).then(function (data){
+                    self.$('.academic_batches_list').empty()
+                    console.log("batch list",data,academic_window)
+                    var academic_batches =  QWeb.render('logic_performance_tracker.academic_batches_template', {
+                        batches: data
+                    });
+                    self.$('.academic_batches_list').append(academic_batches)
+
+                    var sub_div_elem = self.$('.academic_batch_data_sub_div')
+                    if(sub_div_elem)
+                    {
+                        sub_div_elem.remove()
+                    }
+
+                    self.render_academic_batch_data_summary()
+                }).catch(function(err){
+                    console.log(err)
+                })
+            }
         },
 
         render_academic_batch_data_summary: function () {

@@ -168,13 +168,25 @@
             <div class="row m-4" t-if="values['academic_data']">
                 <div class="employee_details_card academic_batch_data" style="width:100%;height:auto;">
                     <div class="card-header row px-0 mr-0 ml-0" style="border:0px">
-                        <div t-if="values['academic_data']" class="col">
-                            <select class="academic_batch form-control mr-2" style="display: inline-block; width: auto;background-color:#bfc1c2;">
-                                <t t-if="values['academic_data']['batches']" t-foreach="values['academic_data']['batches']" t-as="batch">
-                                    <option t-att-value="batch['id']" t-esc="batch['name'] + ' (' + batch['strength'] + ' Students)'"/>
+                        
+                        <div t-if="values['academic_data']" class="mr-0 ml-2 p-0">
+                            <select class="academic_window form-control mr-2" style="display: inline-block; width: auto;background-color:#bfc1c2;">
+                                <t t-if="values['academic_data']['academic_windows']" t-foreach="values['academic_data']['academic_windows']" t-as="academic_window">
+                                    <option t-att-value="academic_window['id']" t-esc="academic_window['name']"/>
                                 </t>
                             </select>
                         </div>
+
+                        <div class="academic_batches_list">
+                            <!-- <div t-if="values['academic_data']" class="col">
+                                <select class="academic_batch form-control mr-2" style="display: inline-block; width: auto;background-color:#bfc1c2;">
+                                    <t t-if="values['academic_data']['batches']" t-foreach="values['academic_data']['batches']" t-as="batch">
+                                        <option t-att-value="batch['id']" t-esc="batch['name'] + ' (' + batch['strength'] + ' Students)'"/>
+                                    </t>
+                                </select>
+                            </div> -->
+                        </div>
+
                         <div class="col">
                             <h2>Batch Summary</h2>
 
