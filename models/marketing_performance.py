@@ -27,6 +27,7 @@ class MarketingTracker(models.Model):
         dashboard_data['leads_data'] = {'districts':district_names,'leads_dataset':[]}
         for employee in employees:
             actions_common.create_employee_qualitative_performance(self,dashboard_data['qualitatives'],employee)
+            self.create_employee_seminar_leaderboard_data(employee,start_date,end_date)
             leads_count = []
             conversion_rates = []
             leads_data = {
@@ -44,7 +45,7 @@ class MarketingTracker(models.Model):
             dashboard_data['leads_data']['leads_dataset'].append(leads_data)
 
         dashboard_data['org_datas'],dashboard_data['dept_names'] = actions_common.get_org_datas_dept_names(manager,managers)
-
+        dashboard_data['seminar_performances'] = self.get_seminar_leaderboard_data(employees)
         dashboard_data['qualitatives'],dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data['qualitatives'],employees)
         dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self,employees,start_date,end_date)
 
@@ -92,5 +93,51 @@ class MarketingTracker(models.Model):
         if leads_count>0:
             lead_conversion_rate = 100 * round(converted_lead_count/leads_count,3)
         return {'leads_count':leads_count, 'leads_conversion_rate': lead_conversion_rate}
+    
+    def create_employee_seminar_leaderboard_data(self,employee,start_date=False,end_date=False):
+        leads_count = 0
+        lead_conversion_rate = 0
+        seminar_domain = [('state','=','done'),('create_uid','=',employee.user_id.id)]
+        if start_date and end_date:
+            seminar_domain.extend([('seminar_date','>=',start_date),('seminar_date','<=',end_date)])
+        seminars = self.env['seminar.leads'].sudo().search(seminar_domain)
+        converted_lead_count = 0
+        for seminar in seminars:
+            leads_count+=len(seminar.seminar_ids)
+            for student_lead in seminar.seminar_ids:
+                if student_lead.admission_status == 'yes':
+                    converted_lead_count+=1
+        if leads_count>0:
+            lead_conversion_rate = 100 * round(converted_lead_count/leads_count,3)
+        values = {
+            'employee': employee.id,
+            'lead_count': leads_count,
+            'conversion_rate': lead_conversion_rate
+        }
+        emp_mark_perf_obj = self.env['logic.employee.marketing.performance'].sudo().search([('employee','=',employee.id)])
+        if emp_mark_perf_obj:
+            emp_mark_perf_obj.write(values)
+        else:
+            self.env['logic.employee.marketing.performance'].sudo().create(values)
 
+    def get_seminar_leaderboard_data(self,employees):
+        marketing_perf_objs = self.env['logic.employee.marketing.performance'].sudo().search([('employee','in',employees.ids)])
+        employees_data = {}
+        for perf_obj in marketing_perf_objs:
+            emp_id = str(perf_obj.employee.id) + " "
+            employees_data[emp_id] = {}
+            employees_data[emp_id]['name'] = perf_obj.employee.name
+            employees_data[emp_id]['lead_count'] = perf_obj.lead_count
+            employees_data[emp_id]['conversion_rate'] = perf_obj.conversion_rate
+        return employees_data
+
+
+
+        return marketing_perf_objs
+class EmployeeMarketingPerformance(models.Model):
+    _name = "logic.employee.marketing.performance"
+    _order="lead_count desc"
+    employee = fields.Many2one("hr.employee",string="Employee")
+    lead_count = fields.Integer(string="Lead Count")
+    conversion_rate = fields.Float(string="Conversion Rate")
 

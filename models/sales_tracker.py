@@ -28,6 +28,8 @@ class SalesTracker(models.Model):
         dashboard_data['leads_data'] = {'lead_sources':lead_source_names,'leads_dataset':[]}
         for employee in employees:
             actions_common.create_employee_qualitative_performance(self,dashboard_data['qualitatives'],employee)
+            self.create_employee_leads_leaderboard_data(employee,start_date,end_date)
+
             leads_count = []
             conversion_rates = []
             leads_data = {
@@ -45,7 +47,7 @@ class SalesTracker(models.Model):
             dashboard_data['leads_data']['leads_dataset'].append(leads_data)
 
         dashboard_data['org_datas'],dashboard_data['dept_names'] = actions_common.get_org_datas_dept_names(manager,managers)
-
+        dashboard_data['leads_performances'] = self.get_leads_leaderboard_data(employees)
         dashboard_data['qualitatives'],dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data['qualitatives'],employees)
         dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self,employees,start_date,end_date)
 
@@ -92,3 +94,48 @@ class SalesTracker(models.Model):
             lead_domain.extend([('date_of_adding', '>=',start_date), ('date_of_adding','<=',end_date)])
         lead_count = self.env['leads.logic'].search_count(lead_domain)
         return lead_count
+    
+    def create_employee_leads_leaderboard_data(self,employee,start_date=False,end_date=False):
+        lead_domain = [('state','in',('done','crm')),('leads_assign','=',employee.id)]
+        if start_date and end_date:
+            lead_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
+        leads = self.env['leads.logic'].sudo().search(lead_domain)
+        converted_lead_count = 0
+        lead_conversion_rate = 0
+        leads_count = 0
+        for lead in leads:
+            leads_count+=1
+            if lead.admission_status == True:
+                converted_lead_count+=1
+        if leads_count>0:
+            lead_conversion_rate = 100 * round(converted_lead_count/leads_count,3)
+
+        values = {
+            'employee': employee.id,
+            'lead_count': leads_count,
+            'conversion_rate': lead_conversion_rate
+        }
+        emp_sales_perf_obj = self.env['logic.employee.sales.performance'].sudo().search([('employee','=',employee.id)])
+        if emp_sales_perf_obj:
+            emp_sales_perf_obj.write(values)
+        else:
+            self.env['logic.employee.sales.performance'].sudo().create(values)
+
+    def get_leads_leaderboard_data(self,employees):
+        sales_perf_objs = self.env['logic.employee.sales.performance'].sudo().search([('employee','in',employees.ids)])
+        employees_data = {}
+        for perf_obj in sales_perf_objs:
+            emp_id = str(perf_obj.employee.id) + " "
+            employees_data[emp_id] = {}
+            employees_data[emp_id]['name'] = perf_obj.employee.name
+            employees_data[emp_id]['lead_count'] = perf_obj.lead_count
+            employees_data[emp_id]['conversion_rate'] = perf_obj.conversion_rate
+        return employees_data
+
+class EmployeeSalesPerformance(models.Model):
+    _name = "logic.employee.sales.performance"
+    _order="lead_count desc"
+    employee = fields.Many2one("hr.employee",string="Employee")
+    lead_count = fields.Integer(string="Lead Count")
+    conversion_rate = fields.Float(string="Conversion Rate")
+
