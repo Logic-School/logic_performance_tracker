@@ -149,7 +149,7 @@ class SalesTracker(models.Model):
 
 class EmployeeSalesPerformance(models.Model):
     _name = "logic.employee.sales.performance"
-    _order="lead_count desc"
+    _order="conversion_rate desc"
     employee = fields.Many2one("hr.employee",string="Employee")
     lead_count = fields.Integer(string="Lead Count")
     lead_target = fields.Integer(string="Lead Target")
