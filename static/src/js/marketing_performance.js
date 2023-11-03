@@ -241,6 +241,7 @@ odoo.define('logic_performance_tracker.marketing_dashboard', function (require) 
 
                         stacked: true
                     }
+                    
 
                 }
             };
