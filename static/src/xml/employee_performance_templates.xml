@@ -19,11 +19,10 @@
                     <div class="row justify-content-center">
                         <div class="col-auto ml-4" style="">   
                             <!-- <span class="font-weight-bold">Employee </span> -->
-                            <select class="department_employee form-control mr-2" style="display: inline-block; width: auto;background-color:#bfc1c2;">
+                            <select class="department_employee form-control mr-2 font-weight-bold" style="display: inline-block; width: auto;background-color:#edf0f2;">
                                 <option t-if="values['personal_data']" t-att-value="values['personal_data']['id']">
                                     <div>
                                         <span t-esc="values['personal_data']['name']" />
-                                        <img t-att-src="'data:image/png;base64,'+values['personal_data']['image']"/>
                                     </div>
                                 </option>
 
@@ -31,7 +30,6 @@
                                     <option t-if="department_employee" t-att-value="department_employee['id']">
                                         <div>
                                             <span t-esc="department_employee['name']" />
-                                            <img t-att-src="department_employee['image']"/>
                                         </div>
                                     </option>
                                 </t>
@@ -170,7 +168,7 @@
                     <div class="card-header row px-0 mr-0 ml-0" style="border:0px">
                         
                         <div t-if="values['academic_data']" class="mr-0 ml-2 p-0">
-                            <select class="academic_window form-control mr-2" style="display: inline-block; width: auto;background-color:#bfc1c2;">
+                            <select class="academic_window form-control mr-2 font-weight-bold" style="display: inline-block; width: auto;background-color:#edf0f2;">
                                 <t t-if="values['academic_data']['academic_windows']" t-foreach="values['academic_data']['academic_windows']" t-as="academic_window">
                                     <option t-att-value="academic_window['id']" t-esc="academic_window['name']"/>
                                 </t>

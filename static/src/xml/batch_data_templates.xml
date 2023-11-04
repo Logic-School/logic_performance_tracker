@@ -4,7 +4,7 @@
     <!-- Define your QWeb template for the dashboard_card view -->
     <t t-name="logic_performance_tracker.academic_batches_template">
         <div t-if="batches" class="col">
-            <select class="academic_batch form-control mr-2" style="display: inline-block; width: auto;background-color:#bfc1c2;">
+            <select class="academic_batch form-control mr-2 font-weight-bold" style="display: inline-block; width: auto;background-color:#edf0f2;">
                 <t t-if="batches" t-foreach="batches" t-as="batch">
                     <option t-att-value="batch['id']" t-esc="batch['name'] + ' (' + batch['strength'] + ' Students)'"/>
                 </t>

@@ -392,7 +392,6 @@ class LogicEmployeePerformance(models.Model):
             data = {}
             data['id'] = employee.id
             data['name'] = employee.name
-            data['image'] = employee.image_1920
             employees_data.append(data)
         return employees_data
 
