@@ -54,10 +54,14 @@ class MarketingTracker(models.Model):
         return dashboard_data
     
     def get_employee_seminar_count(self,employee,start_date,end_date):
-        seminar_domain = [('state','=','done'), ('create_uid','=',employee.user_id.id)]
+        seminar_domain = [('state','=','done')]
         if start_date and end_date:
             seminar_domain.extend([('seminar_date', '>=',start_date), ('seminar_date','<=',end_date)])
-        seminar_count = self.env['seminar.leads'].search_count(seminar_domain)
+        seminar_count = 0
+        seminars = self.env['seminar.leads'].search(seminar_domain)
+        for seminar in seminars:
+            if (seminar.attended_by.id==employee.id) or ( (not seminar.attended_by) and (seminar.create_uid.id==employee.user_id.id) ):
+                seminar_count+=1
         return seminar_count
 
     def retrieve_leads_target_count(self,employee,start_date,end_date):
@@ -68,11 +72,12 @@ class MarketingTracker(models.Model):
         year_lead_target_obj = self.env['seminar.target'].sudo().search([('year','=',year),('user_id','=',employee.user_id.id)])
         if year_lead_target_obj:
             year_lead_target = year_lead_target_obj[0].lead_target
-            seminars = self.env['seminar.leads'].sudo().search([('create_uid','=',employee.user_id.id),('seminar_date','!=',False)])
+            seminars = self.env['seminar.leads'].sudo().search([('seminar_date','!=',False)])
             year_filtered_seminars = seminars.filtered(lambda seminar: seminar.seminar_date.year==year)
             leads_count = 0
             for seminar_lead in year_filtered_seminars:
-                leads_count+=len(seminar_lead.seminar_ids)
+                if (seminar_lead.attended_by.id==employee.id) or ( (not seminar_lead.attended_by) and (seminar_lead.create_uid.id==employee.user_id.id) ):
+                    leads_count+=len(seminar_lead.seminar_ids)
             return {'year_leads_target': year_lead_target, 'year_leads_count': leads_count}
         return {'year_leads_target': 0, 'year_leads_count': 0}
 
@@ -82,16 +87,17 @@ class MarketingTracker(models.Model):
         logger = logging.getLogger("Debugger: ")
         leads_count = 0
         lead_conversion_rate = 0
-        seminar_domain = [('district','=',district),('state','=','done'),('create_uid','=',employee.user_id.id)]
+        seminar_domain = [('district','=',district),('state','=','done')]
         if start_date and end_date:
             seminar_domain.extend([('seminar_date','>=',start_date),('seminar_date','<=',end_date)])
         seminars = self.env['seminar.leads'].sudo().search(seminar_domain)
         converted_lead_count = 0
         for seminar in seminars:
-            leads_count+=len(seminar.seminar_ids)
-            for student_lead in seminar.seminar_ids:
-                if student_lead.admission_status == 'yes':
-                    converted_lead_count+=1
+            if (seminar.attended_by.id==employee.id) or ( (not seminar.attended_by) and (seminar.create_uid.id==employee.user_id.id) ):
+                leads_count+=len(seminar.seminar_ids)
+                for student_lead in seminar.seminar_ids:
+                    if student_lead.admission_status == 'yes':
+                        converted_lead_count+=1
         if leads_count>0:
             lead_conversion_rate = 100 * round(converted_lead_count/leads_count,3)
         return {'leads_count':leads_count, 'leads_conversion_rate': lead_conversion_rate}
@@ -99,16 +105,18 @@ class MarketingTracker(models.Model):
     def create_employee_seminar_leaderboard_data(self,employee,start_date=False,end_date=False):
         leads_count = 0
         lead_conversion_rate = 0
-        seminar_domain = [('state','=','done'),('create_uid','=',employee.user_id.id)]
+        seminar_domain = [('state','=','done')]
         if start_date and end_date:
             seminar_domain.extend([('seminar_date','>=',start_date),('seminar_date','<=',end_date)])
         seminars = self.env['seminar.leads'].sudo().search(seminar_domain)
+        # seminars.filtered(lambda seminar: (seminar.attended_by.id==employee.id) or (seminar.attended_by==False and seminar.create_uid.id==employee.user_id.id))
         converted_lead_count = 0
         for seminar in seminars:
-            leads_count+=len(seminar.seminar_ids)
-            for student_lead in seminar.seminar_ids:
-                if student_lead.admission_status == 'yes':
-                    converted_lead_count+=1
+            if (seminar.attended_by.id==employee.id) or ( (not seminar.attended_by) and (seminar.create_uid.id==employee.user_id.id) ):
+                leads_count+=len(seminar.seminar_ids)
+                for student_lead in seminar.seminar_ids:
+                    if student_lead.admission_status == 'yes':
+                        converted_lead_count+=1
         if leads_count>0:
             lead_conversion_rate = 100 * round(converted_lead_count/leads_count,3)
         
