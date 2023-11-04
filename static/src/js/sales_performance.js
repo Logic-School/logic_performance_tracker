@@ -41,7 +41,7 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
         events:{
             'click .o_filter_performance': '_onPerformanceFilterActionClicked',
             'click .o_filter_reset': 'filter_reset',
-            // 'click .o_employee_name': '_onEmployeeNameClicked',
+            'click .o_employee_leads_data_name': '_onEmployeeLeadsDataNameClicked',
             'click .node':'_onEmployeeNodeClicked',
 
             // uncomment the below line to view records on clicking the card
@@ -165,6 +165,48 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
 
 
         },
+
+        _onEmployeeLeadsDataNameClicked: function (ev) {
+            var self = this;
+    
+            // Get the date field's value
+            var fromDate = this.$('.from_date').val();
+            var endDate = this.$('.end_date').val();
+            console.log("from",fromDate==="")
+            console.log("To",endDate)
+            var employee_id = $(ev.currentTarget).find(".o_employee_id").data("empid")
+            console.log("hello",employee_id)
+            var next_element = $(ev.currentTarget).next()
+            
+            if (next_element.attr("class")==='o_sales_leaderboard_data_subtable')
+            {
+                $(ev.currentTarget).next().remove(".o_sales_leaderboard_data_subtable")
+            }
+            else
+            {
+                this._rpc({
+                    model: self.model_name, // Replace with your actual model name
+                    method: 'retrieve_employee_all_source_wise_lead_data', // Use 'search_read' to retrieve records
+                    args: [
+                        employee_id,fromDate,endDate
+                    ], 
+                    // Define search domain if needed
+                    // kwargs: {},
+                }).then(function (values) {
+                    // Set the state with the retrieved data
+                    console.log(values)
+                    var salesman_subdata = QWeb.render('logic_performance_tracker.salesman_leads_sub_data', {
+                        values: values
+                    });
+                    $(ev.currentTarget).after(salesman_subdata)
+                    
+                }).catch(function(err){
+                    console.log(err)
+                });
+            }
+
+        },
+
 
         _onEmployeeNodeClicked: function (ev){
             var self = this

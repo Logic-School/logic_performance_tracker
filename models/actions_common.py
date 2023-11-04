@@ -123,14 +123,17 @@ def get_miscellaneous_performances(self,employees,start_date,end_date):
         other_performances =  self.env['logic.task.other'].retrieve_performance(employees)
     return other_performances
     
-def get_academic_windows(self):
+def get_academic_windows(self,employee):
     academic_windows = self.env['logic.base.batch'].fields_get()['batch_window']['selection']
     academic_windows_data = []
 
     logger = logging.getLogger("debugger: ")
     logger.error("academic_windows"+str(academic_windows))
     for window in academic_windows:
-        academic_windows_data.append( {'id': window[0], 'name':window[1]} )
+        batch_count = self.env['logic.base.batch'].sudo().search_count([('batch_window','=',window[0]),('academic_coordinator','=',employee.user_id.id)])
+        academic_windows_data.append( {
+            'id': window[0], 'name':window[1] + ' (' + str(batch_count) + ' Batches)'
+            } )
     logger.error("academic_windows_data"+str(academic_windows_data))
 
     return academic_windows_data

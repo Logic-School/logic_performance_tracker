@@ -514,6 +514,8 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                 self.render_line_chart()
                 self.render_districtwise_leads_chart()
                 self.render_sourcewise_leads_chart();
+                self.render_academic_batch_list()
+
                 self.render_academic_batch_data_summary();
 
                 self.$(".from_date").val(fromDate)
@@ -546,6 +548,8 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                 self.render_line_chart()
                 self.render_districtwise_leads_chart()
                 self.render_sourcewise_leads_chart()
+                self.render_academic_batch_list()
+
                 self.render_academic_batch_data_summary();
 
             });

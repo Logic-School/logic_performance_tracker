@@ -55,6 +55,15 @@ class SalesTracker(models.Model):
 
         return dashboard_data
     
+    @api.model
+    def retrieve_employee_all_source_wise_lead_data(self,employee_id,start_date=False,end_date=False):
+        employee = self.env['hr.employee'].sudo().browse(int(employee_id.strip()))
+        lead_sources = self.env['leads.sources'].sudo().search([])
+        employee_data = {}
+        for lead_source in lead_sources:
+            employee_data[lead_source.name] = self.retrieve_employee_source_wise_lead_data(lead_source,employee,start_date,end_date)
+        return employee_data
+
     
     def retrieve_employee_source_wise_lead_data(self,lead_source,employee,start_date=False,end_date=False):
         logger = logging.getLogger("Debugger: ")
@@ -71,7 +80,7 @@ class SalesTracker(models.Model):
                 converted_lead_count+=1
         if leads_count>0:
             lead_conversion_rate = 100 * round(converted_lead_count/leads_count,3)
-        return {'leads_count':leads_count, 'leads_conversion_rate': lead_conversion_rate}
+        return {'leads_count':leads_count, 'leads_conversion_rate': lead_conversion_rate, 'converted_lead_count': converted_lead_count}
     
 
     def retrieve_leads_target_count(self,employee,start_date,end_date):

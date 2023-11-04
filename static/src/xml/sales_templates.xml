@@ -76,7 +76,8 @@
                                 <t t-set="index" t-value="1"/>
                                 <t t-foreach="Object.keys(values['leads_performances'])" t-as="employee">
 
-                                    <tr>
+                                    <tr class="o_employee_leads_data_name">
+                                        <td class="d-none o_employee_id" t-att-data-empid="employee"/>
                                         <td t-esc="index"/>
                                         <td t-esc="values['leads_performances'][employee]['name']"/>
                                         <td style="color: green" t-esc="values['leads_performances'][employee]['lead_count']" class="text-center"/>
@@ -211,5 +212,46 @@
                     </div>
                 </div>
             </div>
+        </t>
+
+        <t t-name="logic_performance_tracker.salesman_leads_sub_data">    
+            <!-- <div class="o_coordinator_subtable"> -->
+                    <tr t-if="values" class="o_sales_leaderboard_data_subtable">
+                        <td colspan="11">
+                            <table width="100%" style="font-size:14px; margin: auto; background-color:#e3e0d5;" class="table table-sm mt-1 ml-2">
+                                <thead>
+                                    <tr>
+                                        <th width="5%" scope="col" class="px-3">#</th>
+                                        <th width="25%" scope="col" class="px-3">Lead Source</th>
+                                        <th width="25%" scope="col" class="px-3">Lead</th>
+                                        <th width="20%" scope="col" class="px-3">Converted Leads</th>
+                                        <th width="25%" scope="col" class="px-3">Conversion Rate (%)</th>
+                                        <!-- <th width="23.75%" scope="col" class="px-3">Exam</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="index" t-value="1"/>
+                                    <t t-foreach="Object.keys(values)" t-as="lead_source">
+                                        <tr>
+                                            <td class="px-3" t-esc="index+'.'"/>
+                                            <td class="px-3" t-esc="lead_source"/>
+
+                                            <td class="px-3" style="color:green;" t-esc="values[lead_source]['leads_count']"/>
+                                            <td class="px-3" style="color:brown;" t-esc="values[lead_source]['converted_lead_count']"/>
+                                            <td class="px-3" style="color:blue;" t-esc="values[lead_source]['leads_conversion_rate']"/>
+
+
+                                        </tr>
+                                        <t t-set="index" t-value="index+1"/>
+
+                                    </t>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr t-else="" class="o_sales_leaderboard_data_subtable">
+                        <td colspan="5"><b>No data available for this employee</b></td>
+                    </tr>
+            <!-- </div> -->
         </t>
     </templates>
