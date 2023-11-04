@@ -15,6 +15,12 @@
 
             <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/orgchart_styles.css"/>
             <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/other_styles.css"/>
+            <style>
+                .row{
+                    margin-right:0;
+                    margin-left:0
+                }
+            </style>
             <div class="o_dashboard_card" style="overflow-x: auto;">
 
             <div t-if="values">
