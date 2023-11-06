@@ -189,11 +189,11 @@ class LogicEmployeePerformance(models.Model):
         employee = self.env['hr.employee'].sudo().browse(int(employee_id))
         if not window:
             window = 'january'
-        batch_objs = self.env['logic.base.batch'].search([('academic_coordinator','=',employee.user_id.id),('batch_window','=',window)])
+        batch_objs = self.env['logic.base.batch'].sudo().search([('academic_coordinator','=',employee.user_id.id),('batch_window','=',window)])
         batches = []
         for batch_obj in batch_objs:
             batch = {'id':batch_obj.id,'name':batch_obj.name}
-            batch['strength'] = self.env['logic.students'].search_count([('batch_id','=',batch_obj.id),('current_status','=',True)])
+            batch['strength'] = self.env['logic.students'].sudo().search_count([('batch_id','=',batch_obj.id),('current_status','=',True)])
             batches.append(batch)
         return batches
     
@@ -395,12 +395,22 @@ class LogicEmployeePerformance(models.Model):
             data['name'] = employee.name
             employees_data.append(data)
         return employees_data
+    
+    @api.model
+    def get_employee_details(self,employee_id):
+        employee = self.env['hr.employee'].sudo().browse(int(employee_id))
+        return {'name':employee.name}
 
     def check_access(self,employee):
-        if self.env.user.has_group('logic_performance_tracker.group_perf_admin'):
+        if self.env.user.has_group('logic_performance_tracker.group_perf_admin') \
+            or self.env.user.has_group('logic_performance_tracker.group_perf_academic_head') \
+            or self.env.user.has_group('logic_performance_tracker.group_perf_digital_head') \
+            or self.env.user.has_group('logic_performance_tracker.group_perf_marketing_head') \
+            or self.env.user.has_group('logic_performance_tracker.group_perf_sales_head') \
+            or self.env.user.has_group('logic_performance_tracker.group_perf_accounts_head'):
             return True
-        elif employee.id in self.env.user.employee_id.child_ids.ids or (employee.id==self.env.user.employee_id.id):
-            return True
+        # elif employee.id in self.env.user.employee_id.child_ids.ids or (employee.id==self.env.user.employee_id.id):
+        #     return True
         return False
     
     @api.model

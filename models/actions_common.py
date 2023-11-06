@@ -124,7 +124,7 @@ def get_miscellaneous_performances(self,employees,start_date,end_date):
     return other_performances
     
 def get_academic_windows(self,employee):
-    academic_windows = self.env['logic.base.batch'].fields_get()['batch_window']['selection']
+    academic_windows = self.env['logic.base.batch'].sudo().fields_get()['batch_window']['selection']
     academic_windows_data = []
 
     logger = logging.getLogger("debugger: ")
