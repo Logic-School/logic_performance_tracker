@@ -1,4 +1,5 @@
 from odoo import models,api,fields
+from odoo.exceptions import UserError
 import logging
 import random
 from datetime import date
@@ -395,16 +396,27 @@ class LogicEmployeePerformance(models.Model):
             employees_data.append(data)
         return employees_data
 
-
+    def check_access(self,employee):
+        if self.env.user.has_group('logic_performance_tracker.group_perf_admin'):
+            return True
+        elif employee.id in self.env.user.employee_id.child_ids.ids or (employee.id==self.env.user.employee_id.id):
+            return True
+        return False
+    
     @api.model
     def retrieve_employee_performance(self,employee_id,start_date=False,end_date=False):
+        
+        employee = self.env['hr.employee'].sudo().browse(int(employee_id))
+
+        if not self.check_access(employee):
+            return False
+        
         logger = logging.getLogger("Debugger: ")
         if start_date and end_date:
             start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
             year = start_date.year
         else:
             year = date.today().year
-        employee = self.env['hr.employee'].sudo().browse(int(employee_id))
         employee_data = {}
 
         employee_data['years'] = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037]

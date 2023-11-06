@@ -61,6 +61,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
 
         willStart: function () {
             var self = this;
+            console.log("this.employee_id",this.employee_id)
             return this._super().then(function () {
                 var def = self._rpc({
                     model: 'logic.employee.performance', // Replace with your actual model name
