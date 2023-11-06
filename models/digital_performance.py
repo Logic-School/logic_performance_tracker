@@ -22,7 +22,7 @@ class DigitalPerformance(models.Model):
         return score
 
     @api.model
-    def action_executive_performance(self,qualitatives,from_date=False,end_date=False,order="completed_tasks desc"):
+    def action_executive_performance(self,qualitatives,from_date=False,end_date=False,order="total_score desc"):
         # self.env['digital.executive.performance'].sudo().search([]).unlink()
         executives_performance = {}
         if not from_date or not end_date:
