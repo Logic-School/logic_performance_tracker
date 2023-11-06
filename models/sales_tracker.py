@@ -103,7 +103,7 @@ class SalesTracker(models.Model):
         lead_domain = [('state','in',('done','crm')), ('leads_assign','=',employee.id)]
         if start_date and end_date:
             lead_domain.extend([('date_of_adding', '>=',start_date), ('date_of_adding','<=',end_date)])
-        lead_count = self.env['leads.logic'].search_count(lead_domain)
+        lead_count = self.env['leads.logic'].sudo().search_count(lead_domain)
         return lead_count
     
     def create_employee_leads_leaderboard_data(self,employee,start_date=False,end_date=False):
