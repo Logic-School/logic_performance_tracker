@@ -378,7 +378,7 @@ class LogicEmployeePerformance(models.Model):
             digital_domain = [('state','in',('completed','to_post','posted')), ('assigned_execs','in',[employee.user_id.id] ), ('assigned_execs','!=',False)]
             if start_date and end_date:
                 digital_domain.extend([('date_completed', '>=',start_date), ('date_completed','<=',end_date)])
-            task_count = self.env['digital.task'].search_count(digital_domain)
+            task_count = self.env['digital.task'].sudo().search_count(digital_domain)
 
             digital_data = {'digital_task_count':task_count}
             return digital_data

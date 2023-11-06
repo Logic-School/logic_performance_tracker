@@ -134,13 +134,13 @@ odoo.define('logic_performance_tracker.marketing_dashboard', function (require) 
             let emp_id = $(ev.currentTarget).attr('id')
             console.log("empt id: ",emp_id)
             this._rpc({
-                model: "hr.employee", // Replace with your actual model name
-                method: 'search_read', // Use 'search_read' to retrieve records
-                domain: [['id','=',emp_id]],
+                model: "logic.employee.performance", // Replace with your actual model name
+                method: 'get_employee_details', // Use 'search_read' to retrieve records
+                args: [emp_id]
             }).then(function (employee) {
             var action = {
                 type: 'ir.actions.client',
-                name: employee[0].name,
+                name: employee.name,
                 // res_model: self.model_name,
                 // view_type: 'tree',
                 // target: 'main',
