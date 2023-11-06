@@ -23,8 +23,8 @@ class MarketingTracker(models.Model):
 
         dashboard_data['qualitatives'] = actions_common.get_raw_qualitative_data(self,employees,start_date,end_date)
 
-        districts = dict(self.env['seminar.leads'].fields_get()['district']['selection'])
-        district_names = list(dict(self.env['seminar.leads'].fields_get()['district']['selection']).values())
+        districts = dict(self.env['seminar.leads'].sudo().fields_get()['district']['selection'])
+        district_names = list(dict(self.env['seminar.leads'].sudo().fields_get()['district']['selection']).values())
 
         dashboard_data['leads_data'] = {'districts':district_names,'leads_dataset':[]}
         for employee in employees:
@@ -58,7 +58,7 @@ class MarketingTracker(models.Model):
         if start_date and end_date:
             seminar_domain.extend([('seminar_date', '>=',start_date), ('seminar_date','<=',end_date)])
         seminar_count = 0
-        seminars = self.env['seminar.leads'].search(seminar_domain)
+        seminars = self.env['seminar.leads'].sudo().search(seminar_domain)
         for seminar in seminars:
             if (seminar.attended_by.id==employee.id) or ( (not seminar.attended_by) and (seminar.create_uid.id==employee.user_id.id) ):
                 seminar_count+=1

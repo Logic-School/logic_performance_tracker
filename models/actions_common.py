@@ -155,6 +155,9 @@ class StateAction(models.Model):
         elif self.env.user.has_group('logic_performance_tracker.group_perf_admin') or self.env.user.has_group('logic_performance_tracker.group_perf_sales_head'):
             action = self.env.ref("logic_performance_tracker.sales_performance_action").sudo().read()[0]
             return action
+        elif self.env.user.has_group('logic_performance_tracker.group_perf_admin') or self.env.user.has_group('logic_performance_tracker.group_perf_accounts_head'):
+            action = self.env.ref("logic_performance_tracker.accounts_performance_action").sudo().read()[0]
+            return action
 
         else:
             raise UserError("You do not have access to this application!")
