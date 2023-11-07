@@ -93,7 +93,7 @@
                                         <td style="color: green" t-esc="values['seminar_performances'][employee]['webinar_count']" class="text-center"/>
 
                                         <td class="text-center">
-                                            <span style="color: brown" t-esc="values['seminar_performances'][employee]['lead_converted']"/>
+                                            <span style="color: brown" t-esc="values['seminar_performances'][employee]['seminar_count']"/>
                                             <span t-esc="' / '"/>
                                             <span style="color: green" t-esc="values['seminar_performances'][employee]['lead_target']"/>
                                         </td>
