@@ -63,7 +63,7 @@
                         <table style="font-size:14px;" class="table table-striped table-hover rounded-table table-borderless">
                             <thead>
                                 <tr class="rounded" style="background-color:#78787859;">
-                                    <td colspan="7" class="text-center"><h2>Seminar Leaderboard</h2></td>
+                                    <td colspan="7" class="text-center"><h2>Leaderboard</h2></td>
                                 </tr>
                             </thead>
                             <thead style="background-color:#e0e0de" class="">

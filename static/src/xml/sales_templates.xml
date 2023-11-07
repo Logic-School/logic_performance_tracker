@@ -12,6 +12,9 @@
                     margin-right:0;
                     margin-left:0
                 }
+                .card-body{
+                    background-color:#dae3dc;
+                }
             </style>
             <div class="o_dashboard_card">
             
@@ -40,8 +43,8 @@
                     </div>
                 </div> -->
 
-                <div style="col">
-                    <div class="m-4 container-fluid">
+                <div class="col" style="">
+                    <div class="container-fluid card-body mb-3" style="width:fit-content;border-radius:10px;">
                         <div class="row justify-content-center">
 
                             <div t-if="values['lead_sources']" class="">
@@ -90,7 +93,7 @@
                         <table style="font-size:14px;" class="table table-striped table-hover rounded-table table-borderless">
                             <thead>
                                 <tr class="rounded" style="background-color:#78787859;">
-                                    <td colspan="5" class="text-center"><h2>Leads Leaderboard</h2></td>
+                                    <td colspan="5" class="text-center"><h2>Leaderboard</h2></td>
                                 </tr>
                             </thead>
                             <thead style="background-color:#e0e0de" class="">
