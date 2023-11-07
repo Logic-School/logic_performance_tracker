@@ -105,14 +105,28 @@ class MarketingTracker(models.Model):
     def create_employee_seminar_leaderboard_data(self,employee,start_date=False,end_date=False):
         leads_count = 0
         lead_conversion_rate = 0
+        seminar_count = 0
+        webinar_count = 0
         seminar_domain = [('state','=','done')]
         if start_date and end_date:
             seminar_domain.extend([('seminar_date','>=',start_date),('seminar_date','<=',end_date)])
         seminars = self.env['seminar.leads'].sudo().search(seminar_domain)
         # seminars.filtered(lambda seminar: (seminar.attended_by.id==employee.id) or (seminar.attended_by==False and seminar.create_uid.id==employee.user_id.id))
         converted_lead_count = 0
+
+        checked_institute_ids = []
         for seminar in seminars:
             if (seminar.attended_by.id==employee.id) or ( (not seminar.attended_by) and (seminar.create_uid.id==employee.user_id.id) ):
+                
+                if seminar.lead_source_id:
+                    if seminar.lead_source_id.name=="Seminar":
+                        if seminar.college_id.id not in checked_institute_ids:
+                            seminar_count+=1
+                            checked_institute_ids.append(seminar.college_id.id)
+                    elif seminar.lead_source_id.name=="Webinar":
+                        webinar_count+=1
+
+
                 leads_count+=len(seminar.seminar_ids)
                 for student_lead in seminar.seminar_ids:
                     if student_lead.admission_status == 'yes':
@@ -140,6 +154,8 @@ class MarketingTracker(models.Model):
             'lead_converted': converted_lead_count,
             'lead_target': year_lead_target,
             'converted_target_ratio': converted_target_ratio,
+            'seminar_count': seminar_count,
+            'webinar_count': webinar_count,
         }
         emp_mark_perf_obj = self.env['logic.employee.marketing.performance'].sudo().search([('employee','=',employee.id)])
         if emp_mark_perf_obj:
@@ -159,19 +175,23 @@ class MarketingTracker(models.Model):
             employees_data[emp_id]['lead_target'] = perf_obj.lead_target
             employees_data[emp_id]['lead_converted'] = perf_obj.lead_converted
             employees_data[emp_id]['converted_target_ratio'] = perf_obj.converted_target_ratio
+            employees_data[emp_id]['seminar_count'] = perf_obj.seminar_count
+            employees_data[emp_id]['webinar_count'] = perf_obj.webinar_count
+
 
 
         return employees_data
 
 
-
-        return marketing_perf_objs
 class EmployeeMarketingPerformance(models.Model):
     _name = "logic.employee.marketing.performance"
     _order="converted_target_ratio desc"
     employee = fields.Many2one("hr.employee",string="Employee")
     lead_count = fields.Integer(string="Lead Count")
     lead_target = fields.Integer(string="Lead Target")
+    seminar_count = fields.Integer(string="Seminar Count")
+    webinar_count = fields.Integer(string="Webinar Count")
+
     lead_converted = fields.Integer(string="Lead Achieved")
     converted_target_ratio = fields.Float(string="Lead Converted Target Ratio")
     conversion_rate = fields.Float(string="Conversion Rate")

@@ -19,7 +19,7 @@ class SalesTracker(models.Model):
         dashboard_data['department_heads'] = department_heads_data
         if manager or managers:
             employees = actions_common.get_employees(self,department_obj,manager,managers)
-            employee_user_ids = employees.mapped('user_id.id')
+            employee_ids = employees.ids
 
         dashboard_data['qualitatives'] = actions_common.get_raw_qualitative_data(self,employees,start_date,end_date)
 
@@ -48,12 +48,48 @@ class SalesTracker(models.Model):
             leads_data['data'] = leads_count
             dashboard_data['leads_data']['leads_dataset'].append(leads_data)
 
+        dashboard_data['employee_ids'] = employee_ids
+        dashboard_data['lead_sources'] = self.get_lead_sources_data()
         dashboard_data['org_datas'],dashboard_data['dept_names'] = actions_common.get_org_datas_dept_names(manager,managers)
         dashboard_data['leads_performances'] = self.get_leads_leaderboard_data(employees)
         dashboard_data['qualitatives'],dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data['qualitatives'],employees)
         dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self,employees,start_date,end_date)
 
         return dashboard_data
+    
+    def get_lead_sources_data(self):
+        lead_sources_data = []
+        lead_sources = self.env['leads.sources'].sudo().search([])
+        for lead_source in lead_sources:
+            lead_source_data = {}
+            lead_source_data['id'] = lead_source.id
+            lead_source_data['name'] = lead_source.name
+            lead_sources_data.append(lead_source_data)
+        return lead_sources_data
+    
+    @api.model
+    def get_sourcewise_pie_chart_data(self,lead_source_id,employee_ids,start_date=False,end_date=False):
+        logger = logging.getLogger("Debugger: ")
+        logger.error("employee_ids: "+str(employee_ids))
+
+        lead_domain = [('leads_source','=',int(lead_source_id)),('state','in',('done','crm')),('leads_assign','in',employee_ids)]
+        if start_date and end_date:
+            start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
+            lead_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
+        leads = self.env['leads.logic'].sudo().search(lead_domain)
+        # employees = self.env['hr.employee'].sudo().search[('id','in',employee_ids)]
+        employees_data = {}
+        for lead in leads:
+            if lead.leads_assign:
+                if employees_data.get(lead.leads_assign):
+                    employees_data[lead.leads_assign.name]+=1
+                else:
+                    employees_data[lead.leads_assign.name] = 1
+        logger.error("employees_data: "+str(employees_data))
+        leads_data = []
+        for key in employees_data.keys():
+            leads_data.append({'label':key,'value':employees_data[key]})
+        return leads_data
     
     @api.model
     def retrieve_employee_all_source_wise_lead_data(self,employee_id,start_date=False,end_date=False):

@@ -43,6 +43,7 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
             'click .o_filter_reset': 'filter_reset',
             'click .o_employee_leads_data_name': '_onEmployeeLeadsDataNameClicked',
             'click .node':'_onEmployeeNodeClicked',
+            'change .lead_source_id': 'render_lead_source_pie_chart',
 
             // uncomment the below line to view records on clicking the card
             // 'click .o_model_count': '_onCardActionClicked',
@@ -76,7 +77,8 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
             this._super.apply(this, arguments)
             this.render_dashboards()
             this.render_organisation_chart()
-            this.render_sourcewise_chart()
+            // this.render_sourcewise_chart()
+            this.render_lead_source_pie_chart()
         },
 
         render_organisation_chart: function(){
@@ -164,6 +166,80 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
             });            
 
 
+        },
+
+        render_lead_source_pie_chart:function(){
+            var self = this;
+            self.$('.lead_source_pie_chart').empty();
+            var employee_ids = self.data.employee_ids
+            var fromDate = this.$('.from_date').val();
+            var endDate = this.$('.end_date').val();
+            if (fromDate == '' || endDate == '') {
+                fromDate = false
+                endDate = false
+            }
+            var lead_source_id = self.$('.lead_source_id').val()
+
+            if (lead_source_id!='')
+            {
+                self._rpc({
+                    model: "sales.tracker", // Replace with your actual model name
+                    method: 'get_sourcewise_pie_chart_data', // Use 'search_read' to retrieve records
+                    args: [lead_source_id,employee_ids,fromDate,fromDate]
+                }).then(function (lead_source_data) {
+                    if (lead_source_data.length === 0)
+                    {
+                        self.$('.lead_source_pie_chart').append("<div><h6>No data available for this source!</h6></div>")
+                    }
+                    else
+                    {
+                        console.log("lead_source_data",lead_source_data)
+                        var w = 200;
+                        var h = 200;
+                        var r = h/2;
+                        var elem = self.$('.lead_source_pie_chart');
+                //        var colors = ['#ff8762', '#5ebade', '#b298e1', '#70cac1', '#cf2030'];
+                        var colors = ['#FFD700', '#70cac1', '#9370DB', '#FF8C00', '#006400', '#696969', '#191970', '#fe7139',
+                        '#ffa433', '#ffc25b', '#f8e54b'];
+                        var color = d3.scale.ordinal().range(colors);
+                        var segColor = {};
+                        var data = lead_source_data
+                        var vis = d3.select(elem[0]).append("svg:svg").data([data]).attr("width", w).attr("height", h).append("svg:g").attr("transform", "translate(" + r + "," + r + ")");
+                        var pie = d3.layout.pie().value(function(d){return d.value;});
+                        var arc = d3.svg.arc().outerRadius(r);
+                        var arcs = vis.selectAll("g.slice").data(pie).enter().append("svg:g").attr("class", "slice");
+                        arcs.append("svg:path")
+                            .attr("fill", function(d, i){
+                                return color(i);
+                            })
+                            .attr("d", function (d) {
+                                return arc(d);
+                            });
+
+                        var legend = d3.select(elem[0]).append("table").attr('class','legend');
+
+                        // create one row per segment.
+                        var tr = legend.append("tbody").selectAll("tr").data(data).enter().append("tr");
+
+                        // create the first column for each segment.
+                        tr.append("td").append("svg").attr("width", '16').attr("height", '16').append("rect")
+                            .attr("width", '16').attr("height", '16')
+                            .attr("fill",function(d, i){ return color(i) });
+
+                        // create the second column for each segment.
+                        tr.append("td").text(function(d){ return d.label;});
+
+                        // create the third column for each segment.
+                        tr.append("td").attr("class",'legendFreq')
+                            .text(function(d){ return d.value;});
+                    }
+                }).catch(function(err){
+                    console.log(err)
+                })
+            }
+            
+    
+        
         },
 
         _onEmployeeLeadsDataNameClicked: function (ev) {
@@ -290,10 +366,12 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
                 self.data = data
                 self.render_dashboards()
                 self.render_organisation_chart()
-                self.render_sourcewise_chart()
+                // self.render_sourcewise_chart()
                 self.$(".from_date").val(fromDate)
                 self.$(".end_date").val(endDate)
                 self.$(".department_head").val(department_head_id)
+                self.render_lead_source_pie_chart()
+
 
                 // self.updateState(self.state,false)
                 // console.log(self.renderer)
@@ -324,7 +402,8 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
                 // self.updateState(self.state,false)
                 self.render_dashboards();
                 self.render_organisation_chart()
-                self.render_sourcewise_chart()
+                // self.render_sourcewise_chart()
+                self.render_lead_source_pie_chart()
 
             });
         },
@@ -349,7 +428,8 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
                 // self.updateState(self.state,false)
                 self.render_dashboards();
                 self.render_organisation_chart()
-                self.render_sourcewise_chart()
+                // self.render_sourcewise_chart()
+                self.render_lead_source_pie_chart()
 
             });
         

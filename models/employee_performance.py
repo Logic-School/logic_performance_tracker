@@ -72,7 +72,9 @@ class LogicEmployeePerformance(models.Model):
                 domain.extend([('date_completed', '>=',start_date), ('date_completed','<=',end_date)])
 
         elif model_name=='seminar.leads':
-            domain = [('state','=','done'), ('create_uid','=',employee.user_id.id )]
+            # if (seminar.attended_by.id==employee.id) or ( (not seminar.attended_by) and (seminar.create_uid.id==employee.user_id.id) ):
+
+            domain = [('state','=','done'), '|',('attended_by','=',employee.id ),'&',('attended_by','=',False),('create_uid','=',employee.user_id.id)]
             if start_date and end_date:
                 domain.extend([('seminar_date', '>=',start_date), ('seminar_date','<=',end_date)])
 
@@ -263,7 +265,7 @@ class LogicEmployeePerformance(models.Model):
                 'label': 'Leads Count',
                 'yAxisID': 'leads_count',
                 'fill': True,
-                'backgroundColor': 'rgba(255, 255, 255, 0)',
+                'backgroundColor': 'rgba(79, 227, 55, 0.8)',
                 'borderColor': 'rgba(49, 150, 76, 0.68)',
                 'borderWidth': 1,
                 'data': []
@@ -314,7 +316,7 @@ class LogicEmployeePerformance(models.Model):
                 'label': 'Leads Count',
                 'yAxisID': 'leads_count',
                 'fill': True,
-                'backgroundColor': 'rgba(255, 255, 255, 0)',
+                'backgroundColor': 'rgba(204, 244, 196, 0.8)',
                 'borderColor': 'rgba(49, 150, 76, 0.68)',
                 'borderWidth': 1,
                 'data': []
