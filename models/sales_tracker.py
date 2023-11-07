@@ -81,7 +81,7 @@ class SalesTracker(models.Model):
         employees_data = {}
         for lead in leads:
             if lead.leads_assign:
-                if employees_data.get(lead.leads_assign):
+                if employees_data.get(lead.leads_assign.name):
                     employees_data[lead.leads_assign.name]+=1
                 else:
                     employees_data[lead.leads_assign.name] = 1
