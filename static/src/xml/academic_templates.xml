@@ -290,7 +290,7 @@
                                                 <span t-esc="employee_data['exam']['name']"/>
                                                 <span t-if="employee_data['exam']['present_count']">
                                                     (
-                                                    <span t-esc="employee_data['exam']['present_count']" class="text-secondary"/>
+                                                    <span t-esc="employee_data['exam']['present_count']" class="text-primary"/>
                                                     /
                                                     <span t-esc="employee_data['exam']['total_count']" class="text-success"/>
                                                     )

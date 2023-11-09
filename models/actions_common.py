@@ -58,7 +58,6 @@ def get_employees(self,department_obj,manager=False,managers=False):
         employees+=managers
 
     else:
-        logger.error("inside else, manager: "+manager.name)
         employees = self.env['hr.employee'].sudo().search([('department_id','=',manager.department_id.id),('parent_id','=',manager.id)])
         employees+=manager
     return employees
@@ -191,7 +190,7 @@ def get_academic_domains(self,department_obj,start_date=False,end_date=False,man
     logger = logging.getLogger("Debugger: ")
     upaya_domain = [('state','=','complete')]
     yes_plus_domain = [('state','=','complete')]
-    sfc_domain = [('state','=','confirm')]
+    sfc_domain = [('state','in',('confirm','sent_to_approve','approved','payment_request','paid'))]
     exam_domain = []
     one_to_one_domain = []
     mock_interview_domain = [('state','=','done')]

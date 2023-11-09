@@ -171,6 +171,11 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
             var endDate = this.$('.end_date').val();
             console.log("from",fromDate==="")
             console.log("To",endDate)
+            if(fromDate=='' || endDate=='')
+            {
+                fromDate=false;
+                endDate=false;
+            }
             var employee_id = $(ev.currentTarget).find(".o_employee_id").data("empid")
             console.log("hello",employee_id)
             var next_element = $(ev.currentTarget).next()

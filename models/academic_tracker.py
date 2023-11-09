@@ -24,7 +24,7 @@ class AcademicTracker(models.Model):
 
         employees = actions_common.get_employees(self,department_obj,manager,managers)
 
-        academic_domains = actions_common.get_academic_domains(self,department_obj=department_obj,start_date=start_date,end_date=end_date,manager=manager,managers=managers,employee_user_ids=False)
+        academic_domains = actions_common.get_academic_domains(self,department_obj=department_obj,start_date=start_date,end_date=end_date,manager=manager,managers=managers,employee_user_ids=employees.mapped('user_id.id'))
 
         academic_counts = actions_common.get_academic_counts(self,academic_domains)
         dashboard_data = {
@@ -97,20 +97,18 @@ class AcademicTracker(models.Model):
     def retrieve_employee_academic_data(self,employee_id,start_date=False,end_date=False):
         employee_id = int(employee_id.strip())
         logger = logging.getLogger("Debugger")
-        logger.error("from"+start_date)
-        logger.error("end"+end_date)
 
         employee = self.env['hr.employee'].sudo().browse(employee_id)
-        if len(start_date)==0 or len(end_date)==0:
-            upaya_objs = self.env['upaya.form'].sudo().search([('coordinator_id','!=',False),('coordinator_id','=',employee.user_id.id)])
-            yes_plus_objs = self.env['yes_plus.logic'].sudo().search([('coordinator_id','!=',False),('coordinator_id','=',employee.user_id.id)])
+        if not start_date or not end_date:
+            upaya_objs = self.env['upaya.form'].sudo().search([('state','=','complete'),('coordinator_id','!=',False),('coordinator_id','=',employee.user_id.id)])
+            yes_plus_objs = self.env['yes_plus.logic'].sudo().search([('state','=','complete'),('coordinator_id','!=',False),('coordinator_id','=',employee.user_id.id)])
             one_to_one_objs = self.env['one_to_one.meeting'].sudo().search([('coordinator_id','!=',False),('coordinator_id','=',employee.user_id.id)])
             exam_objs = self.env['exam.details'].sudo().search([('coordinator','!=',False),('coordinator','=',employee.user_id.id)])
         else:
             start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
 
-            upaya_objs = self.env['upaya.form'].sudo().search([('coordinator_id','!=',False),('coordinator_id','=',employee.user_id.id),('date','>=',start_date),('date','<=',end_date)])
-            yes_plus_objs = self.env['yes_plus.logic'].sudo().search([('coordinator_id','!=',False),('coordinator_id','=',employee.user_id.id),('date_one','>=',start_date),('date_one','<=',end_date)])
+            upaya_objs = self.env['upaya.form'].sudo().search([('state','=','complete'),('coordinator_id','!=',False),('coordinator_id','=',employee.user_id.id),('date','>=',start_date),('date','<=',end_date)])
+            yes_plus_objs = self.env['yes_plus.logic'].sudo().search([('state','=','complete'),('coordinator_id','!=',False),('coordinator_id','=',employee.user_id.id),('date_one','>=',start_date),('date_one','<=',end_date)])
             one_to_one_objs = self.env['one_to_one.meeting'].sudo().search([('coordinator_id','!=',False),('coordinator_id','=',employee.user_id.id),('added_date','>=',start_date),('added_date','<=',end_date)])
             exam_objs = self.env['exam.details'].sudo().search([('coordinator','!=',False),('coordinator','=',employee.user_id.id),('date','>=',start_date),('date','<=',end_date)])
 
