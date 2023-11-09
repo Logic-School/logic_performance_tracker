@@ -100,6 +100,8 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
                 var oc = this.$("#chart-container-"+i).orgchart({
                     exportButton: false,
                     exportFilename: "MyOrgChart",
+                    verticalLevel: 5,
+                    horizontalLevel:2,
                     data: acad_org_datas[i],
                     nodeContent: "title",
                     nodeID: "id",

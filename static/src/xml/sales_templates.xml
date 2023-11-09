@@ -44,24 +44,42 @@
                 </div> -->
 
                 <div class="col" style="">
-                    <div class="container-fluid card-body mb-3" style="width:fit-content;border-radius:10px;">
-                        <div class="row justify-content-center">
+                    <div class="container-fluid card-body mb-3" style="border-radius:10px;">
+                        <div class="row">
 
-                            <div t-if="values['lead_sources']" class="">
-                                <select class="lead_source_id form-control mr-2 font-weight-bold" style="display: inline-block; width: auto;background-color:#edf0f2;">
-                                    <t t-if="values['lead_sources']" t-foreach="values['lead_sources']" t-as="lead_source">
-                                        <option t-att-value="lead_source['id']" t-esc="lead_source['name']"/>
-                                    </t>
-                                </select>
+                            <div class="row">
+                                <div t-if="values['lead_sources']" class="col p-0 m-0">
+                                    <select class="lead_source_id form-control mr-2 font-weight-bold" style="display: inline-block; width: auto;background-color:#edf0f2;">
+                                        <t t-if="values['lead_sources']" t-foreach="values['lead_sources']" t-as="lead_source">
+                                            <option t-att-value="lead_source['id']" t-esc="lead_source['name']"/>
+                                        </t>
+                                    </select>
+                                </div>
                             </div>
-                        <!-- <div class="graph_view" style="padding:0">
-    
-                        </div> -->
-    
-                            <div class="">
-                                <div class="mr-4">
-            
-                                    <div class="lead_source_pie_chart">
+                            
+                            <div class="row">
+
+                                <div class="col p-0 m-0">
+                                    <div class="container-fluid mt-3">
+                                        <div class="row justify-content-center">
+                                            <div class="col" style="width:100%">                            
+                                                <div class="employee_lead_source_chart-canvas-container" style="position:relative;height:500px;">
+                                                    <canvas id="employeeLeadSourceChart" style="width:700px;height:450px;"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            <!-- <div class="graph_view" style="padding:0">
+        
+                            </div> -->
+        
+                                <div class="col m-0">
+                                    <div class="m-3">
+                
+                                        <div class="lead_source_pie_chart">
+                                        </div>
                                     </div>
                                 </div>
                             </div>

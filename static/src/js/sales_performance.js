@@ -43,7 +43,7 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
             'click .o_filter_reset': 'filter_reset',
             'click .o_employee_leads_data_name': '_onEmployeeLeadsDataNameClicked',
             'click .node':'_onEmployeeNodeClicked',
-            'change .lead_source_id': 'render_lead_source_pie_chart',
+            'change .lead_source_id': 'render_lead_source_charts',
 
             // uncomment the below line to view records on clicking the card
             // 'click .o_model_count': '_onCardActionClicked',
@@ -78,7 +78,7 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
             this.render_dashboards()
             this.render_organisation_chart()
             // this.render_sourcewise_chart()
-            this.render_lead_source_pie_chart()
+            this.render_lead_source_charts()
         },
 
         render_organisation_chart: function(){
@@ -168,7 +168,7 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
 
         },
 
-        render_lead_source_pie_chart:function(){
+        render_lead_source_charts:function(){
             var self = this;
             self.$('.lead_source_pie_chart').empty();
             var employee_ids = self.data.employee_ids
@@ -184,16 +184,17 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
             {
                 self._rpc({
                     model: "sales.tracker", // Replace with your actual model name
-                    method: 'get_sourcewise_pie_chart_data', // Use 'search_read' to retrieve records
+                    method: 'get_sourcewise_charts_data', // Use 'search_read' to retrieve records
                     args: [lead_source_id,employee_ids,fromDate,fromDate]
-                }).then(function (lead_source_data) {
-                    if (lead_source_data.length === 0)
+                }).then(function (charts_data) {
+                    
+                    if (charts_data.pie_chart_data.length === 0)
                     {
-                        self.$('.lead_source_pie_chart').append("<div><h6>No data available for this source!</h6></div>")
+                        self.$('.lead_source_pie_chart').append("<div class='col m-0'><h6>No data available for this source!</h6></div>")
                     }
                     else
                     {
-                        console.log("lead_source_data",lead_source_data)
+                        console.log("lead_source_data",charts_data)
                         var w = 200;
                         var h = 200;
                         var r = h/2;
@@ -203,7 +204,7 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
                         '#ffa433', '#ffc25b', '#f8e54b'];
                         var color = d3.scale.ordinal().range(colors);
                         var segColor = {};
-                        var data = lead_source_data
+                        var data = charts_data.pie_chart_data
                         var vis = d3.select(elem[0]).append("svg:svg").data([data]).attr("width", w).attr("height", h).append("svg:g").attr("transform", "translate(" + r + "," + r + ")");
                         var pie = d3.layout.pie().value(function(d){return d.value;});
                         var arc = d3.svg.arc().outerRadius(r);
@@ -233,6 +234,46 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
                         tr.append("td").attr("class",'legendFreq')
                             .text(function(d){ return d.value;});
                     }
+                    if(charts_data.stacked_chart_data)
+                    {
+                        var data = {
+                            labels: charts_data.stacked_chart_data['employee_names'],
+                            datasets: charts_data.stacked_chart_data['leads_dataset'],
+                        }
+                        // Configuration options
+                        var options = {
+                            responsive: true,
+                            maintainAspectRatio: true,
+            
+                            scales: {
+                                x: {
+                                    stacked: true,
+                                    },
+                                y: {
+                                    beginAtZero: true,
+            
+                                    stacked: true
+                                }
+                                
+            
+                            }
+                        };
+                        
+            
+                        // Create a new chart with jQuery
+                        var canvas_container = self.$('.employee_lead_source_chart-canvas-container');
+                        canvas_container.empty()
+                        canvas_container.append('<canvas id="employeeLeadSourceChart" style="width:750px;height:500px;"></canvas>')
+                        var canvas1 = self.$('#employeeLeadSourceChart');
+                        self.LineChart1 = new Chart(canvas1, {
+                            type: 'bar',
+                            data: data,
+                            options: options
+                        }); 
+                    }
+                    
+
+
                 }).catch(function(err){
                     console.log(err)
                 })
@@ -370,7 +411,7 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
                 self.$(".from_date").val(fromDate)
                 self.$(".end_date").val(endDate)
                 self.$(".department_head").val(department_head_id)
-                self.render_lead_source_pie_chart()
+                self.render_lead_source_charts()
 
 
                 // self.updateState(self.state,false)
@@ -403,7 +444,7 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
                 self.render_dashboards();
                 self.render_organisation_chart()
                 // self.render_sourcewise_chart()
-                self.render_lead_source_pie_chart()
+                self.render_lead_source_charts()
 
             });
         },
@@ -429,7 +470,7 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
                 self.render_dashboards();
                 self.render_organisation_chart()
                 // self.render_sourcewise_chart()
-                self.render_lead_source_pie_chart()
+                self.render_lead_source_charts()
 
             });
         

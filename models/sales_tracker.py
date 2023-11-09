@@ -68,7 +68,7 @@ class SalesTracker(models.Model):
         return lead_sources_data
     
     @api.model
-    def get_sourcewise_pie_chart_data(self,lead_source_id,employee_ids,start_date=False,end_date=False):
+    def get_sourcewise_charts_data(self,lead_source_id,employee_ids,start_date=False,end_date=False):
         logger = logging.getLogger("Debugger: ")
         logger.error("employee_ids: "+str(employee_ids))
 
@@ -78,19 +78,64 @@ class SalesTracker(models.Model):
             lead_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
         leads = self.env['leads.logic'].sudo().search(lead_domain)
         # employees = self.env['hr.employee'].sudo().search[('id','in',employee_ids)]
-        employees_data = {}
-        for lead in leads:
-            if lead.leads_assign:
-                if employees_data.get(lead.leads_assign.name):
-                    employees_data[lead.leads_assign.name]+=1
-                else:
-                    employees_data[lead.leads_assign.name] = 1
-        logger.error("employees_data: "+str(employees_data))
-        leads_data = []
-        for key in employees_data.keys():
-            leads_data.append({'label':key,'value':employees_data[key]})
-        return leads_data
-    
+        def get_pie_chart_data(leads):
+            employees_data = {}
+            for lead in leads:
+                if lead.leads_assign:
+                    if employees_data.get(lead.leads_assign.name):
+                        employees_data[lead.leads_assign.name]+=1
+                    else:
+                        employees_data[lead.leads_assign.name] = 1
+            logger.error("employees_data: "+str(employees_data))
+            leads_data = []
+            for key in employees_data.keys():
+                leads_data.append({'label':key,'value':employees_data[key]})
+            return leads_data
+        pie_chart_data = get_pie_chart_data(leads)
+
+        def get_stacked_chart_data(lead_source_id,employee_ids,start_date,end_date):
+            employees = self.env['hr.employee'].sudo().search([('id','=',employee_ids)])
+            employee_name_labels = employees.mapped('name')
+            employee_leads_data = {'employee_names':employee_name_labels, 'leads_dataset': [] }
+            leads_count_data = {
+                'type':'bar',
+                'label': 'Leads Count',
+                'barPercentage': 0.1,
+
+                # 'yAxisID': 'leads_count',
+                'fill': True,
+                'backgroundColor': 'rgba(32, 187, 72, 0.8)',
+                'borderColor': 'rgba(49, 150, 76, 0.68)',
+                'borderWidth': 1,
+                'data': []
+            }  
+            leads_converted_data = {
+                'type':'bar',
+                'label': 'Converted Leads',
+                'barPercentage': 0.1,
+
+                # 'yAxisID': 'converted_leads_count',
+                'fill': True,
+                'backgroundColor': 'rgba(249, 83, 0, 0.83)',
+                'borderColor': 'rgba(249, 83, 0, 0.83)',
+                'borderWidth': 1,
+                'data': []
+            }  
+            leads_count = []
+            converted_leads_count = []
+            lead_source = self.env['leads.sources'].sudo().search([('id','=',int(lead_source_id))])
+            for employee in employees:
+                source_leads_data = self.env['sales.tracker'].retrieve_employee_source_wise_lead_data(lead_source,employee,start_date,end_date)
+                leads_count.append(source_leads_data['leads_count'])
+                converted_leads_count.append(source_leads_data['converted_lead_count'])
+            leads_count_data['data'] = leads_count
+            leads_converted_data['data'] = converted_leads_count
+            employee_leads_data['leads_dataset'].append(leads_count_data)
+            employee_leads_data['leads_dataset'].append(leads_converted_data)
+            return employee_leads_data
+        stacked_chart_data = get_stacked_chart_data(lead_source_id,employee_ids,start_date,end_date)
+        return {'pie_chart_data':pie_chart_data,'stacked_chart_data':stacked_chart_data}
+
     @api.model
     def retrieve_employee_all_source_wise_lead_data(self,employee_id,start_date=False,end_date=False):
         employee = self.env['hr.employee'].sudo().browse(int(employee_id.strip()))

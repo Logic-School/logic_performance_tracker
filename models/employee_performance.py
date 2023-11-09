@@ -269,7 +269,7 @@ class LogicEmployeePerformance(models.Model):
                 'label': 'Leads Count',
                 'yAxisID': 'leads_count',
                 'fill': True,
-                'backgroundColor': 'rgba(79, 227, 55, 0.8)',
+                'backgroundColor': 'rgba(255, 255, 255, 0)',
                 'borderColor': 'rgba(49, 150, 76, 0.68)',
                 'borderWidth': 1,
                 'data': []
