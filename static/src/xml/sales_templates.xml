@@ -13,7 +13,7 @@
                     margin-left:0
                 }
                 .card-body{
-                    background-color:#dae3dc;
+                    background-color:#fcf7f7 !important;
                 }
             </style>
             <div class="o_dashboard_card">

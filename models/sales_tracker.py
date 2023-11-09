@@ -72,7 +72,7 @@ class SalesTracker(models.Model):
         logger = logging.getLogger("Debugger: ")
         logger.error("employee_ids: "+str(employee_ids))
 
-        lead_domain = [('leads_source','=',int(lead_source_id)),('state','in',('done','crm')),('leads_assign','in',employee_ids)]
+        lead_domain = [('leads_source','=',int(lead_source_id)),('leads_assign','in',employee_ids)]
         if start_date and end_date:
             start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
             lead_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
@@ -150,7 +150,7 @@ class SalesTracker(models.Model):
         logger = logging.getLogger("Debugger: ")
         leads_count = 0
         lead_conversion_rate = 0
-        lead_domain = [('leads_source','=',lead_source.id),('state','in',('done','crm')),('leads_assign','=',employee.id)]
+        lead_domain = [('leads_source','=',lead_source.id),('leads_assign','=',employee.id)]
         if start_date and end_date:
             lead_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
         leads = self.env['leads.logic'].sudo().search(lead_domain)
@@ -181,14 +181,14 @@ class SalesTracker(models.Model):
         return {'year_leads_target': 0, 'year_leads_count': 0}
 
     def get_employee_lead_count(self,employee,start_date,end_date):
-        lead_domain = [('state','in',('done','crm')), ('leads_assign','=',employee.id)]
+        lead_domain = [('leads_assign','=',employee.id)]
         if start_date and end_date:
             lead_domain.extend([('date_of_adding', '>=',start_date), ('date_of_adding','<=',end_date)])
         lead_count = self.env['leads.logic'].sudo().search_count(lead_domain)
         return lead_count
     
     def create_employee_leads_leaderboard_data(self,employee,start_date=False,end_date=False):
-        lead_domain = [('state','in',('done','crm')),('leads_assign','=',employee.id)]
+        lead_domain = [('leads_assign','=',employee.id)]
         if start_date and end_date:
             lead_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
         leads = self.env['leads.logic'].sudo().search(lead_domain)

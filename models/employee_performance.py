@@ -79,7 +79,7 @@ class LogicEmployeePerformance(models.Model):
                 domain.extend([('seminar_date', '>=',start_date), ('seminar_date','<=',end_date)])
 
         elif model_name=='leads.logic':
-            domain = [('state','=',('done','crm')), ('leads_assign','=',employee.id )]
+            domain = [('leads_assign','=',employee.id )]
             if start_date and end_date:
                 domain.extend([('date_of_adding', '>=',start_date), ('date_of_adding','<=',end_date)])
 
