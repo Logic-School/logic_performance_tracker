@@ -224,6 +224,16 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                         }
                     })
                     self.$(".presentation_attended").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span>${data.presentation_data.presented_count} / ${data.batch_strength}</span></div>`)
+                   
+                    self.$(".one_to_one_attended").progressbar({
+                        value: data.one_to_one_data.total_conducted,
+                        max: data.batch_strength,
+                        classes: {
+                            "ui-progressbar": "highlight"
+                        }
+                    })
+                    self.$(".one_to_one_attended").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span>${data.one_to_one_data.total_conducted} / ${data.batch_strength}</span></div>`)
+                   
                     
                     self.$(".cip_average").progressbar({
                         value: data.cip_data.average_attendance,

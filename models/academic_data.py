@@ -160,6 +160,14 @@ def get_exam_data(self,batch):
             exam_data['exam_datasets'].append(exam_dataset)
     return exam_data
 
+def get_one_to_one_data(self,batch):
+    attendance_data = {'total_conducted':0}
+    batch_students = self.env['logic.students'].sudo().search([('batch_id','=',batch.id)])
+    for student in batch_students:
+        one_to_one_count = self.env['one_to_one.meeting'].sudo().search_count([('student_name','=',student.id)])
+        if one_to_one_count>0:
+            attendance_data['total_conducted']+=1
+    return attendance_data
 def get_quart_exam_pass_fail_percent(self,exam_rec):
     pass_count = 0
     fail_count = 0

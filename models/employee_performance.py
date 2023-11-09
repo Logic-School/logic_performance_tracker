@@ -214,6 +214,7 @@ class LogicEmployeePerformance(models.Model):
         batch_data['mock_interview_data'] = academic_data.get_mock_interview_data(self,batch_obj)
         batch_data['attendance_data'] = academic_data.get_attendance_data(self,batch_obj)
         batch_data['exam_data'] = academic_data.get_exam_data(self,batch_obj)
+        batch_data['one_to_one_data'] = academic_data.get_one_to_one_data(self,batch_obj)
         return batch_data
     
     def get_employee_academic_data(self,employee,start_date=False,end_date=False):

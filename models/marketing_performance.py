@@ -114,15 +114,15 @@ class MarketingTracker(models.Model):
         # seminars.filtered(lambda seminar: (seminar.attended_by.id==employee.id) or (seminar.attended_by==False and seminar.create_uid.id==employee.user_id.id))
         converted_lead_count = 0
 
-        checked_institute_ids = []
+        # checked_institute_ids = []
         for seminar in seminars:
             if (seminar.attended_by.id==employee.id) or ( (not seminar.attended_by) and (seminar.create_uid.id==employee.user_id.id) ):
                 
                 if seminar.lead_source_id:
                     if seminar.lead_source_id.name=="Seminar":
-                        if seminar.college_id.id not in checked_institute_ids:
-                            seminar_count+=1
-                            checked_institute_ids.append(seminar.college_id.id)
+                        # if seminar.college_id.id not in checked_institute_ids:
+                        seminar_count+=1
+                            # checked_institute_ids.append(seminar.college_id.id)
                     elif seminar.lead_source_id.name=="Webinar":
                         webinar_count+=1
 

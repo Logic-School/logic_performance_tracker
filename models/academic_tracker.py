@@ -133,7 +133,7 @@ class AcademicTracker(models.Model):
                 current_row_data['yes_plus_name'] = '-'
 
             try:
-                current_row_data['one_to_one_name'] = one_to_one_objs[i].name
+                current_row_data['one_to_one_name'] = one_to_one_objs[i].student_name.name + " - " + dict(one_to_one_objs[i]._fields['reason_for_meeting'].selection).get(one_to_one_objs[i].reason_for_meeting)
             except:
                 current_row_data['one_to_one_name'] = '-'
 
