@@ -397,147 +397,148 @@
                 </t>
 
                 <t t-if="values['academic_data']">
-    
-                    <div class="col-md-2 col-sm-6 oh-payslip" >
-                        <div class="oh-card model_record_card" id="upaya.form" name="Upaya">
-                            <div class="oh-card-body">
-                                <div class="stat-widget-one">
-                                    <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/upaya.png"/></div>
-                                    <div class="stat-content">
-                                        <div class="stat-text">Upaya</div>
-                                        <div class="stat-digit"><t t-esc="values['academic_data']['upaya_count']"/></div>
+                    <t t-if="!values['academic_data']['is_associate_faculty']">
+                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                            <div class="oh-card model_record_card" id="upaya.form" name="Upaya">
+                                <div class="oh-card-body">
+                                    <div class="stat-widget-one">
+                                        <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/upaya.png"/></div>
+                                        <div class="stat-content">
+                                            <div class="stat-text">Upaya</div>
+                                            <div class="stat-digit"><t t-esc="values['academic_data']['upaya_count']"/></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col-md-2 col-sm-6 oh-payslip" >
-                        <div class="oh-card model_record_card" id="yes_plus.logic" name="Yes Plus">
-                            <div class="oh-card-body">
-                                <div class="stat-widget-one">
-                                    <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/yes_plus.png"/></div>
-                                    <div class="stat-content">
-                                        <div class="stat-text">Yes Plus</div>
-                                        <div class="stat-digit"><t t-esc="values['academic_data']['yes_plus_count']"/></div>
+                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                            <div class="oh-card model_record_card" id="yes_plus.logic" name="Yes Plus">
+                                <div class="oh-card-body">
+                                    <div class="stat-widget-one">
+                                        <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/yes_plus.png"/></div>
+                                        <div class="stat-content">
+                                            <div class="stat-text">Yes Plus</div>
+                                            <div class="stat-digit"><t t-esc="values['academic_data']['yes_plus_count']"/></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col-md-2 col-sm-6 oh-payslip" >
-                        <div class="oh-card model_record_card" id="student.faculty" name="Student Faculty Club">
-                            <div class="oh-card-body">
-                                <div class="stat-widget-one">
-                                    <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/sfc.png"/></div>
-                                    <div class="stat-content">
-                                        <div class="stat-text">SFC</div>
-                                        <div class="stat-digit"><t t-esc="values['academic_data']['sfc_count']"/></div>
+                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                            <div class="oh-card model_record_card" id="student.faculty" name="Student Faculty Club">
+                                <div class="oh-card-body">
+                                    <div class="stat-widget-one">
+                                        <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/sfc.png"/></div>
+                                        <div class="stat-content">
+                                            <div class="stat-text">SFC</div>
+                                            <div class="stat-digit"><t t-esc="values['academic_data']['sfc_count']"/></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
 
 
-                    <div class="col-md-2 col-sm-6 oh-payslip" >
-                        <div class="oh-card model_record_card" id="exam.details" name="Exams">
-                            <div class="oh-card-body">
-                                <div class="stat-widget-one">
-                                    <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/exam.png"/></div>
-                                    <div class="stat-content">
-                                        <div class="stat-text">Exams</div>
-                                        <div class="stat-digit"><t t-esc="values['academic_data']['exam_count']"/></div>
+                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                            <div class="oh-card model_record_card" id="exam.details" name="Exams">
+                                <div class="oh-card-body">
+                                    <div class="stat-widget-one">
+                                        <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/exam.png"/></div>
+                                        <div class="stat-content">
+                                            <div class="stat-text">Exams</div>
+                                            <div class="stat-digit"><t t-esc="values['academic_data']['exam_count']"/></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col-md-2 col-sm-6 oh-payslip" >
-                        <div class="oh-card model_record_card" id="one_to_one.meeting" name="One to One">
-                            <div class="oh-card-body">
-                                <div class="stat-widget-one">
-                                    <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/one_to_one.png"/></div>
-                                    <div class="stat-content">
-                                        <div class="stat-text">One To One</div>
-                                        <div class="stat-digit"><t t-esc="values['academic_data']['one2one_count']"/></div>
+                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                            <div class="oh-card model_record_card" id="one_to_one.meeting" name="One to One">
+                                <div class="oh-card-body">
+                                    <div class="stat-widget-one">
+                                        <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/one_to_one.png"/></div>
+                                        <div class="stat-content">
+                                            <div class="stat-text">One To One</div>
+                                            <div class="stat-digit"><t t-esc="values['academic_data']['one2one_count']"/></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col-md-2 col-sm-6 oh-payslip" >
-                        <div class="oh-card model_record_card" id="logic.mock_interview" name="Mock Interview">
-                            <div class="oh-card-body">
-                                <div class="stat-widget-one">
-                                    <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/mock_interview.png"/></div>
-                                    <div class="stat-content">
-                                        <div class="stat-text">Mock Interview</div>
-                                        <div class="stat-digit"><t t-esc="values['academic_data']['mock_interview_count']"/></div>
+                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                            <div class="oh-card model_record_card" id="logic.mock_interview" name="Mock Interview">
+                                <div class="oh-card-body">
+                                    <div class="stat-widget-one">
+                                        <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/mock_interview.png"/></div>
+                                        <div class="stat-content">
+                                            <div class="stat-text">Mock Interview</div>
+                                            <div class="stat-digit"><t t-esc="values['academic_data']['mock_interview_count']"/></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-2 col-sm-6 oh-payslip" >
-                        <div class="oh-card model_record_card" id="logic.cip.form" name="CIP/Excel">
-                            <div class="oh-card-body">
-                                <div class="stat-widget-one">
-                                    <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/cip_excel.png"/></div>
-                                    <div class="stat-content">
-                                        <div class="stat-text">CIP/Excel</div>
-                                        <div class="stat-digit"><t t-esc="values['academic_data']['cip_excel_count']"/></div>
+                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                            <div class="oh-card model_record_card" id="logic.cip.form" name="CIP/Excel">
+                                <div class="oh-card-body">
+                                    <div class="stat-widget-one">
+                                        <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/cip_excel.png"/></div>
+                                        <div class="stat-content">
+                                            <div class="stat-text">CIP/Excel</div>
+                                            <div class="stat-digit"><t t-esc="values['academic_data']['cip_excel_count']"/></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col-md-2 col-sm-6 oh-payslip" >
-                        <div class="oh-card model_record_card" id="bring.your.buddy" name="Bring Your Buddy">
-                            <div class="oh-card-body">
-                                <div class="stat-widget-one">
-                                    <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/bring_your_buddy.png"/></div>
-                                    <div class="stat-content">
-                                        <div class="stat-text">BB Program</div>
-                                        <div class="stat-digit"><t t-esc="values['academic_data']['bring_buddy_count']"/></div>
+                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                            <div class="oh-card model_record_card" id="bring.your.buddy" name="Bring Your Buddy">
+                                <div class="oh-card-body">
+                                    <div class="stat-widget-one">
+                                        <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/bring_your_buddy.png"/></div>
+                                        <div class="stat-content">
+                                            <div class="stat-text">BB Program</div>
+                                            <div class="stat-digit"><t t-esc="values['academic_data']['bring_buddy_count']"/></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col-md-2 col-sm-6 oh-payslip" >
-                        <div class="oh-card model_record_card" id="logic.presentations" name="Presentation">
-                            <div class="oh-card-body">
-                                <div class="stat-widget-one">
-                                    <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/presentation.png"/></div>
-                                    <div class="stat-content">
-                                        <div class="stat-text">Presentation</div>
-                                        <div class="stat-digit"><t t-esc="values['academic_data']['presentation_count']"/></div>
+                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                            <div class="oh-card model_record_card" id="logic.presentations" name="Presentation">
+                                <div class="oh-card-body">
+                                    <div class="stat-widget-one">
+                                        <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/presentation.png"/></div>
+                                        <div class="stat-content">
+                                            <div class="stat-text">Presentation</div>
+                                            <div class="stat-digit"><t t-esc="values['academic_data']['presentation_count']"/></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col-md-2 col-sm-6 oh-payslip" >
-                        <div class="oh-card model_record_card" id="attendance.session" name="Attendance">
-                            <div class="oh-card-body">
-                                <div class="stat-widget-one">
-                                    <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/attendance.png"/></div>
-                                    <div class="stat-content">
-                                        <div class="stat-text">Attendance</div>
-                                        <div class="stat-digit"><t t-esc="values['academic_data']['attendance_count']"/></div>
+                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                            <div class="oh-card model_record_card" id="attendance.session" name="Attendance">
+                                <div class="oh-card-body">
+                                    <div class="stat-widget-one">
+                                        <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/attendance.png"/></div>
+                                        <div class="stat-content">
+                                            <div class="stat-text">Attendance</div>
+                                            <div class="stat-digit"><t t-esc="values['academic_data']['attendance_count']"/></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </t>
                 </t>
             </div>
 

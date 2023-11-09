@@ -9,7 +9,7 @@ class HrEmployeeInherit(models.Model):
     in_charge_id = fields.Many2one("hr.employee",string="In Charge")
     is_in_charge = fields.Boolean(string="Is In charge")
     in_charge_child_ids = fields.One2many("hr.employee","in_charge_id",string="In Charge Childs")
-
+    is_associate_faculty = fields.Boolean(string="Is Associate Faculty")
 
     def get_organisation_data(self,employee, processed_ids=None):
             if processed_ids is None:

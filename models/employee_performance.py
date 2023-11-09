@@ -218,9 +218,10 @@ class LogicEmployeePerformance(models.Model):
     
     def get_employee_academic_data(self,employee,start_date=False,end_date=False):
         department_obj = employee.department_id
+        employee_data = {}
         if department_obj.parent_id:
             if department_obj.parent_id.name=='ACADEMICS':
-
+                
                 employee_academic_domains = actions_common.get_academic_domains(self,department_obj=department_obj,start_date=start_date,end_date=end_date,manager=False,managers=False,employee_user_ids=[employee.user_id.id])
                 employee_academic_counts = actions_common.get_academic_counts(self,employee_academic_domains)
                 total_completed = sum(list(employee_academic_counts.values()))
@@ -244,12 +245,14 @@ class LogicEmployeePerformance(models.Model):
                     acad_coord_perf_obj.write(values)
                 else:
                     self.env['academic.coordinator.performance'].create(values)
-                values['name'] = employee.name
-                values['student_feedback_rating'] = self.get_student_feedback_average(employee)
-                values['batches'] = self.get_employee_academic_batches(employee.id)
-                values['academic_windows'] = actions_common.get_academic_windows(self,employee)
+                employee_data.update(values)
+                employee_data['name'] = employee.name
+                employee_data['student_feedback_rating'] = self.get_student_feedback_average(employee)
+                employee_data['batches'] = self.get_employee_academic_batches(employee.id)
+                employee_data['academic_windows'] = actions_common.get_academic_windows(self,employee)
+                employee_data['is_associate_faculty'] = employee.is_associate_faculty
                 # values['academic_batch_data'] = self.get_academic_batch_data(values['batches'])
-                return values
+                return employee_data
         return False
         
     def get_employee_sales_data(self,employee,start_date=False,end_date=False):

@@ -10,6 +10,10 @@
 
                 <field name="in_charge_id"/>
             </xpath>
+            <xpath expr="//field[@name='company_id']" position="after">
+
+                <field name="is_associate_faculty"/>
+            </xpath>
         </field>
     </record>
 </odoo>
