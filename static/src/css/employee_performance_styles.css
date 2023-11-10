@@ -8,6 +8,11 @@
     margin-right: 10px;
     font-size: 17px;
 }
+.label3{
+    font-weight: bold;
+    /* margin-right: 10px; */
+    font-size: 15px;
+}
 .number-value {
     color: #b65e24;
     font-size: 15px;

@@ -13,119 +13,132 @@
     </t>
 
     <t t-name="logic_performance_tracker.batch_data_template">
-        <div class="col-auto academic_batch_data_sub_div">
+        <div class="col-auto academic_batch_data_sub_div m-0 p-0">
             <div class="card-body">
-                <div class="detail-item">
-                    <span class="label2">Upaya Conducted:</span>
-                    <span class="number-value" t-esc="values['upaya_data']['is_conducted'] ? 'Yes' : 'No'"/>
-                </div>
-                <!-- <div class="detail-item">
-                    <span class="label2">Upaya Attended:</span>
-                    <span class="number-value" t-esc="'Nil'"/>
-                </div> -->
-                <div class="detail-item">
-                    <span class="label2">Yes Plus Conducted:</span>
-                    <span class="number-value" t-esc="values['yes_plus_data']['is_conducted'] ? 'Yes' : 'No'"/>
-                </div>
-                <div class="row">
-                    <div class="col-auto">
+                <div class="container-fluid m-0 p-0">
+                    <div class="row no-gutters">
+                        <!-- <div class="col d-flex justify-content-start"> -->
+                            <div class="col-2">
+                                <span class="label3">Upaya Conducted:</span>
+                            </div>
+                            <div class="col-10">
+                                <span class="number-value" t-esc="values['upaya_data']['is_conducted'] ? 'Yes' : 'No'"/>
+                            </div>
+                        <!-- </div> -->
+
+                    </div>
+                    <!-- <div class="detail-item">
                         <span class="label2">Upaya Attended:</span>
+                        <span class="number-value" t-esc="'Nil'"/>
+                    </div> -->
+                    <div class="row no-gutters">
+                        <div class="col-2">
+                            <span class="label3">Yes Plus Conducted:</span>
+                        </div>
+                        <div class="col-10">
+                            <span class="number-value" t-esc="values['yes_plus_data']['is_conducted'] ? 'Yes' : 'No'"/>
+                        </div>
                     </div>
-                    <!-- <span class="number-value" t-esc="'0/0'"/>
-                    <span>/ 5</span> -->
-                    <div class="col p-0 mt-2 upaya_attended" style="margin-left:92px;">
+                    <div class="row no-gutters">
+                        <div class="col-2 p-0">
+                            <span class="label3">Upaya Attended:</span>
+                        </div>
+                        <!-- <span class="number-value" t-esc="'0/0'"/>
+                        <span>/ 5</span> -->
+                        <div class="col-10 p-0 mt-2 upaya_attended" style="">
 
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-auto">
-                        <span class="label2">Yes Plus Average:</span>
-                    </div>
-                    <!-- <span class="number-value" t-esc="'0/0'"/>
-                    <span>/ 5</span> -->
-                    <div class="col p-0 mt-2 yes_plus_average" style="margin-left:80px;">
+                    <div class="row no-gutters">
+                        <div class="col-2 p-0">
+                            <span class="label3">Yes Plus Average:</span>
+                        </div>
+                        <!-- <span class="number-value" t-esc="'0/0'"/>
+                        <span>/ 5</span> -->
+                        <div class="col-10 p-0 mt-2 yes_plus_average" style="">
 
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-auto">
-                        <span class="label2">Presentation Attended:</span>
-                    </div>
-                    <!-- <span class="number-value" t-esc="'0/0'"/>
-                    <span>/ 5</span> -->
-                    <div class="col p-0 mt-2 presentation_attended" style="margin-left:40px;">
+                    <div class="row no-gutters">
+                        <div class="col-2 p-0">
+                            <span class="label3">Presentation Attended:</span>
+                        </div>
+                        <!-- <span class="number-value" t-esc="'0/0'"/>
+                        <span>/ 5</span> -->
+                        <div class="col-10 p-0 mt-2 presentation_attended" style="">
 
+                        </div>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-auto">
-                        <span class="label2">One To One Attended:</span>
-                    </div>
-                    <!-- <span class="number-value" t-esc="'0/0'"/>
-                    <span>/ 5</span> -->
-                    <div class="col p-0 mt-2 one_to_one_attended" style="margin-left:47px;">
+                    <div class="row no-gutters">
+                        <div class="col-2 p-0">
+                            <span class="label3">One To One Attended:</span>
+                        </div>
+                        <!-- <span class="number-value" t-esc="'0/0'"/>
+                        <span>/ 5</span> -->
+                        <div class="col-10 p-0 mt-2 one_to_one_attended" style="">
 
+                        </div>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-auto">
-                        <span class="label2">CIP Average Attendance:</span>
-                    </div>
-                    <!-- <span class="number-value" t-esc="'0/0'"/>
-                    <span>/ 5</span> -->
-                    <div class="col p-0 mt-2 cip_average" style="margin-left:24px;">
+                    <div class="row no-gutters">
+                        <div class="col-2 p-0">
+                            <span class="label3">CIP Average Attendance:</span>
+                        </div>
+                        <!-- <span class="number-value" t-esc="'0/0'"/>
+                        <span>/ 5</span> -->
+                        <div class="col-10 p-0 mt-2 cip_average" style="">
 
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-auto">
-                        <span class="label2 ml-0 mr-0">Excel Average Attendance:</span>
-                    </div>
-                    <!-- <span class="number-value" t-esc="'0/0'"/>
-                    <span>/ 5</span> -->
-                    <div class="col p-0 mt-2 excel_average" style="margin-left:18px;">
+                    <div class="row no-gutters">
+                        <div class="col-2 p-0">
+                            <span class="label3 ml-0 mr-0">Excel Average Attendance:</span>
+                        </div>
+                        <!-- <span class="number-value" t-esc="'0/0'"/>
+                        <span>/ 5</span> -->
+                        <div class="col-10 p-0 mt-2 excel_average" style="">
 
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-auto">
-                        <span class="label2">BB Attendance:</span>
-                    </div>
-                    <!-- <span class="number-value" t-esc="'0/0'"/>
-                    <span>/ 5</span> -->
-                    <div class="col p-0 mt-2 bb_average" style="margin-left:97px;">
+                    <div class="row no-gutters">
+                        <div class="col-2 p-0">
+                            <span class="label3">BB Attendance:</span>
+                        </div>
+                        <!-- <span class="number-value" t-esc="'0/0'"/>
+                        <span>/ 5</span> -->
+                        <div class="col-10 p-0 mt-2 bb_average" style="">
 
+                        </div>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-auto">
-                        <span class="label2">Mock Interview Attendance:</span>
+                    <div class="row no-gutters">
+                        <div class="col-2 p-0">
+                            <span class="label3">Mock Interview Attendance:</span>
+                        </div>
+                        <!-- <span class="number-value" t-esc="'0/0'"/>
+                        <span>/ 5</span> -->
+                        <div class="col-10 p-0 mt-2 mock_average">
+
+                        </div>
                     </div>
-                    <!-- <span class="number-value" t-esc="'0/0'"/>
-                    <span>/ 5</span> -->
-                    <div class="col p-0 mt-2 mock_average">
 
+                    <div class="row no-gutters">
+                        <div class="col-2 p-0">
+                            <span class="label3">Attendance Average:</span>
+                        </div>
+                        <!-- <span class="number-value" t-esc="'0/0'"/>
+                        <span>/ 5</span> -->
+                        <div style="" class="col-10 p-0 mt-2 attendance_average">
+
+                        </div>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-auto">
-                        <span class="label2">Attendance Average:</span>
-                    </div>
-                    <!-- <span class="number-value" t-esc="'0/0'"/>
-                    <span>/ 5</span> -->
-                    <div style="margin-left:54px;" class="col p-0 mt-2 attendance_average">
-
-                    </div>
-                </div>
-
-                <div class="row justify-content-center card mt-4">
-                    <div class="col-md-10" style="width:100%">
-                        <div class="examchart-canvas-container" style="position:relative;height:400px;">
-                            <canvas id="ExamChart1" style="width:600px;height:350px;"></canvas>
+                    <div class="row justify-content-center card mt-4">
+                        <div class="col-md-10" style="width:100%">
+                            <div class="examchart-canvas-container" style="position:relative;height:400px;">
+                                <canvas id="ExamChart1" style="width:600px;height:350px;"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>

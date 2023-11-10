@@ -100,7 +100,7 @@ class SalesTracker(models.Model):
             leads_count_data = {
                 'type':'bar',
                 'label': 'Leads Count',
-                'barPercentage': 0.1,
+                'barPercentage': 0.3,
 
                 # 'yAxisID': 'leads_count',
                 'fill': True,
@@ -112,7 +112,7 @@ class SalesTracker(models.Model):
             leads_converted_data = {
                 'type':'bar',
                 'label': 'Converted Leads',
-                'barPercentage': 0.1,
+                'barPercentage': 0.3,
 
                 # 'yAxisID': 'converted_leads_count',
                 'fill': True,
@@ -160,7 +160,8 @@ class SalesTracker(models.Model):
             if lead.admission_status == True:
                 converted_lead_count+=1
         if leads_count>0:
-            lead_conversion_rate = 100 * round(converted_lead_count/leads_count,3)
+            lead_conversion_rate = round(100 * (converted_lead_count/leads_count),2)
+            # lead_conversion_rate = 100 * round(converted_lead_count/leads_count,3)
         return {'leads_count':leads_count, 'leads_conversion_rate': lead_conversion_rate, 'converted_lead_count': converted_lead_count}
     
 
