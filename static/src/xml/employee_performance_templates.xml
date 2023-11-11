@@ -111,12 +111,21 @@
                                                     <span class="number-value" t-esc="values['common_performance']['to_do_count']"/>
                                                 </div>
                                                 <div class="detail-item" t-if="values['marketing_data']">
-                                                    <span class="label1">Leads Target:</span>
+                                                    <span class="label1">Seminar Target:</span>
                                                     <span class="number-value" t-esc="values['marketing_data']['year_leads_count']"/>
                                                     <span>/</span>
                                                     <span t-esc="values['marketing_data']['year_leads_target']"/>
                                                     <span class="font-weight-bold" t-esc="' ('+values['year']+')'"/>
                                                 </div>
+
+                                                <div class="detail-item" t-if="values['sales_data']">
+                                                    <span class="label1">Admission Target:</span>
+                                                    <span class="number-value" t-esc="values['sales_data']['year_converted_leads_count']"/>
+                                                    <span>/</span>
+                                                    <span t-esc="values['sales_data']['year_leads_target']"/>
+                                                    <span class="font-weight-bold" t-esc="' ('+values['year']+')'"/>
+                                                </div>
+
                                                 <div class="detail-item" t-if="values['academic_data']">
                                                     <span class="label1">Student rating:</span>
                                                     <span class="number-value" t-esc="values['academic_data']['student_feedback_rating']"/>

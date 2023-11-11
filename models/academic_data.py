@@ -89,7 +89,18 @@ def get_cip_data(self,batch):
                         total_attendance+=1
                     elif cip_rec.day_three_cip_attendance=="half_day":
                         total_attendance+=0.5
-            if cip_excel_obj[0].cip_day_one and cip_excel_obj[0].cip_day_two and cip_excel_obj[0].cip_day_three:
+
+                    
+                if cip_excel_obj[0].cip_day_four:
+
+                    if cip_rec.day_four_cip_attendance=='full_day':
+                        total_attendance+=1
+                    elif cip_rec.day_four_cip_attendance=="half_day":
+                        total_attendance+=0.5
+
+            if cip_excel_obj[0].cip_day_one and cip_excel_obj[0].cip_day_two and cip_excel_obj[0].cip_day_three and cip_excel_obj[0].cip_day_four:
+                average_attendance = total_attendance/4
+            elif cip_excel_obj[0].cip_day_one and cip_excel_obj[0].cip_day_two and cip_excel_obj[0].cip_day_three:
                 average_attendance = total_attendance/3
             elif cip_excel_obj[0].cip_day_one and cip_excel_obj[0].cip_day_two:
                 average_attendance = total_attendance/2

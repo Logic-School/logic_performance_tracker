@@ -42,3 +42,13 @@
     /* font-weight: bold; */
     text-shadow: 2px 2px 1px rgba(0, 0, 0, 0.1);
 }
+
+.lead_source_pie_chart .legend {
+    margin-top: 0;
+    margin-bottom: -49px !important;
+    display: inline-block;
+    border-collapse: collapse;
+    /* border-spacing: 0px; */
+    margin-left: 28px !important;
+    /* margin-top: 77px !important; */
+}

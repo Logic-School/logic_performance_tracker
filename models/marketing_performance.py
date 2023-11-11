@@ -72,7 +72,8 @@ class MarketingTracker(models.Model):
         year_lead_target_obj = self.env['seminar.target'].sudo().search([('year','=',year),('user_id','=',employee.user_id.id)])
         if year_lead_target_obj:
             year_lead_target = year_lead_target_obj[0].lead_target
-            seminars = self.env['seminar.leads'].sudo().search([('seminar_date','!=',False)])
+            seminar_sources = self.env['leads.sources'].sudo().search([('name','in',('Seminar','Seminar Data'))])
+            seminars = self.env['seminar.leads'].sudo().search([('seminar_date','!=',False),('lead_source_id','in',seminar_sources.ids)])
             year_filtered_seminars = seminars.filtered(lambda seminar: seminar.seminar_date.year==year)
             leads_count = 0
             for seminar_lead in year_filtered_seminars:
@@ -119,7 +120,7 @@ class MarketingTracker(models.Model):
             if (seminar.attended_by.id==employee.id) or ( (not seminar.attended_by) and (seminar.create_uid.id==employee.user_id.id) ):
                 
                 if seminar.lead_source_id:
-                    if seminar.lead_source_id.name=="Seminar":
+                    if seminar.lead_source_id.name=="Seminar" or seminar.lead_source_id.name=='Seminar Data':
                         # if seminar.college_id.id not in checked_institute_ids:
                         seminar_count+=1
                             # checked_institute_ids.append(seminar.college_id.id)

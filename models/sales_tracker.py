@@ -176,10 +176,13 @@ class SalesTracker(models.Model):
             leads = self.env['leads.logic'].sudo().search([('leads_assign','=',employee.id),('date_of_adding','!=',False)])
             year_filtered_leads = leads.filtered(lambda lead: lead.date_of_adding.year==year)
             leads_count = 0
+            converted_leads_count = 0
             for lead in year_filtered_leads:
                 leads_count+=1
-            return {'year_leads_target': year_lead_target, 'year_leads_count': leads_count}
-        return {'year_leads_target': 0, 'year_leads_count': 0}
+                if lead.admission_status:
+                    converted_leads_count+=1
+            return {'year_leads_target': year_lead_target, 'year_leads_count': leads_count,'year_converted_leads_count':converted_leads_count}
+        return {'year_leads_target': 0, 'year_leads_count': 0,'year_converted_leads_count':0}
 
     def get_employee_lead_count(self,employee,start_date,end_date):
         lead_domain = [('leads_assign','=',employee.id)]

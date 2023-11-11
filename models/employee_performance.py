@@ -74,7 +74,7 @@ class LogicEmployeePerformance(models.Model):
         elif model_name=='seminar.leads':
             # if (seminar.attended_by.id==employee.id) or ( (not seminar.attended_by) and (seminar.create_uid.id==employee.user_id.id) ):
 
-            domain = [('state','=','done'), '|',('attended_by','=',employee.id ),'&',('attended_by','=',False),('create_uid','=',employee.user_id.id)]
+            domain = ['|',('attended_by','=',employee.id ),'&',('attended_by','=',False),('create_uid','=',employee.user_id.id)]
             if start_date and end_date:
                 domain.extend([('seminar_date', '>=',start_date), ('seminar_date','<=',end_date)])
 
@@ -299,6 +299,8 @@ class LogicEmployeePerformance(models.Model):
             year_target_data = self.env['sales.tracker'].retrieve_leads_target_count(employee,start_date,end_date)
             employee_leads_data['year_leads_count'] = year_target_data['year_leads_count']
             employee_leads_data['year_leads_target'] = year_target_data['year_leads_target']
+            employee_leads_data['year_converted_leads_count'] = year_target_data['year_converted_leads_count']
+
 
             employee_leads_data['leads_count'] = self.env['sales.tracker'].get_employee_lead_count(employee,start_date,end_date)            
             return employee_leads_data
@@ -320,7 +322,7 @@ class LogicEmployeePerformance(models.Model):
                 'label': 'Leads Count',
                 'yAxisID': 'leads_count',
                 'fill': True,
-                'backgroundColor': 'rgba(204, 244, 196, 0.8)',
+                'backgroundColor': 'rgba(255, 255, 255, 0)',
                 'borderColor': 'rgba(49, 150, 76, 0.68)',
                 'borderWidth': 1,
                 'data': []
