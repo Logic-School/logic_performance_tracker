@@ -259,7 +259,7 @@ class LogicEmployeePerformance(models.Model):
         sales_dept_obj = self.env['hr.department'].sudo().search([('name','=','Sales')])
         if employee.department_id.id in sales_dept_obj.child_ids.ids:
             lead_sources = self.env['leads.sources'].sudo().search([])
-            lead_courses = self.env['logic.base.courses'].sudo().search([('name','!=','Nill')])
+            lead_courses = self.env['logic.base.courses'].sudo().search([('name','not in',('Nill',"DON'T USE"))])
             lead_source_names = lead_sources.mapped('name')
             lead_course_names = lead_courses.mapped('name')
             employee_leads_data = {'lead_sources':lead_source_names, 'sourcewise_leads_dataset': [], 'lead_courses': lead_course_names,'coursewise_leads_dataset': [], }
