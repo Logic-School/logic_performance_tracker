@@ -297,9 +297,9 @@ class LogicEmployeePerformance(models.Model):
             employee_leads_data['leads_dataset'].append(leads_conversion_data)
 
             year_target_data = self.env['sales.tracker'].retrieve_leads_target_count(employee,start_date,end_date)
-            employee_leads_data['year_leads_count'] = year_target_data['year_leads_count']
-            employee_leads_data['year_leads_target'] = year_target_data['year_leads_target']
-            employee_leads_data['year_converted_leads_count'] = year_target_data['year_converted_leads_count']
+            employee_leads_data['month_year_leads_count'] = year_target_data['month_year_leads_count']
+            employee_leads_data['month_year_leads_target'] = year_target_data['month_year_leads_target']
+            employee_leads_data['month_year_converted_leads_count'] = year_target_data['month_year_converted_leads_count']
 
 
             employee_leads_data['leads_count'] = self.env['sales.tracker'].get_employee_lead_count(employee,start_date,end_date)            
@@ -433,11 +433,14 @@ class LogicEmployeePerformance(models.Model):
         if start_date and end_date:
             start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
             year = start_date.year
+            month = actions_common.get_month_list().get(start_date.month)
         else:
             year = date.today().year
+            month = actions_common.get_month_list().get(date.today().month)
+
         employee_data = {}
 
-        employee_data['years'] = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037]
+        # employee_data['years'] = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037]
         employee_data['department_employees'] = self.get_department_employees(employee)
         employee_data['misc_to_do_chart_dataset'] = self.get_line_chart_datasets(employee.id,start_date,end_date)
         employee_data['personal_data'] = self.get_employee_personal_data(employee)
@@ -449,4 +452,5 @@ class LogicEmployeePerformance(models.Model):
         employee_data['sales_data'] = self.get_employee_sales_data(employee,start_date,end_date)
 
         employee_data['year'] = year
+        employee_data['month'] = month.capitalize()
         return employee_data

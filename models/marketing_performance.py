@@ -73,13 +73,13 @@ class MarketingTracker(models.Model):
         if year_lead_target_obj:
             year_lead_target = year_lead_target_obj[0].lead_target
             seminar_sources = self.env['leads.sources'].sudo().search([('name','in',('Seminar','Seminar Data'))])
-            seminars = self.env['seminar.leads'].sudo().search([('seminar_date','!=',False),('lead_source_id','in',seminar_sources.ids)])
+            seminars = self.env['seminar.leads'].sudo().search([('seminar_date','!=',False),('lead_source_id','in',seminar_sources.ids),('state','=','done')])
             year_filtered_seminars = seminars.filtered(lambda seminar: seminar.seminar_date.year==year)
-            leads_count = 0
+            seminar_count = 0
             for seminar_lead in year_filtered_seminars:
                 if (seminar_lead.attended_by.id==employee.id) or ( (not seminar_lead.attended_by) and (seminar_lead.create_uid.id==employee.user_id.id) ):
-                    leads_count+=len(seminar_lead.seminar_ids)
-            return {'year_leads_target': year_lead_target, 'year_leads_count': leads_count}
+                    seminar_count+=1
+            return {'year_leads_target': year_lead_target, 'year_leads_count': seminar_count}
         return {'year_leads_target': 0, 'year_leads_count': 0}
 
 
@@ -146,7 +146,7 @@ class MarketingTracker(models.Model):
 
         converted_target_ratio = 0
         if year_lead_target>0:
-            converted_target_ratio = round(converted_lead_count/year_lead_target,3)
+            converted_target_ratio = round(seminar_count/year_lead_target,3)
 
         values = {
             'employee': employee.id,

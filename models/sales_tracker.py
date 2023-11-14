@@ -13,6 +13,11 @@ class SalesTracker(models.Model):
         logger = logging.getLogger("Debugger: ")
         if start_date and end_date:
             start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
+            month = start_date.month
+            year=start_date.year
+        else:
+            year = date.today().year
+            month = date.today().month
         dashboard_data = {}
         department_obj = self.env['hr.department'].sudo().search([('name','=','Sales')])
         manager,managers,department_heads_data = actions_common.get_manager_managers_heads_data(self,department_obj,manager_id)
@@ -54,6 +59,12 @@ class SalesTracker(models.Model):
         dashboard_data['leads_performances'] = self.get_leads_leaderboard_data(employees)
         dashboard_data['qualitatives'],dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data['qualitatives'],employees)
         dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self,employees,start_date,end_date)
+        dashboard_data['month'] = actions_common.get_month_list().get(month).capitalize()
+
+        if start_date and end_date:
+            if start_date.month != end_date.month:
+                dashboard_data['month'] = False
+        dashboard_data['year'] = year
 
         return dashboard_data
     
@@ -71,6 +82,7 @@ class SalesTracker(models.Model):
     def get_sourcewise_charts_data(self,lead_source_id,employee_ids,start_date=False,end_date=False):
         logger = logging.getLogger("Debugger: ")
         logger.error("employee_ids: "+str(employee_ids))
+        logger.error("lead_source_id: "+str(lead_source_id))
 
         lead_domain = [('leads_source','=',int(lead_source_id)),('leads_assign','in',employee_ids)]
         if start_date and end_date:
@@ -94,7 +106,7 @@ class SalesTracker(models.Model):
         pie_chart_data = get_pie_chart_data(leads)
 
         def get_stacked_chart_data(lead_source_id,employee_ids,start_date,end_date):
-            employees = self.env['hr.employee'].sudo().search([('id','=',employee_ids)])
+            employees = self.env['hr.employee'].sudo().search([('id','in',employee_ids)])
             employee_name_labels = employees.mapped('name')
             employee_leads_data = {'employee_names':employee_name_labels, 'leads_dataset': [] }
             leads_count_data = {
@@ -166,24 +178,30 @@ class SalesTracker(models.Model):
     
 
     def retrieve_leads_target_count(self,employee,start_date,end_date):
+        month_dict = actions_common.get_month_list()
         if start_date and end_date:
+            month = start_date.month
             year=start_date.year
         else:
             year = date.today().year
+            month = date.today().month
+
         year_lead_target_obj = self.env['leads.target'].sudo().search([('year','=',year),('user_id','=',employee.user_id.id)])
         if year_lead_target_obj:
-            year_lead_target = year_lead_target_obj[0].admission_target
+            month_lead_obj = year_lead_target_obj.month_ids.filtered(lambda month_obj: month_obj.month==month_dict[month])
+            month_year_lead_target = month_lead_obj[0].target
             leads = self.env['leads.logic'].sudo().search([('leads_assign','=',employee.id),('date_of_adding','!=',False)])
-            year_filtered_leads = leads.filtered(lambda lead: lead.date_of_adding.year==year)
+            month_year_filtered_leads = leads.filtered(lambda lead: lead.date_of_adding.year==year and lead.date_of_adding.month==month)
             leads_count = 0
             converted_leads_count = 0
-            for lead in year_filtered_leads:
+            for lead in month_year_filtered_leads:
                 leads_count+=1
                 if lead.admission_status:
                     converted_leads_count+=1
-            return {'year_leads_target': year_lead_target, 'year_leads_count': leads_count,'year_converted_leads_count':converted_leads_count}
-        return {'year_leads_target': 0, 'year_leads_count': 0,'year_converted_leads_count':0}
+            return {'month_year_leads_target': month_year_lead_target, 'month_year_leads_count': leads_count,'month_year_converted_leads_count':converted_leads_count}
+        return {'month_year_leads_target': 0, 'month_year_leads_count': 0,'month_year_converted_leads_count':0}
 
+    #leads count in model card inside employee performance
     def get_employee_lead_count(self,employee,start_date,end_date):
         lead_domain = [('leads_assign','=',employee.id)]
         if start_date and end_date:
@@ -192,10 +210,27 @@ class SalesTracker(models.Model):
         return lead_count
     
     def create_employee_leads_leaderboard_data(self,employee,start_date=False,end_date=False):
+        month_dict = actions_common.get_month_list()
         lead_domain = [('leads_assign','=',employee.id)]
+        month=False
+
         if start_date and end_date:
             lead_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
+            year=start_date.year
+            if start_date.month==end_date.month and start_date.year==end_date.year:
+                month = start_date.month
+        else:
+            year = date.today().year
+            month = date.today().month
         leads = self.env['leads.logic'].sudo().search(lead_domain)
+        year_lead_target_obj = self.env['leads.target'].sudo().search([('year','=',year),('user_id','=',employee.user_id.id)])
+        month_year_lead_target = 0
+        if year_lead_target_obj:
+            if month:
+                month_lead_obj = year_lead_target_obj.month_ids.filtered(lambda month_obj: month_obj.month==month_dict[month])
+                month_year_lead_target = month_lead_obj[0].target
+                leads = leads.filtered(lambda lead: lead.date_of_adding.year==year and lead.date_of_adding.month==month)
+
         converted_lead_count = 0
         lead_conversion_rate = 0
         leads_count = 0
@@ -206,25 +241,16 @@ class SalesTracker(models.Model):
         if leads_count>0:
             lead_conversion_rate = 100 * round(converted_lead_count/leads_count,3)
 
-        year_lead_target = 0
-        if start_date and end_date:
-            year=start_date.year
-        else:
-            year = date.today().year
-        year_lead_target_obj = self.env['leads.target'].sudo().search([('year','=',year),('user_id','=',employee.user_id.id)])
-        if year_lead_target_obj:
-            year_lead_target = year_lead_target_obj[0].admission_target
-
         converted_target_ratio = 0
-        if year_lead_target>0:
-            converted_target_ratio = round(converted_lead_count/year_lead_target,3)
+        if month_year_lead_target>0:
+            converted_target_ratio = round(converted_lead_count/month_year_lead_target,3)
 
         values = {
             'employee': employee.id,
             'lead_count': leads_count,
             'conversion_rate': lead_conversion_rate,
             'lead_converted': converted_lead_count,
-            'lead_target': year_lead_target,
+            'lead_target': month_year_lead_target,
             'converted_target_ratio': converted_target_ratio,
         }
         emp_sales_perf_obj = self.env['logic.employee.sales.performance'].sudo().search([('employee','=',employee.id)])

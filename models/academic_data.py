@@ -166,7 +166,7 @@ def get_exam_data(self,batch):
                 'backgroundColor': rgba_colors.pop(random.randint(0,20)),
                 'borderColor': rgba_colors.pop(random.randint(0,20)),
                 'borderWidth': 1,
-                'data': get_quart_exam_pass_fail_percent(self,exam_rec)
+                'data': get_quart_exam_pass_fail_percent(self,exam_rec[0])
             }
             exam_data['exam_datasets'].append(exam_dataset)
     return exam_data

@@ -185,7 +185,7 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
                 self._rpc({
                     model: "sales.tracker", // Replace with your actual model name
                     method: 'get_sourcewise_charts_data', // Use 'search_read' to retrieve records
-                    args: [lead_source_id,employee_ids,fromDate,fromDate]
+                    args: [lead_source_id,employee_ids,fromDate,endDate]
                 }).then(function (charts_data) {
                     
                     if (charts_data.pie_chart_data.length === 0)

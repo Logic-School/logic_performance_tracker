@@ -22,9 +22,11 @@ class OtherTaskInherit(models.Model):
 
 
             if not start_date or not end_date:
-                task_records = self.env['logic.task.other'].sudo().search([('task_creator_employee','=',employee_id)])
+                task_records = self.env['logic.task.other'].sudo().search([('task_creator_employee','=',employee_id),('state','=',('completed')),('expected_completion','!=',False)])
             else:
-                task_records = self.env['logic.task.other'].sudo().search([('task_creator_employee','=',employee_id),('date','>=',start_date),('date','<=',end_date)])
+                task_records = self.env['logic.task.other'].sudo().search([('task_creator_employee','=',employee_id),('state','=',('completed')),('date_completed','>=',start_date),('date_completed','<=',end_date)])
+
+                # task_records = task_records.filtered(lambda task: task.expected_completion.date()>=start_date and task.expected_completion.date()<=end_date)
             logger.error("Other works Emp recs: "+str(task_records))
 
             for task in task_records:

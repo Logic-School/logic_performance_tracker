@@ -4,6 +4,10 @@ from datetime import date
 import logging
 
 def get_date_obj_from_string(from_date,end_date):
+    logger = logging.getLogger("Date debug")
+    logger.error('from_date'+str(from_date))
+    logger.error('end_date'+str(end_date))
+
     from_date = from_date.split("-")
     from_date = date(year=int(from_date[0]),month=int(from_date[1]), day=int(from_date[2]))
     end_date = end_date.split("-")
@@ -258,4 +262,20 @@ def get_academic_counts(self,academic_domains):
         'presentation_count': self.env['logic.presentations'].sudo().search_count(academic_domains['presentation_domain']),
         'attendance_count': self.env['attendance.session'].sudo().search_count(academic_domains['attendance_domain'])
 
+    }
+
+def get_month_list():
+    return {
+        1: 'january',
+        2: 'february',
+        3: 'march',
+        4: 'april',
+        5: 'may',
+        6: 'june',
+        7: 'july',
+        8: 'august',
+        9: 'september',
+        10: 'october',
+        11: 'november',
+        12: 'december',
     }
