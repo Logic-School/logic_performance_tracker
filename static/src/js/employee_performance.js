@@ -137,6 +137,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             this.render_line_chart()
             this.render_districtwise_leads_chart()
             this.render_sourcewise_leads_chart();
+            this.render_coursewise_leads_chart()
             this.render_academic_batch_list()
             this.render_academic_batch_data_summary();
             // this.render_line_chart();
@@ -439,7 +440,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                 console.log("inside if", this.data)
                 var data = {
                     labels: this.data.sales_data['lead_sources'],
-                    datasets: this.data.sales_data['leads_dataset'],
+                    datasets: this.data.sales_data['sourcewise_leads_dataset'],
                 }
                 // Configuration options
                 var options = {
@@ -452,7 +453,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Leads'
+                            text: 'Leads (By Source)'
                         }
                     },
                     scales: {
@@ -495,6 +496,68 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             }
         },
 
+        render_coursewise_leads_chart: function () {
+            var self = this
+            if (this.data.sales_data) {
+                console.log("inside if", this.data)
+                var data = {
+                    labels: this.data.sales_data['lead_courses'],
+                    datasets: this.data.sales_data['coursewise_leads_dataset'],
+                }
+                // Configuration options
+                var options = {
+                    responsive: true,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    stacked: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Leads (By Course)'
+                        }
+                    },
+                    scales: {
+                        leads_count: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            beginAtZero: true,
+
+                        },
+                        conversion_rates: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            beginAtZero: true,
+
+
+                            // grid line settings
+                            grid: {
+                                drawOnChartArea: false, // only want the grid lines for one axis to show up
+                            },
+                        },
+                    }
+                }
+
+
+                // Create a new chart with jQuery
+                var canvas_container = self.$('.coursechart-canvas-container');
+                canvas_container.empty()
+                canvas_container.append('<canvas id="courseWiseLeadChart" style="width:850px;height:500px;"></canvas>')
+                var canvas1 = self.$('#courseWiseLeadChart');
+                self.LineChart1 = new Chart(canvas1, {
+                    type: 'bar',
+                    data: data,
+                    options: options
+                });
+
+
+
+            }
+        },
+
         _onPerformanceFilterActionClicked: function (ev) {
             var self = this;
 
@@ -522,6 +585,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                 self.render_line_chart()
                 self.render_districtwise_leads_chart()
                 self.render_sourcewise_leads_chart();
+                self.render_coursewise_leads_chart()
                 self.render_academic_batch_list()
 
                 self.render_academic_batch_data_summary();
@@ -556,6 +620,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                 self.render_line_chart()
                 self.render_districtwise_leads_chart()
                 self.render_sourcewise_leads_chart()
+                self.render_coursewise_leads_chart()
                 self.render_academic_batch_list()
 
                 self.render_academic_batch_data_summary();

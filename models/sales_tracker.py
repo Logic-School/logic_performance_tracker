@@ -176,6 +176,24 @@ class SalesTracker(models.Model):
             # lead_conversion_rate = 100 * round(converted_lead_count/leads_count,3)
         return {'leads_count':leads_count, 'leads_conversion_rate': lead_conversion_rate, 'converted_lead_count': converted_lead_count}
     
+    def retrieve_employee_course_wise_lead_data(self,course,employee,start_date=False,end_date=False):
+        logger = logging.getLogger("Debugger: ")
+        leads_count = 0
+        lead_conversion_rate = 0
+        lead_domain = [('base_course_id','!=',False),('base_course_id','=',course.id),('leads_assign','=',employee.id)]
+        if start_date and end_date:
+            lead_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
+        leads = self.env['leads.logic'].sudo().search(lead_domain)
+        converted_lead_count = 0
+        for lead in leads:
+            leads_count+=1
+            if lead.admission_status == True:
+                converted_lead_count+=1
+        if leads_count>0:
+            lead_conversion_rate = round(100 * (converted_lead_count/leads_count),2)
+            # lead_conversion_rate = 100 * round(converted_lead_count/leads_count,3)
+        return {'leads_count':leads_count, 'leads_conversion_rate': lead_conversion_rate, 'converted_lead_count': converted_lead_count}
+    
 
     def retrieve_leads_target_count(self,employee,start_date,end_date):
         month_dict = actions_common.get_month_list()

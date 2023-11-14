@@ -259,11 +259,13 @@ class LogicEmployeePerformance(models.Model):
         sales_dept_obj = self.env['hr.department'].sudo().search([('name','=','Sales')])
         if employee.department_id.id in sales_dept_obj.child_ids.ids:
             lead_sources = self.env['leads.sources'].sudo().search([])
+            lead_courses = self.env['logic.base.courses'].sudo().search([('name','!=','Nill')])
             lead_source_names = lead_sources.mapped('name')
-            employee_leads_data = {'lead_sources':lead_source_names, 'leads_dataset': [] }
-            leads_count = []
-            conversion_rates = []
-            leads_count_data = {
+            lead_course_names = lead_courses.mapped('name')
+            employee_leads_data = {'lead_sources':lead_source_names, 'sourcewise_leads_dataset': [], 'lead_courses': lead_course_names,'coursewise_leads_dataset': [], }
+            leads_sourcewise_count = []
+            sourcewise_conversion_rates = []
+            sourcewise_leads_count_data = {
                 'type':'bar',
                 'label': 'Leads Count',
                 'yAxisID': 'leads_count',
@@ -275,7 +277,7 @@ class LogicEmployeePerformance(models.Model):
             }  
 
 
-            leads_conversion_data = {
+            sourcewise_leads_conversion_data = {
                 'type':'line',
                 'label': 'Conversion Rate (%)',
                 'yAxisID': 'conversion_rates',
@@ -288,12 +290,51 @@ class LogicEmployeePerformance(models.Model):
 
             for lead_source in lead_sources:
                 source_leads_data = self.env['sales.tracker'].retrieve_employee_source_wise_lead_data(lead_source,employee,start_date,end_date)
-                leads_count.append(source_leads_data['leads_count'])
-                conversion_rates.append(source_leads_data['leads_conversion_rate'])
-            leads_count_data['data'] = leads_count
-            leads_conversion_data['data'] = conversion_rates
-            employee_leads_data['leads_dataset'].append(leads_count_data)
-            employee_leads_data['leads_dataset'].append(leads_conversion_data)
+                leads_sourcewise_count.append(source_leads_data['leads_count'])
+                sourcewise_conversion_rates.append(source_leads_data['leads_conversion_rate'])
+
+            sourcewise_leads_count_data['data'] = leads_sourcewise_count
+            sourcewise_leads_conversion_data['data'] = sourcewise_conversion_rates
+            employee_leads_data['sourcewise_leads_dataset'].append(sourcewise_leads_count_data)
+            employee_leads_data['sourcewise_leads_dataset'].append(sourcewise_leads_conversion_data)
+
+
+            leads_coursewise_count = []
+            coursewise_conversion_rates = []
+            coursewise_leads_count_data = {
+                'type':'bar',
+                'label': 'Leads Count',
+                'yAxisID': 'leads_count',
+                'fill': True,
+                'backgroundColor': 'rgba(255, 255, 255, 0)',
+                'borderColor': 'rgba(49, 150, 76, 0.68)',
+                'borderWidth': 1,
+                'data': []
+            }  
+
+
+            coursewise_leads_conversion_data = {
+                'type':'line',
+                'label': 'Conversion Rate (%)',
+                'yAxisID': 'conversion_rates',
+                'fill': True,
+                'backgroundColor': 'rgba(255, 255, 255, 0)',
+                'borderColor': 'rgba(249, 83, 0, 0.83)',
+                'borderWidth': 1,
+                'data': []
+            }  
+
+            for course in lead_courses:
+                course_leads_data = self.env['sales.tracker'].retrieve_employee_course_wise_lead_data(course,employee,start_date,end_date)
+                leads_coursewise_count.append(course_leads_data['leads_count'])
+                coursewise_conversion_rates.append(course_leads_data['leads_conversion_rate'])
+
+                
+            coursewise_leads_count_data['data'] = leads_coursewise_count
+            coursewise_leads_conversion_data['data'] = coursewise_conversion_rates
+            employee_leads_data['coursewise_leads_dataset'].append(coursewise_leads_count_data)
+            employee_leads_data['coursewise_leads_dataset'].append(coursewise_leads_conversion_data)
+
 
             year_target_data = self.env['sales.tracker'].retrieve_leads_target_count(employee,start_date,end_date)
             employee_leads_data['month_year_leads_count'] = year_target_data['month_year_leads_count']
