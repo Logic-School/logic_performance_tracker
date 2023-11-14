@@ -3,6 +3,56 @@ from odoo.exceptions import UserError
 from datetime import date
 import logging
 
+class StateAction(models.Model):
+    _name = "performance.tracker"
+
+    # @api.model
+    def perf_tracker_open_action(self):
+        if self.env.user.has_group('logic_performance_tracker.group_perf_admin'):
+            action = self.env.ref("logic_performance_tracker.tracker_dashboard_action").sudo().read()[0]
+            return action
+        elif self.env.user.has_group('logic_performance_tracker.group_perf_digital_head'):
+            action = self.env.ref("logic_performance_tracker.digital_performance_action").sudo().read()[0]
+            return action
+        elif self.env.user.has_group('logic_performance_tracker.group_perf_academic_head'):
+            action = self.env.ref("logic_performance_tracker.academic_performance_action").sudo().read()[0]
+            return action
+        elif self.env.user.has_group('logic_performance_tracker.group_perf_marketing_head'):
+            action = self.env.ref("logic_performance_tracker.marketing_performance_action").sudo().read()[0]
+            return action
+        elif self.env.user.has_group('logic_performance_tracker.group_perf_sales_head'):
+            action = self.env.ref("logic_performance_tracker.sales_performance_action").sudo().read()[0]
+            return action
+        elif self.env.user.has_group('logic_performance_tracker.group_perf_accounts_head'):
+            action = self.env.ref("logic_performance_tracker.accounts_performance_action").sudo().read()[0]
+            return action
+        else:
+            raise UserError("You do not have access to this application!")
+    
+    @api.model
+    def retrieve_dashboard_data(self):
+        dashboard_data = {}
+        sales_department_obj = self.env['hr.department'].sudo().search([('name','=','Sales')])
+        sales_dept_childs = self.env['hr.department'].sudo().search([('parent_id','=',sales_department_obj[0].ids)])
+        dashboard_data['sales_employees_count'] = self.env['hr.employee'].sudo().search_count([('department_id','in',sales_dept_childs.ids)])
+
+        academic_department_obj = self.env['hr.department'].sudo().search([('name','=','ACADEMICS')])
+        academic_dept_childs = self.env['hr.department'].sudo().search([('parent_id','=',academic_department_obj[0].id)])
+        dashboard_data['academic_employees_count'] = self.env['hr.employee'].sudo().search_count([('department_id','in',academic_dept_childs.ids)])
+
+        digital_department_obj = self.env['hr.department'].sudo().search([('name','=','Digital')])
+        # digital_dept_childs = self.env['hr.department'].sudo().search([('parent_id','=',digital_department_obj[0].id)])
+        dashboard_data['digital_employees_count'] = self.env['hr.employee'].sudo().search_count([('department_id','=',digital_department_obj.id)])
+
+        marketing_department_obj = self.env['hr.department'].sudo().search([('name','=','Marketing')])
+        marketing_dept_childs = self.env['hr.department'].sudo().search([('parent_id','=',marketing_department_obj[0].id)])
+        dashboard_data['marketing_employees_count'] = self.env['hr.employee'].sudo().search_count([('department_id','in',marketing_dept_childs.ids)])
+
+        accounts_department_obj = self.env['hr.department'].sudo().search([('name','=','Accounts')])
+        accounts_dept_childs = self.env['hr.department'].sudo().search([('parent_id','=',accounts_department_obj[0].id)])
+        dashboard_data['accounts_employees_count'] = self.env['hr.employee'].sudo().search_count([('department_id','in',accounts_dept_childs.ids)])
+        return dashboard_data
+
 def get_date_obj_from_string(from_date,end_date):
     logger = logging.getLogger("Date debug")
     logger.error('from_date'+str(from_date))
@@ -141,29 +191,6 @@ def get_academic_windows(self,employee):
 
     return academic_windows_data
 
-class StateAction(models.Model):
-    _name = "performance.tracker"
-
-    # @api.model
-    def perf_tracker_open_action(self):
-        if self.env.user.has_group('logic_performance_tracker.group_perf_admin') or self.env.user.has_group('logic_performance_tracker.group_perf_digital_head'):
-            action = self.env.ref("logic_performance_tracker.digital_performance_action").sudo().read()[0]
-            return action
-        elif self.env.user.has_group('logic_performance_tracker.group_perf_admin') or self.env.user.has_group('logic_performance_tracker.group_perf_academic_head'):
-            action = self.env.ref("logic_performance_tracker.academic_performance_action").sudo().read()[0]
-            return action
-        elif self.env.user.has_group('logic_performance_tracker.group_perf_admin') or self.env.user.has_group('logic_performance_tracker.group_perf_marketing_head'):
-            action = self.env.ref("logic_performance_tracker.marketing_performance_action").sudo().read()[0]
-            return action
-        elif self.env.user.has_group('logic_performance_tracker.group_perf_admin') or self.env.user.has_group('logic_performance_tracker.group_perf_sales_head'):
-            action = self.env.ref("logic_performance_tracker.sales_performance_action").sudo().read()[0]
-            return action
-        elif self.env.user.has_group('logic_performance_tracker.group_perf_admin') or self.env.user.has_group('logic_performance_tracker.group_perf_accounts_head'):
-            action = self.env.ref("logic_performance_tracker.accounts_performance_action").sudo().read()[0]
-            return action
-
-        else:
-            raise UserError("You do not have access to this application!")
 
     # @api.model
     # def action_open_view(self,model_name,state):
@@ -279,3 +306,4 @@ def get_month_list():
         11: 'november',
         12: 'december',
     }
+

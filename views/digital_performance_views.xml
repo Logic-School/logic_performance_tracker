@@ -9,6 +9,8 @@
             <script type="text/javascript" src="/logic_performance_tracker/static/src/js/lib/d3.min.js"/>
             <script type="text/javascript" src="/logic_performance_tracker/static/src/js/lib/jquery-ui.js"/>
 
+            <script type="text/javascript" src="/logic_performance_tracker/static/src/js/tracker_dashboard.js"/>
+
             <script type="text/javascript" src="/logic_performance_tracker/static/src/js/digital_performance.js"/>
             <script type="text/javascript" src="/logic_performance_tracker/static/src/js/academic_performance.js"/>
             <script type="text/javascript" src="/logic_performance_tracker/static/src/js/marketing_performance.js"/>
@@ -38,6 +40,11 @@
         <field name="code">
             action = model.perf_tracker_open_action()
         </field>
+    </record>
+
+    <record id="tracker_dashboard_action" model="ir.actions.client">
+        <field name="name">Performance Tracker</field>
+        <field name="tag">tracker_dashboard</field>
     </record>
 
     <record id="digital_performance_action" model="ir.actions.client">

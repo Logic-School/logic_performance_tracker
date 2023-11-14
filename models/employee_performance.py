@@ -252,7 +252,6 @@ class LogicEmployeePerformance(models.Model):
                 employee_data['batches'] = self.get_employee_academic_batches(employee.id)
                 employee_data['academic_windows'] = actions_common.get_academic_windows(self,employee)
                 employee_data['is_associate_faculty'] = employee.is_associate_faculty
-                # values['academic_batch_data'] = self.get_academic_batch_data(values['batches'])
                 return employee_data
         return False
         
