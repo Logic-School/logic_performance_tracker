@@ -289,6 +289,11 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
             // Get the date field's value
             var fromDate = this.$('.from_date').val();
             var endDate = this.$('.end_date').val();
+            if (fromDate=='' || endDate=='')
+            {
+                fromDate = false;
+                endDate = false;
+            }
             console.log("from",fromDate==="")
             console.log("To",endDate)
             var employee_id = $(ev.currentTarget).find(".o_employee_id").data("empid")

@@ -453,7 +453,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Leads (By Source)'
+                            text: 'Leads (By Source)' + (self.data.month ? ' '+self.data.month+' '+self.data.year : '')
                         }
                     },
                     scales: {
@@ -515,7 +515,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Leads (By Course)'
+                            text: 'Leads (By Course)' + (self.data.month ? ' '+self.data.month+' '+self.data.year : '')
                         }
                     },
                     scales: {

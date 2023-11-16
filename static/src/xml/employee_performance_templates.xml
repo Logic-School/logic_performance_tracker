@@ -123,7 +123,7 @@
                                                     <span class="number-value" t-esc="values['sales_data']['month_year_converted_leads_count']"/>
                                                     <span>/</span>
                                                     <span t-esc="values['sales_data']['month_year_leads_target']"/>
-                                                    <span class="font-weight-bold" t-esc="' ('+values['month']+ ' '+values['year']+')'"/>
+                                                    <span t-if="values['month']" class="font-weight-bold" t-esc="' ('+values['month']+ ' '+values['year']+')'"/>
                                                 </div>
 
                                                 <div class="detail-item" t-if="values['academic_data']">

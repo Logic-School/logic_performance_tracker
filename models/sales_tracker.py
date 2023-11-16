@@ -85,19 +85,49 @@ class SalesTracker(models.Model):
         logger.error("lead_source_id: "+str(lead_source_id))
 
         lead_domain = [('leads_source','=',int(lead_source_id)),('leads_assign','in',employee_ids)]
+        
+        month=False 
         if start_date and end_date:
             start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
-            lead_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
+            year=start_date.year
+            if start_date.month==end_date.month and start_date.year==end_date.year:
+                month = start_date.month
+        else:
+            year = date.today().year
+            month = date.today().month
+            # lead_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
+        
         leads = self.env['leads.logic'].sudo().search(lead_domain)
+
+        leads_with_admission = leads.filtered(lambda lead: lead.admission_status==True and lead.admission_date)
+        leads_without_admission = leads.filtered(lambda lead: lead.admission_status==False)
+
+        if start_date and end_date:
+            leads_with_admission = leads_with_admission.filtered(lambda lead: lead.admission_date>=start_date and lead.admission_date<=end_date)
+            leads_without_admission = leads_without_admission.filtered(lambda lead: lead.date_of_adding>=start_date and lead.date_of_adding<=end_date)
+        else:
+            leads_with_admission = leads_with_admission.filtered(lambda lead: lead.admission_date.month==month and lead.admission_date.year==year)
+            leads_without_admission = leads_without_admission.filtered(lambda lead: lead.date_of_adding.month==month and lead.date_of_adding.year==year)
+        
+        leads = leads_with_admission + leads_without_admission
         # employees = self.env['hr.employee'].sudo().search[('id','in',employee_ids)]
         def get_pie_chart_data(leads):
             employees_data = {}
+            # for lead_with_admission in leads_with_admission:
+            #     # if lead_with_admission.admission_date>=start_date and lead_with_admission.admission_date<=end_date:
+            #         if employees_data.get(lead_with_admission.leads_assign.name):
+            #             employees_data[lead_with_admission.leads_assign.name]+=1
+            #         else:
+            #             employees_data[lead_with_admission.leads_assign.name] = 1
+
             for lead in leads:
-                if lead.leads_assign:
-                    if employees_data.get(lead.leads_assign.name):
-                        employees_data[lead.leads_assign.name]+=1
-                    else:
-                        employees_data[lead.leads_assign.name] = 1
+                # if lead_with_out_admission.admission_date>=start_date and lead_with_out_admission.admission_date<=end_date:
+                if employees_data.get(lead.leads_assign.name):
+                    employees_data[lead.leads_assign.name]+=1
+                else:
+                    employees_data[lead.leads_assign.name] = 1
+
+            
             logger.error("employees_data: "+str(employees_data))
             leads_data = []
             for key in employees_data.keys():
@@ -150,6 +180,8 @@ class SalesTracker(models.Model):
 
     @api.model
     def retrieve_employee_all_source_wise_lead_data(self,employee_id,start_date=False,end_date=False):
+        if start_date and end_date:
+            start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
         employee = self.env['hr.employee'].sudo().browse(int(employee_id.strip()))
         lead_sources = self.env['leads.sources'].sudo().search([])
         employee_data = {}
@@ -160,17 +192,55 @@ class SalesTracker(models.Model):
     
     def retrieve_employee_source_wise_lead_data(self,lead_source,employee,start_date=False,end_date=False):
         logger = logging.getLogger("Debugger: ")
+        month_dict = actions_common.get_month_list()
+
         leads_count = 0
         lead_conversion_rate = 0
-        lead_domain = [('leads_source','=',lead_source.id),('leads_assign','=',employee.id)]
-        if start_date and end_date:
-            lead_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
-        leads = self.env['leads.logic'].sudo().search(lead_domain)
         converted_lead_count = 0
-        for lead in leads:
+
+        lead_domain = [('leads_source','=',lead_source.id),('leads_assign','=',employee.id)]
+
+        leads = self.env['leads.logic'].sudo().search(lead_domain)
+
+        month=False 
+        if start_date and end_date:
+            # lead_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
+            year=start_date.year
+            if start_date.month==end_date.month and start_date.year==end_date.year:
+                month = start_date.month
+        else:
+            year = date.today().year
+            month = date.today().month
+        
+        leads_with_admission = leads.filtered(lambda lead: lead.admission_status==True and lead.admission_date)
+        leads_without_admission = leads.filtered(lambda lead: lead.admission_status==False)
+
+        if start_date and end_date:
+            leads_with_admission = leads_with_admission.filtered(lambda lead: lead.admission_date>=start_date and lead.admission_date<=end_date)
+            leads_without_admission = leads_without_admission.filtered(lambda lead: lead.date_of_adding>=start_date and lead.date_of_adding<=end_date)
+        else:
+            leads_with_admission = leads_with_admission.filtered(lambda lead: lead.admission_date.month==month and lead.admission_date.year==year)
+            leads_without_admission = leads_without_admission.filtered(lambda lead: lead.date_of_adding.month==month and lead.date_of_adding.year==year)
+
+        year_lead_target_obj = self.env['leads.target'].sudo().search([('year','=',year),('user_id','=',employee.user_id.id)])
+        month_year_lead_target = 0
+        if year_lead_target_obj:
+            if month:
+                month_lead_obj = year_lead_target_obj.month_ids.filtered(lambda month_obj: month_obj.month==month_dict[month])
+                month_year_lead_target = month_lead_obj[0].target
+                # leads = leads.filtered(lambda lead: lead.date_of_adding.year==year and lead.date_of_adding.month==month)
+
+        for lead_without_admission in leads_without_admission:
             leads_count+=1
-            if lead.admission_status == True:
+
+        for lead_with_admission in leads_with_admission:
+            leads_count+=1
+            if month:
+                if lead_with_admission.admission_date.month==month and lead_with_admission.admission_date.year==year:
+                    converted_lead_count+=1
+            else:
                 converted_lead_count+=1
+
         if leads_count>0:
             lead_conversion_rate = round(100 * (converted_lead_count/leads_count),2)
             # lead_conversion_rate = 100 * round(converted_lead_count/leads_count,3)
@@ -178,16 +248,49 @@ class SalesTracker(models.Model):
     
     def retrieve_employee_course_wise_lead_data(self,course,employee,start_date=False,end_date=False):
         logger = logging.getLogger("Debugger: ")
+        month_dict = actions_common.get_month_list()
         leads_count = 0
         lead_conversion_rate = 0
-        lead_domain = [('base_course_id','!=',False),('base_course_id','=',course.id),('leads_assign','=',employee.id)]
-        if start_date and end_date:
-            lead_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
-        leads = self.env['leads.logic'].sudo().search(lead_domain)
         converted_lead_count = 0
-        for lead in leads:
+        lead_domain = [('base_course_id','!=',False),('base_course_id','=',course.id),('leads_assign','=',employee.id)]
+        leads = self.env['leads.logic'].sudo().search(lead_domain)
+        month=False 
+        if start_date and end_date:
+            # lead_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
+            year=start_date.year
+            if start_date.month==end_date.month and start_date.year==end_date.year:
+                month = start_date.month
+        else:
+            year = date.today().year
+            month = date.today().month
+        
+        leads_with_admission = leads.filtered(lambda lead: lead.admission_status==True and lead.admission_date)
+        leads_without_admission = leads.filtered(lambda lead: lead.admission_status==False)
+
+        if start_date and end_date:
+            leads_with_admission = leads_with_admission.filtered(lambda lead: lead.admission_date>=start_date and lead.admission_date<=end_date)
+            leads_without_admission = leads_without_admission.filtered(lambda lead: lead.date_of_adding>=start_date and lead.date_of_adding<=end_date)
+        else:
+            leads_with_admission = leads_with_admission.filtered(lambda lead: lead.admission_date.month==month and lead.admission_date.year==year)
+            leads_without_admission = leads_without_admission.filtered(lambda lead: lead.date_of_adding.month==month and lead.date_of_adding.year==year)
+
+        year_lead_target_obj = self.env['leads.target'].sudo().search([('year','=',year),('user_id','=',employee.user_id.id)])
+        month_year_lead_target = 0
+        if year_lead_target_obj:
+            if month:
+                month_lead_obj = year_lead_target_obj.month_ids.filtered(lambda month_obj: month_obj.month==month_dict[month])
+                month_year_lead_target = month_lead_obj[0].target
+                # leads = leads.filtered(lambda lead: lead.date_of_adding.year==year and lead.date_of_adding.month==month)
+
+        for lead_without_admission in leads_without_admission:
             leads_count+=1
-            if lead.admission_status == True:
+
+        for lead_with_admission in leads_with_admission:
+            leads_count+=1
+            if month:
+                if lead_with_admission.admission_date.month==month and lead_with_admission.admission_date.year==year:
+                    converted_lead_count+=1
+            else:
                 converted_lead_count+=1
         if leads_count>0:
             lead_conversion_rate = round(100 * (converted_lead_count/leads_count),2)
@@ -195,67 +298,115 @@ class SalesTracker(models.Model):
         return {'leads_count':leads_count, 'leads_conversion_rate': lead_conversion_rate, 'converted_lead_count': converted_lead_count}
     
 
-    def retrieve_leads_target_count(self,employee,start_date,end_date):
+    def retrieve_leads_target_count(self,employee,start_date=False,end_date=False):
         month_dict = actions_common.get_month_list()
+        month=False
+        month_year_lead_target = 0
+        leads_count = 0
+        converted_leads_count = 0
         if start_date and end_date:
-            month = start_date.month
             year=start_date.year
+            if start_date.month==end_date.month:
+                month=start_date.month
+
         else:
             year = date.today().year
             month = date.today().month
+        
+        leads = self.env['leads.logic'].sudo().search([('leads_assign','=',employee.id),('admission_status','=',True),('admission_date','!=',False)])
 
         year_lead_target_obj = self.env['leads.target'].sudo().search([('year','=',year),('user_id','=',employee.user_id.id)])
         if year_lead_target_obj:
-            month_lead_obj = year_lead_target_obj.month_ids.filtered(lambda month_obj: month_obj.month==month_dict[month])
-            month_year_lead_target = month_lead_obj[0].target
-            leads = self.env['leads.logic'].sudo().search([('leads_assign','=',employee.id),('date_of_adding','!=',False)])
-            month_year_filtered_leads = leads.filtered(lambda lead: lead.date_of_adding.year==year and lead.date_of_adding.month==month)
-            leads_count = 0
-            converted_leads_count = 0
-            for lead in month_year_filtered_leads:
-                leads_count+=1
-                if lead.admission_status:
-                    converted_leads_count+=1
-            return {'month_year_leads_target': month_year_lead_target, 'month_year_leads_count': leads_count,'month_year_converted_leads_count':converted_leads_count}
-        return {'month_year_leads_target': 0, 'month_year_leads_count': 0,'month_year_converted_leads_count':0}
+
+            if month:
+                month_lead_obj = year_lead_target_obj.month_ids.filtered(lambda month_obj: month_obj.month==month_dict[month])
+                month_year_lead_target = month_lead_obj[0].target
+                leads = leads.filtered(lambda lead: lead.admission_date.year==year and lead.admission_date.month==month)
+            for lead in leads:
+                converted_leads_count+=1
+        return {'month_year_leads_target': month_year_lead_target, 'month_year_leads_count': leads_count,'month_year_converted_leads_count':converted_leads_count}
 
     #leads count in model card inside employee performance
     def get_employee_lead_count(self,employee,start_date,end_date):
         lead_domain = [('leads_assign','=',employee.id)]
+        leads = self.env['leads.logic'].sudo().search(lead_domain)
+        month=False 
         if start_date and end_date:
-            lead_domain.extend([('date_of_adding', '>=',start_date), ('date_of_adding','<=',end_date)])
-        lead_count = self.env['leads.logic'].sudo().search_count(lead_domain)
-        return lead_count
-    
-    def create_employee_leads_leaderboard_data(self,employee,start_date=False,end_date=False):
-        month_dict = actions_common.get_month_list()
-        lead_domain = [('leads_assign','=',employee.id)]
-        month=False
-
-        if start_date and end_date:
-            lead_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
+            # lead_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
             year=start_date.year
             if start_date.month==end_date.month and start_date.year==end_date.year:
                 month = start_date.month
         else:
             year = date.today().year
             month = date.today().month
+        
+        leads_with_admission = leads.filtered(lambda lead: lead.admission_status==True and lead.admission_date)
+        leads_without_admission = leads.filtered(lambda lead: lead.admission_status==False)
+
+        if start_date and end_date:
+            leads_with_admission = leads_with_admission.filtered(lambda lead: lead.admission_date>=start_date and lead.admission_date<=end_date)
+            leads_without_admission = leads_without_admission.filtered(lambda lead: lead.date_of_adding>=start_date and lead.date_of_adding<=end_date)
+        else:
+            leads_with_admission = leads_with_admission.filtered(lambda lead: lead.admission_date.month==month and lead.admission_date.year==year)
+            leads_without_admission = leads_without_admission.filtered(lambda lead: lead.date_of_adding.month==month and lead.date_of_adding.year==year)
+        lead_count = len(leads_with_admission) + len(leads_without_admission)
+        return lead_count
+    
+    def create_employee_leads_leaderboard_data(self,employee,start_date=False,end_date=False):
+        logger = logging.getLogger("Lead Debug: ")
+        month_dict = actions_common.get_month_list()
+        lead_domain = [('leads_assign','=',employee.id)]
+        month=False
+
+        '''
+            if start_date and end_date filter is used, show target as the start_date month's target if both start and end is of same month. Otherwise show target as 0.
+            So when loading without date filter show target and leads data of the current month
+        '''
+
+        if start_date and end_date:
+            # lead_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
+            year=start_date.year
+            if start_date.month==end_date.month and start_date.year==end_date.year:
+                month = start_date.month
+        else:
+            year = date.today().year
+            month = date.today().month
+
         leads = self.env['leads.logic'].sudo().search(lead_domain)
+
+        leads_with_admission = leads.filtered(lambda lead: lead.admission_status==True and lead.admission_date)
+        leads_without_admission = leads.filtered(lambda lead: lead.admission_status==False)
+
+        if start_date and end_date:
+            leads_with_admission = leads_with_admission.filtered(lambda lead: lead.admission_date>=start_date and lead.admission_date<=end_date)
+            leads_without_admission = leads_without_admission.filtered(lambda lead: lead.date_of_adding>=start_date and lead.date_of_adding<=end_date)
+        else:
+            leads_with_admission = leads_with_admission.filtered(lambda lead: lead.admission_date.month==month and lead.admission_date.year==year)
+            leads_without_admission = leads_without_admission.filtered(lambda lead: lead.date_of_adding.month==month and lead.date_of_adding.year==year)
+
         year_lead_target_obj = self.env['leads.target'].sudo().search([('year','=',year),('user_id','=',employee.user_id.id)])
         month_year_lead_target = 0
         if year_lead_target_obj:
             if month:
                 month_lead_obj = year_lead_target_obj.month_ids.filtered(lambda month_obj: month_obj.month==month_dict[month])
                 month_year_lead_target = month_lead_obj[0].target
-                leads = leads.filtered(lambda lead: lead.date_of_adding.year==year and lead.date_of_adding.month==month)
+                # leads = leads.filtered(lambda lead: lead.date_of_adding.year==year and lead.date_of_adding.month==month)
 
         converted_lead_count = 0
         lead_conversion_rate = 0
         leads_count = 0
-        for lead in leads:
+
+        for lead_without_admission in leads_without_admission:
             leads_count+=1
-            if lead.admission_status == True:
+
+        for lead_with_admission in leads_with_admission:
+            leads_count+=1
+            if month:
+                if lead_with_admission.admission_date.month==month and lead_with_admission.admission_date.year==year:
+                    converted_lead_count+=1
+            else:
                 converted_lead_count+=1
+
         if leads_count>0:
             lead_conversion_rate = 100 * round(converted_lead_count/leads_count,3)
 
