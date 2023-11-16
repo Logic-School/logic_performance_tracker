@@ -80,30 +80,11 @@ class LogicEmployeePerformance(models.Model):
 
         elif model_name=='leads.logic':
             lead_domain = [('leads_assign','=',employee.id)]
-            
-            month=False 
-            if start_date and end_date:
-                start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
-                year=start_date.year
-                if start_date.month==end_date.month and start_date.year==end_date.year:
-                    month = start_date.month
-            else:
-                year = date.today().year
-                month = date.today().month
-                # lead_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
+        
+            # month,year = self.env['sales.tracker'].sudo().get_leads_month_year(start_date,end_date)
             
             leads = self.env['leads.logic'].sudo().search(lead_domain)
-
-            leads_with_admission = leads.filtered(lambda lead: lead.admission_status==True and lead.admission_date)
-            leads_without_admission = leads.filtered(lambda lead: lead.admission_status==False)
-
-            if start_date and end_date:
-                leads_with_admission = leads_with_admission.filtered(lambda lead: lead.admission_date>=start_date and lead.admission_date<=end_date)
-                leads_without_admission = leads_without_admission.filtered(lambda lead: lead.date_of_adding>=start_date and lead.date_of_adding<=end_date)
-            else:
-                leads_with_admission = leads_with_admission.filtered(lambda lead: lead.admission_date.month==month and lead.admission_date.year==year)
-                leads_without_admission = leads_without_admission.filtered(lambda lead: lead.date_of_adding.month==month and lead.date_of_adding.year==year)
-            
+            leads_with_admission,leads_without_admission = self.env['sales.tracker'].sudo().get_leads_with_and_without_admission(leads,start_date,end_date)
             leads = leads_with_admission + leads_without_admission
             domain = [('id','in',leads.ids)]
             # if start_date and end_date:
