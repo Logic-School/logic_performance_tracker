@@ -88,6 +88,8 @@ class MarketingTracker(models.Model):
         logger = logging.getLogger("Debugger: ")
         leads_count = 0
         lead_conversion_rate = 0
+        seminar_count = 0
+        webinar_count = 0
         seminar_domain = [('district','=',district),('state','=','done')]
         if start_date and end_date:
             seminar_domain.extend([('seminar_date','>=',start_date),('seminar_date','<=',end_date)])
@@ -95,13 +97,20 @@ class MarketingTracker(models.Model):
         converted_lead_count = 0
         for seminar in seminars:
             if (seminar.attended_by.id==employee.id) or ( (not seminar.attended_by) and (seminar.create_uid.id==employee.user_id.id) ):
+                if seminar.lead_source_id:
+                    if seminar.lead_source_id.name=="Seminar" or seminar.lead_source_id.name=='Seminar Data':
+                        # if seminar.college_id.id not in checked_institute_ids:
+                        seminar_count+=1
+                            # checked_institute_ids.append(seminar.college_id.id)
+                    elif seminar.lead_source_id.name=="Webinar":
+                        webinar_count+=1
                 leads_count+=len(seminar.seminar_ids)
                 for student_lead in seminar.seminar_ids:
                     if student_lead.admission_status == 'yes':
                         converted_lead_count+=1
         if leads_count>0:
-            lead_conversion_rate = 100 * round(converted_lead_count/leads_count,3)
-        return {'leads_count':leads_count, 'leads_conversion_rate': lead_conversion_rate}
+            lead_conversion_rate = round(100 * converted_lead_count/leads_count,2)
+        return {'leads_count':leads_count, 'seminar_count':seminar_count, 'webinar_count': webinar_count, 'converted_leads_count': converted_lead_count, 'leads_conversion_rate': lead_conversion_rate}
     
     def create_employee_seminar_leaderboard_data(self,employee,start_date=False,end_date=False):
         leads_count = 0

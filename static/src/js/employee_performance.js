@@ -35,7 +35,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
 
     var EmployeePerformanceAction = AbstractAction.extend({
 
-        xmlDependencies: ['/logic_performance_tracker/static/src/xml/employee_performance_templates.xml','/logic_performance_tracker/static/src/xml/batch_data_templates.xml'],
+        xmlDependencies: ['/logic_performance_tracker/static/src/xml/employee_performance_templates.xml','/logic_performance_tracker/static/src/xml/batch_data_templates.xml','/logic_performance_tracker/static/src/xml/employee_performance_report_templates.xml'],
 
         events: {
             'click .model_record_card': '_onModelCardClickAction',
@@ -45,6 +45,10 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
             'change .department_employee': '_onSelectedEmployeeChanged',
             'change .academic_batch': 'render_academic_batch_data_summary',
             'change .academic_window': 'render_academic_batch_list',
+            'click .report_download_btn': '_downloadPDFReport',
+            // 'change .from_date': '_downloadBtnVisibility',
+            // 'change .end_date': '_downloadBtnVisibility',
+
         },
 
         init: function (parent, context) {
@@ -91,6 +95,19 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                 console.log(err)
             })
             return $.when(def)
+        },
+
+        _downloadBtnVisibility: function(){
+            var self = this
+            var fromDate = this.$('.from_date').val();
+            var endDate = this.$('.end_date').val();
+            if (fromDate == '' || endDate == '') {
+                self.$('.report_download_btn').css("display","none")
+            }
+            else{
+                self.$('.report_download_btn').css("display","")
+
+            }
         },
 
         _onSelectedEmployeeChanged: function (ev) {
@@ -592,6 +609,8 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
 
                 self.$(".from_date").val(fromDate)
                 self.$(".end_date").val(endDate)
+                self._downloadBtnVisibility()
+
             }).catch(function (err) {
                 console.log(err)
             })
@@ -680,6 +699,46 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
         //     self.retrieve_line_chart_data(selected_year)
         // },
 
+        _downloadPDFReport: function(){
+            self = this;
+            var fromDate = this.$('.from_date').val();
+            var endDate = this.$('.end_date').val();
+            if (fromDate == '' || endDate == '') {
+                fromDate = false
+                endDate = false
+            }
+            var def = self._rpc({
+                model: 'logic.employee.performance', // Replace with your actual model name
+                method: 'get_employee_performance_report_data', // Use 'search_read' to retrieve records
+                args: [self.employee_id, fromDate, endDate], // Define search domain if needed
+                // kwargs: {},
+            }).then(function(employee_data){
+                var report_template = QWeb.render('logic_performance_tracker.employee_performance_report_template',{'values':employee_data})
+                console.log(employee_data)
+                console.log(report_template)
+                self._rpc({
+                    model: 'logic.employee.performance', // Replace with your actual model name
+                    method: 'get_employee_performance_report_pdf', // Use 'search_read' to retrieve records
+                    args: [report_template,employee_data['personal_data']['name']], 
+                }).then(function(pdf_data){
+                    var link = `data:application/pdf;base64, ${pdf_data.pdf_b64}`
+                    console.log(link)
+                    self.$('.employee_performance').append("<a id='report_download' target='_blank'><a/>")
+                    var download_link = self.$('#report_download')
+                    download_link.attr('href',link)
+                    download_link.attr('download',pdf_data.filename)
+                    console.log(download_link[0])
+                    download_link[0].click()
+                    download_link.remove()
+                    // download_link.remove()
+                    // window.open('data:application/pdf;base64, '+pdf_file)
+                }).catch(function(err){
+                    console.log(err)
+                })
+            }).catch(function(err){
+                console.log(err)
+            })
+        },
 
         render_dashboards: function () {
             var self = this

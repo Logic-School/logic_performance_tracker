@@ -3,15 +3,13 @@
 <templates xml:space="preserve">
     <!-- Define your QWeb template for the dashboard_card view -->
     <t t-name="logic_performance_tracker.employee_performance_template">
-        <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/dashboard_card_view.css"/>
-        <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/lib/jquery.orgchart.css"/>
-        <!-- <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/lib/jquery-ui.css"/> -->
 
-        <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/orgchart_styles.css"/>
-        <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/other_styles.css"/>
-        <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/progressbar.css"/>
-
-        <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/employee_performance_styles.css"/>
+        <style>
+            <!-- .row{
+                margin-right:0;
+                margin-left:0;
+            } -->
+        </style>
         <div t-if="values" class="container-fluid employee_performance" style="margin:0;padding:0;">
 
             <div class="row">
@@ -33,7 +31,10 @@
                                         </div>
                                     </option>
                                 </t>
-                            </select>
+                            </select> 
+                        </div>
+                        <div class="col-auto">
+                            <button class="form-control btn-primary report_download_btn" >Download</button>
                         </div>
                         <div class="col-auto" style="margin-left: auto; margin-right: 0;">   
                             <span class="font-weight-bold">From: </span>
@@ -200,83 +201,6 @@
                         </div>
                     </div>
                 </div>
-                    <!-- <div class="col-auto">
-                        <div class="card-body">
-                            <div class="detail-item" t-if="values['common_performance']">
-                                <span class="label2">Upaya Conducted:</span>
-                                <span class="number-value" t-esc="'No'"/>
-                            </div>
-
-                            <div class="detail-item">
-                                <span class="label2">Yes Plus Conducted:</span>
-                                <span class="number-value" t-esc="'No'"/>
-                            </div>
-                            <div class="row">
-                                <div class="col-auto">
-                                    <span class="label2">Upaya Attended:</span>
-                                </div>
-                                <div class="col p-0 mt-2 upaya_attended" style="margin-left:92px;">
-
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-auto">
-                                    <span class="label2">Presentation Attended:</span>
-                                </div>
-
-                                <div class="col p-0 mt-2 presentation_attended" style="margin-left:40px;">
-
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-auto">
-                                    <span class="label2">CIP Average Attendance:</span>
-                                </div>
-
-                                <div class="col p-0 mt-2 cip_average" style="margin-left:24px;">
-
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-auto">
-                                    <span class="label2 ml-0 mr-0">Excel Average Attendance:</span>
-                                </div>
-
-                                <div class="col p-0 mt-2 excel_average" style="margin-left:18px;">
-
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-auto">
-                                    <span class="label2">BB Attendance:</span>
-                                </div>
-
-                                <div class="col p-0 mt-2 bb_average" style="margin-left:97px;">
-
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-auto">
-                                    <span class="label2">Mock Interview Attendance:</span>
-                                </div>
-                                <div class="col p-0 mt-2 mock_average">
-
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-auto">
-                                    <span class="label2">Attendance Average:</span>
-                                </div>
-                                <div style="margin-left:54px;" class="col p-0 mt-2 attendance_average">
-
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div> -->
             </div>
 
 

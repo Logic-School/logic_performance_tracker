@@ -5,6 +5,9 @@ import random
 from datetime import date
 from . import actions_common
 from . import academic_data
+from . import pdf_reports
+import pdfkit
+
 class LogicEmployeePerformance(models.Model):
     _name = "logic.employee.performance"
     @api.model
@@ -179,6 +182,7 @@ class LogicEmployeePerformance(models.Model):
         personal_data['name'] = employee.name
         personal_data['job_title'] = employee.job_title
         personal_data['department_name'] = employee.department_id.name
+        personal_data['date_of_joining'] = employee.joining_date
         personal_data['image'] = 'data:image/png;base64, ' + str(employee.image_1920, 'UTF-8')
         return personal_data
     
@@ -506,3 +510,20 @@ class LogicEmployeePerformance(models.Model):
                 employee_data['month'] = False
 
         return employee_data
+    
+    
+    @api.model
+    def get_employee_performance_report_data(self,employee_id=False, start_date=False, end_date=False):
+        employee_data = pdf_reports.get_employee_performance_data(self,employee_id, start_date, end_date)
+        return employee_data
+    
+    @api.model
+    def get_employee_performance_report_pdf(self,html_template,employee_name):
+        logger = logging.getLogger('PDF Debug: ')
+        options = {'enable-local-file-access': None, 'page-size':'A4','encoding': "UTF-8"}
+        pdfkit.from_string(html_template,'/tmp/performance.pdf',options=options)
+        with open('/tmp/performance.pdf','rb') as pdf_data:
+            b64_pdf = pdf_reports.pdf_to_base64(pdf_data)
+            logger.error("b64pdf"+str(type(b64_pdf)))
+            return {'pdf_b64':b64_pdf, 'filename': str(employee_name)+'.pdf'}
+
