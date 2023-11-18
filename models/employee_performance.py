@@ -502,6 +502,9 @@ class LogicEmployeePerformance(models.Model):
         employee_data['marketing_data'] = self.get_employee_marketing_data(employee,start_date,end_date)
         employee_data['sales_data'] = self.get_employee_sales_data(employee,start_date,end_date)
 
+        test = self.env['logic.common.task.performance'].sudo().create_employee_common_task_performance(employee,start_date,end_date)
+
+
         employee_data['year'] = year
         employee_data['month'] = month.capitalize()
 

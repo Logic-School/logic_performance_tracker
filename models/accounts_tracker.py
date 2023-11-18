@@ -1,5 +1,6 @@
 from odoo import models,fields,api
 from . import actions_common
+from . import common_task_performance
 
 class AccountsTracker(models.Model):
     _name = "accounts.tracker"
@@ -27,8 +28,10 @@ class AccountsTracker(models.Model):
         
         for employee in employees:
             actions_common.create_employee_qualitative_performance(self,dashboard_data['qualitatives'],employee)
-        
+            self.env['logic.common.task.performance'].sudo().create_employee_common_task_performance(employee,start_date,end_date)
+        dashboard_data['common_task_performances'] = self.env['logic.common.task.performance'].sudo().get_employee_common_task_performances(employees)
         dashboard_data['qualitatives'],dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data['qualitatives'],employees)    
         dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self,employees,start_date,end_date)
+        
         dashboard_data['org_datas'],dashboard_data['dept_names'] = actions_common.get_org_datas_dept_names(manager,managers)
         return dashboard_data

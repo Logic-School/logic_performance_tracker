@@ -46,6 +46,8 @@ class AcademicTracker(models.Model):
             total_completed=0
             employee_academic_domains = actions_common.get_academic_domains(self,department_obj=department_obj,start_date=start_date,end_date=end_date,manager=False,managers=False,employee_user_ids=[employee.user_id.id])
             employee_academic_counts = actions_common.get_academic_counts(self,employee_academic_domains)
+            self.env['logic.common.task.performance'].sudo().create_employee_common_task_performance(employee,start_date,end_date)
+
             total_completed = sum(list(employee_academic_counts.values()))
             values = {
                 'employee': employee.id,
@@ -88,7 +90,10 @@ class AcademicTracker(models.Model):
         dashboard_data['coordinator_data'] = employees_data
         dashboard_data['qualitatives'],dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data['qualitatives'],employees)    
         dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self,employees,start_date,end_date)
+        dashboard_data['common_task_performances'] = self.env['logic.common.task.performance'].sudo().get_employee_common_task_performances(employees)
+
         logger.error("dashboard_data['other_performances'] "+str(dashboard_data['other_performances']))
+
 
         dashboard_data['org_datas'],dashboard_data['dept_names'] = actions_common.get_org_datas_dept_names(manager,managers)
         return dashboard_data

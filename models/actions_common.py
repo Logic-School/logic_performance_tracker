@@ -217,7 +217,7 @@ def get_academic_windows(self,employee):
     #     dashboard_data['performances'] = self.env['digital.executive.performance'].action_executive_performance()
     #     return dashboard_data
 
-def get_academic_domains(self,department_obj,start_date=False,end_date=False,manager=False,managers=False,employee_user_ids=False):
+def get_academic_domains(self,department_obj,start_date=False,end_date=False,manager=False,managers=False,employee_user_ids=False,batch=False):
     logger = logging.getLogger("Debugger: ")
     upaya_domain = [('state','=','complete')]
     yes_plus_domain = [('state','=','complete')]
@@ -243,6 +243,18 @@ def get_academic_domains(self,department_obj,start_date=False,end_date=False,man
         bring_buddy_domain.extend([('date','>=',start_date),('date','<=',end_date)])
         presentation_domain.extend([('date','>=',start_date),('date','<=',end_date)])
         attendance_domain.extend([('date','>=',start_date),('date','<=',end_date)])
+
+    if batch:
+        upaya_domain.extend([('batch_id','=',batch.id)])
+        yes_plus_domain.extend([('batch_id','=',batch.id)])
+        sfc_domain.extend([('batch_id','=',batch.id)])
+        exam_domain.extend([('batch','=',batch.id)])
+        # one_to_one_domain.extend([('added_date','>=',start_date),('added_date','<=',end_date)])
+        # mock_interview_domain.extend([('date','>=',start_date),('date','<=',end_date)])
+        cip_domain.extend([('batch_id','=',batch.id)])
+        bring_buddy_domain.extend([('batch_id','=',batch.id)])
+        presentation_domain.extend([('batch_id','=',batch.id)])
+        attendance_domain.extend([('batch_id','=',batch.id)])
 
     if (manager or managers or employee_user_ids):
         logger.error("inside ss")
@@ -290,6 +302,13 @@ def get_academic_counts(self,academic_domains):
         'attendance_count': self.env['attendance.session'].sudo().search_count(academic_domains['attendance_domain'])
 
     }
+
+def get_employee_to_do_data(self,employee,start_date=False,end_date=False):
+    to_do_domain = [('state','=','completed'),'|',('assigned_to','=',employee.user_id.id),('coworkers_ids','in',[employee.user_id.id] )]
+    if start_date and end_date:
+        to_do_domain.extend([('completed_date','>=',start_date),('completed_date','<=',end_date)])
+    to_do_count = self.env['to_do.tasks'].sudo().search(to_do_domain)
+    return {'to_do_count': to_do_count}
 
 def get_month_list():
     return {

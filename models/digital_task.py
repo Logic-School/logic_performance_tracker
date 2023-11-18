@@ -48,11 +48,13 @@ class DigitalTaskInherit(models.Model):
         dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self,employees,start_date,end_date)
 
         for employee in employees:  
+            self.env['logic.common.task.performance'].sudo().create_employee_common_task_performance(employee,start_date,end_date)
 
             actions_common.create_employee_qualitative_performance(self,dashboard_data['qualitatives'],employee)
 
         dashboard_data['qualitatives'],dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data['qualitatives'],employees)
-        
+        dashboard_data['common_task_performances'] = self.env['logic.common.task.performance'].sudo().get_employee_common_task_performances(employees)
+
         org_datas=[]
         if manager:
             org_datas = [manager.get_organisation_data(manager)]

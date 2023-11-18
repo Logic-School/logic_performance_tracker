@@ -36,6 +36,7 @@ class SalesTracker(models.Model):
         for employee in employees:
             actions_common.create_employee_qualitative_performance(self,dashboard_data['qualitatives'],employee)
             self.create_employee_leads_leaderboard_data(employee,start_date,end_date)
+            self.env['logic.common.task.performance'].sudo().create_employee_common_task_performance(employee,start_date,end_date)
 
             leads_count = []
             conversion_rates = []
@@ -60,6 +61,7 @@ class SalesTracker(models.Model):
         dashboard_data['qualitatives'],dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data['qualitatives'],employees)
         dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self,employees,start_date,end_date)
         dashboard_data['month'] = actions_common.get_month_list().get(month).capitalize()
+        dashboard_data['common_task_performances'] = self.env['logic.common.task.performance'].sudo().get_employee_common_task_performances(employees)
 
         if start_date and end_date:
             if start_date.month != end_date.month:

@@ -18,6 +18,7 @@ class OtherTaskInherit(models.Model):
             employee_performances[employee_id]['rating'] = 0
             employee_performances[employee_id]['rated_tasks']=0
             employee_performances[employee_id]['completed_tasks']=0
+            employee_performances[employee_id]['delayed_tasks'] = 0
             employee_performances[employee_id]['average_rating'] = 0
 
 
@@ -34,6 +35,9 @@ class OtherTaskInherit(models.Model):
                 if task.head_rating!='0':
                     employee_performances[employee_id]['rating']+=int(task.head_rating)
                     employee_performances[employee_id]['rated_tasks']+=1
+                
+                if task.completion_datetime and task.expected_completion and task.expected_completed_difference>0 and not task.delay_approved:
+                    employee_performances[employee_id]['delayed_tasks']+=1
                     
                 employee_performances[employee_id]['completed_tasks']+=1
             if employee_performances[employee_id]['rated_tasks']>0:
@@ -43,11 +47,13 @@ class OtherTaskInherit(models.Model):
             if other_task_perf_obj:
                 other_task_perf_obj.write({
                     'total_completed': employee_performances[employee_id]['completed_tasks'],
+                    'delayed_tasks': employee_performances[employee_id]['delayed_tasks'],
                     'average_rating': employee_performances[employee_id]['average_rating'],
                 })
             else:
                 self.env['other.task.performance'].sudo().create({
                     'employee': employee_id,
+                    'delayed_tasks': employee_performances[employee_id]['delayed_tasks'],
                     'total_completed': employee_performances[employee_id]['completed_tasks'],
                     'average_rating': employee_performances[employee_id]['average_rating'],
                 })
@@ -61,6 +67,8 @@ class OtherTaskInherit(models.Model):
             employee_performances[emp_id_name]['name'] = other_task_perf_obj.employee.name
             employee_performances[emp_id_name]['average_rating'] = other_task_perf_obj.average_rating
             employee_performances[emp_id_name]['total_completed']=other_task_perf_obj.total_completed
+            employee_performances[emp_id_name]['delayed_tasks']=other_task_perf_obj.delayed_tasks
+
         logger.error('employee_performances '+str(employee_performances))
 
         return employee_performances
@@ -71,4 +79,5 @@ class OtherTaskPerformance(models.Model):
 
     employee = fields.Many2one("hr.employee",string="Employee")
     total_completed = fields.Integer(default=0)
+    delayed_tasks = fields.Integer(default=0)
     average_rating = fields.Float(default=0)
