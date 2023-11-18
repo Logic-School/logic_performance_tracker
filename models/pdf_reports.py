@@ -42,8 +42,9 @@ def get_employee_sales_data(self, employee, start_date=False, end_date=False):
 
         sales_data['overall_course_leads_data']['total_leads_count']+= sales_data['course_leads_data'][course]['leads_count']
         sales_data['overall_course_leads_data']['total_converted_leads']+= sales_data['course_leads_data'][course]['converted_lead_count']
-        sales_data['overall_course_leads_data']['total_conversion_rate']+= sales_data['course_leads_data'][course]['converted_lead_count']
         sales_data['overall_course_leads_data']['total_course_revenue']+=sales_data['course_leads_data'][course]['course_revenue']
+    if sales_data['overall_course_leads_data']['total_leads_count']>0:
+        sales_data['overall_course_leads_data']['total_conversion_rate']+= round((sales_data['overall_course_leads_data']['total_converted_leads']/sales_data['overall_course_leads_data']['total_leads_count']) * 100 , 2)
 
     return sales_data   
 
