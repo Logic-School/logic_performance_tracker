@@ -182,7 +182,9 @@ class LogicEmployeePerformance(models.Model):
         personal_data['name'] = employee.name
         personal_data['job_title'] = employee.job_title
         personal_data['department_name'] = employee.department_id.name
+        personal_data['head_name'] = employee.parent_id.name if employee.parent_id else False
         personal_data['date_of_joining'] = employee.joining_date
+        personal_data['branch'] = dict(employee._fields['branch'].selection).get(employee.branch) if employee.branch else False 
         personal_data['image'] = 'data:image/png;base64, ' + str(employee.image_1920, 'UTF-8')
         return personal_data
     

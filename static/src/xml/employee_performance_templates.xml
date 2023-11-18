@@ -87,6 +87,10 @@
                                                                 <span class="label1">Department:</span>
                                                                 <span class="value" t-esc="values['personal_data']['department_name']"/>
                                                             </div>
+                                                            <div class="detail-item" t-if="values['personal_data']['branch']">
+                                                                <span class="label1">Branch:</span>
+                                                                <span class="value" t-esc="values['personal_data']['branch']"/>
+                                                            </div>
                                                             <!-- <div class="detail-item mt-3">
                                                                 <span class="label">Projects Completed:</span>
                                                                 <span class="value">15</span>

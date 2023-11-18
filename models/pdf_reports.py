@@ -24,13 +24,27 @@ def pdf_to_base64(file):
 
 def get_employee_sales_data(self, employee, start_date=False, end_date=False):
     sales_data = {}
-    sales_data['leads_data'] = self.env['sales.tracker'].sudo().retrieve_employee_all_source_wise_lead_data(str(employee.id),start_date,end_date)
-    sales_data['overall_leads_data'] = {'total_leads_count':0, 'total_converted_leads':0, 'total_conversion_rate':0}
-    for lead_source in sales_data['leads_data'].keys():
-        sales_data['overall_leads_data']['total_leads_count']+= sales_data['leads_data'][lead_source]['leads_count']
-        sales_data['overall_leads_data']['total_converted_leads']+= sales_data['leads_data'][lead_source]['converted_lead_count']
-    if sales_data['overall_leads_data']['total_leads_count']>0:
-        sales_data['overall_leads_data']['total_conversion_rate'] = round((sales_data['overall_leads_data']['total_converted_leads']/sales_data['overall_leads_data']['total_leads_count']) * 100 , 2)
+    sales_data['source_leads_data'] = self.env['sales.tracker'].sudo().retrieve_employee_all_source_wise_lead_data(str(employee.id),start_date,end_date)
+    sales_data['overall_source_leads_data'] = {'total_leads_count':0, 'total_converted_leads':0, 'total_conversion_rate':0, 'total_hot_leads':0, 'total_warm_leads':0, 'total_cold_leads':0}
+    for lead_source in sales_data['source_leads_data'].keys():
+        sales_data['overall_source_leads_data']['total_leads_count']+= sales_data['source_leads_data'][lead_source]['leads_count']
+        sales_data['overall_source_leads_data']['total_converted_leads']+= sales_data['source_leads_data'][lead_source]['converted_lead_count']
+        sales_data['overall_source_leads_data']['total_hot_leads']+= sales_data['source_leads_data'][lead_source]['hot_leads_count']
+        sales_data['overall_source_leads_data']['total_warm_leads']+= sales_data['source_leads_data'][lead_source]['warm_leads_count']
+        sales_data['overall_source_leads_data']['total_cold_leads']+= sales_data['source_leads_data'][lead_source]['cold_leads_count']
+
+    if sales_data['overall_source_leads_data']['total_leads_count']>0:
+        sales_data['overall_source_leads_data']['total_conversion_rate'] = round((sales_data['overall_source_leads_data']['total_converted_leads']/sales_data['overall_source_leads_data']['total_leads_count']) * 100 , 2)
+    
+    sales_data['course_leads_data'] = self.env['sales.tracker'].sudo().retrieve_employee_all_course_wise_lead_data(str(employee.id),start_date,end_date)
+    sales_data['overall_course_leads_data'] = {'total_leads_count':0, 'total_converted_leads':0, 'total_conversion_rate':0, 'total_course_revenue':0}
+    for course in sales_data['course_leads_data'].keys():
+
+        sales_data['overall_course_leads_data']['total_leads_count']+= sales_data['course_leads_data'][course]['leads_count']
+        sales_data['overall_course_leads_data']['total_converted_leads']+= sales_data['course_leads_data'][course]['converted_lead_count']
+        sales_data['overall_course_leads_data']['total_conversion_rate']+= sales_data['course_leads_data'][course]['converted_lead_count']
+        sales_data['overall_course_leads_data']['total_course_revenue']+=sales_data['course_leads_data'][course]['course_revenue']
+
     return sales_data   
 
 def get_employee_marketing_data(self, employee, start_date=False, end_date=False):

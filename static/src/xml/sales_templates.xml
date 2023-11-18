@@ -297,10 +297,14 @@
                                 <thead>
                                     <tr>
                                         <th width="5%" scope="col" class="px-3">#</th>
-                                        <th width="25%" scope="col" class="px-3">Lead Source</th>
-                                        <th width="25%" scope="col" class="px-3">Leads</th>
-                                        <th width="20%" scope="col" class="px-3">Converted Leads</th>
-                                        <th width="25%" scope="col" class="px-3">Conversion Rate (%)</th>
+                                        <th width="20%" scope="col" class="px-3">Lead Source</th>
+                                        <th width="15%" scope="col" class="px-3">Leads</th>
+                                        <th width="10%" scope="col" class="px-3">Hot</th>
+                                        <th width="10%" scope="col" class="px-3">Warm</th>
+                                        <th width="10%" scope="col" class="px-3">Cold</th>
+
+                                        <th width="15%" scope="col" class="px-3">Converted Leads</th>
+                                        <th width="15%" scope="col" class="px-3">Conversion Rate (%)</th>
                                         <!-- <th width="23.75%" scope="col" class="px-3">Exam</th> -->
                                     </tr>
                                 </thead>
@@ -312,6 +316,10 @@
                                             <td class="px-3" t-esc="lead_source"/>
 
                                             <td class="px-3" style="color:green;" t-esc="values[lead_source]['leads_count']"/>
+                                            <td class="px-3" style="color:green;" t-esc="values[lead_source]['hot_leads_count']"/>
+                                            <td class="px-3" style="color:green;" t-esc="values[lead_source]['warm_leads_count']"/>
+                                            <td class="px-3" style="color:green;" t-esc="values[lead_source]['cold_leads_count']"/>
+
                                             <td class="px-3" style="color:brown;" t-esc="values[lead_source]['converted_lead_count']"/>
                                             <td class="px-3" style="color:blue;" t-esc="values[lead_source]['leads_conversion_rate']"/>
 

@@ -60,6 +60,15 @@
                                     <span t-esc="values['personal_data']['department_name']"/>
                                 </div>
                             </div>
+
+                            <div class="row" t-if="values['personal_data']['head_name']">
+                                <div class="col-5">
+                                    <span class="label1">Head:</span>
+                                </div>
+                                <div class="col-7">
+                                    <span t-esc="values['personal_data']['head_name']"/>
+                                </div>
+                            </div>
         
                             <div class="row">
                                 <div class="col-5">
@@ -69,7 +78,17 @@
                                     <span t-esc="values['personal_data']['job_title']"/>
                                 </div>
                             </div>
-        
+
+                            <div class="row" t-if="values['personal_data']['branch']">
+                                <div class="col-5">
+                                    <span class="label1">Branch:</span>
+                                </div>
+                                <div class="col-7">
+                                    <span t-esc="values['personal_data']['branch']"/>
+                                </div>
+                            </div>
+
+
                             <div class="row">
                                 <div class="col-5">
                                     <span class="label1">Date of Joining:</span>
@@ -101,37 +120,115 @@
                             <table class="table table-striped table-hover table-bordered">
                                 <thead>
                                     <tr class="rounded" style="background-color:#78787859;">
-                                        <td colspan="5" class="text-center"><h5>Sales Performance</h5></td>
+                                        <td colspan="8" class="text-center font-weight-bold"><h5>Sales Performance</h5></td>
                                     </tr>
                                 </thead>
                                 <thead class="bg-light">
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">Lead Source</th>
-                                        <th scope="col" class="text-center">Leads Count</th>
+                                        <th scope="col" class="text-center">Leads</th>
+                                        <th scope="col" class="text-center">Hot</th>
+                                        <th scope="col" class="text-center">Warm</th>
+                                        <th scope="col" class="text-center">Cold</th>
                                         <th scope="col" class="text-center">Converted Leads</th>
                                         <th scope="col" class="text-center">Conversion Rate (%)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <t t-set="index" t-value="1"/>
-                                    <t t-foreach="Object.keys(values['sales_data']['leads_data'])" t-as="lead_source">
+                                    <t t-foreach="Object.keys(values['sales_data']['source_leads_data'])" t-as="lead_source">
                                     <!-- Add rows dynamically based on data -->
                                         <tr>
                                             <td t-esc="index" class="text-center"/>
                                             <td t-esc="lead_source" class="text-center"/>
-                                            <td t-esc="values['sales_data']['leads_data'][lead_source]['leads_count']" class="text-center"/>
-                                            <td t-esc="values['sales_data']['leads_data'][lead_source]['converted_lead_count']" class="text-center"/>
-                                            <td t-esc="values['sales_data']['leads_data'][lead_source]['leads_conversion_rate']" class="text-center"/>
+                                            <td t-esc="values['sales_data']['source_leads_data'][lead_source]['leads_count']" class="text-center"/>
+                                            <td t-esc="values['sales_data']['source_leads_data'][lead_source]['hot_leads_count']" class="text-center"/>
+                                            <td t-esc="values['sales_data']['source_leads_data'][lead_source]['warm_leads_count']" class="text-center"/>
+                                            <td t-esc="values['sales_data']['source_leads_data'][lead_source]['cold_leads_count']" class="text-center"/>
+
+                                            <td t-esc="values['sales_data']['source_leads_data'][lead_source]['converted_lead_count']" class="text-center"/>
+                                            <td t-esc="values['sales_data']['source_leads_data'][lead_source]['leads_conversion_rate']" class="text-center"/>
                                         </tr>
                                         <t t-set="index" t-value="index+1"/>
                                     </t>
                                     <tr rowspan="2">
                                         <td t-esc="''"/>
                                         <td t-esc="'Total'" class="text-center font-weight-bold"/>
-                                        <td t-esc="values['sales_data']['overall_leads_data']['total_leads_count']" class="text-center font-weight-bold"/>
-                                        <td t-esc="values['sales_data']['overall_leads_data']['total_converted_leads']" class="text-center font-weight-bold"/>
-                                        <td t-esc="values['sales_data']['overall_leads_data']['total_conversion_rate']" class="text-center font-weight-bold"/>
+                                        <td t-esc="values['sales_data']['overall_source_leads_data']['total_leads_count']" class="text-center font-weight-bold"/>
+                                        <td t-esc="values['sales_data']['overall_source_leads_data']['total_hot_leads']" class="text-center font-weight-bold"/>
+                                        <td t-esc="values['sales_data']['overall_source_leads_data']['total_warm_leads']" class="text-center font-weight-bold"/>
+                                        <td t-esc="values['sales_data']['overall_source_leads_data']['total_cold_leads']" class="text-center font-weight-bold"/>
+
+                                        <td t-esc="values['sales_data']['overall_source_leads_data']['total_converted_leads']" class="text-center font-weight-bold"/>
+                                        <td t-esc="values['sales_data']['overall_source_leads_data']['total_conversion_rate']" class="text-center font-weight-bold"/>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div t-if="values['sales_data']" style="page-break-inside: avoid;">
+                    <div class="mt-5">
+                        <div class="table-responsive table-sm card performance-table">
+                            <!-- Add 'table-bordered' class for borders -->
+                            <table class="table table-striped table-hover table-bordered">
+                                <thead>
+                                    <tr class="rounded" style="background-color:#78787859;">
+                                        <td colspan="8" class="text-center font-weight-bold"><h5>Sales Performance</h5></td>
+                                    </tr>
+                                </thead>
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Course</th>
+                                        <th scope="col" class="text-center">Leads</th>
+                                        <th scope="col" class="text-center">Converted Leads</th>
+                                        <th scope="col" class="text-center">Conversion Rate (%)</th>
+                                        <th scope="col" class="text-center">Revenue</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="index" t-value="1"/>
+                                    <t t-foreach="Object.keys(values['sales_data']['course_leads_data'])" t-as="lead_source">
+                                    <!-- Add rows dynamically based on data -->
+                                        <tr>
+                                            <td t-esc="index" class="text-center"/>
+                                            <td t-esc="lead_source" class="text-center"/>
+                                            <td t-esc="values['sales_data']['course_leads_data'][lead_source]['leads_count']" class="text-center"/>
+                                            <td t-esc="values['sales_data']['course_leads_data'][lead_source]['converted_lead_count']" class="text-center"/>
+                                            <td t-esc="values['sales_data']['course_leads_data'][lead_source]['leads_conversion_rate']" class="text-center"/>
+                                            <td class="text-center font-weight-bold">
+                                                <div class="d-flex align-items-center justify-content-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                                                        <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"/>
+                                                    </svg>
+                                                    <span class="mt-2" t-esc="values['sales_data']['course_leads_data'][lead_source]['course_revenue']"></span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <t t-set="index" t-value="index+1"/>
+                                    </t>
+                                    <tr rowspan="2">
+                                        <td t-esc="''"/>
+                                        <td t-esc="'Total'" class="text-center font-weight-bold"/>
+                                        <td t-esc="values['sales_data']['overall_course_leads_data']['total_leads_count']" class="text-center font-weight-bold"/>
+                                        <td t-esc="values['sales_data']['overall_course_leads_data']['total_converted_leads']" class="text-center font-weight-bold"/>
+                                        <td t-esc="values['sales_data']['overall_course_leads_data']['total_conversion_rate']" class="text-center font-weight-bold"/>
+                                        <td class="text-center font-weight-bold">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                                                    <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"/>
+                                                </svg>
+                                                <span class="mt-2" t-esc="values['sales_data']['overall_course_leads_data']['total_course_revenue']"></span>
+                                            </div>
+                                        </td>
+                                        
+                                        
+                                        
                                     </tr>
 
                                 </tbody>

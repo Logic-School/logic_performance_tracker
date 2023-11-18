@@ -176,6 +176,9 @@ class SalesTracker(models.Model):
         leads_count = 0
         lead_conversion_rate = 0
         converted_lead_count = 0
+        hot_lead_count = 0
+        warm_lead_count = 0
+        cold_lead_count = 0
 
         lead_domain = [('leads_source','=',lead_source.id),('leads_assign','=',employee.id)]
 
@@ -191,10 +194,26 @@ class SalesTracker(models.Model):
                 month_lead_obj = year_lead_target_obj.month_ids.filtered(lambda month_obj: month_obj.month==month_dict[month])
                 month_year_lead_target = month_lead_obj[0].target
                 # leads = leads.filtered(lambda lead: lead.date_of_adding.year==year and lead.date_of_adding.month==month)
-        leads_count+=len(leads_without_admission)
+        
+        # leads_count+=len(leads_without_admission)
+
+        for lead_without_admission in leads_without_admission:
+            leads_count+=1
+            if lead_without_admission.lead_quality=='hot':
+                hot_lead_count+=1
+            elif lead_without_admission.lead_quality=='warm':
+                warm_lead_count+=1
+            elif lead_without_admission.lead_quality=='cold':
+                cold_lead_count+=1
 
         for lead_with_admission in leads_with_admission:
             leads_count+=1
+            if lead_with_admission.lead_quality=='hot':
+                hot_lead_count+=1
+            elif lead_with_admission.lead_quality=='warm':
+                warm_lead_count+=1
+            elif lead_with_admission.lead_quality=='cold':
+                cold_lead_count+=1
             if month:
                 if lead_with_admission.admission_date.month==month and lead_with_admission.admission_date.year==year:
                     converted_lead_count+=1
@@ -204,14 +223,27 @@ class SalesTracker(models.Model):
         if leads_count>0:
             lead_conversion_rate = round(100 * (converted_lead_count/leads_count),2)
             # lead_conversion_rate = 100 * round(converted_lead_count/leads_count,3)
-        return {'leads_count':leads_count, 'leads_conversion_rate': lead_conversion_rate, 'converted_lead_count': converted_lead_count}
+        return {'leads_count':leads_count, 'leads_conversion_rate': lead_conversion_rate, 'converted_lead_count': converted_lead_count, 'hot_leads_count':hot_lead_count, 'warm_leads_count':warm_lead_count, 'cold_leads_count':cold_lead_count}
     
+    def retrieve_employee_all_course_wise_lead_data(self,employee_id,start_date=False,end_date=False):
+        if start_date and end_date:
+            start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
+        employee = self.env['hr.employee'].sudo().browse(int(employee_id.strip()))
+        courses = self.env['logic.base.courses'].sudo().search([])
+        employee_data = {}
+        for course in courses:
+            employee_data[course.name] = self.retrieve_employee_course_wise_lead_data(course,employee,start_date,end_date)
+        return employee_data
+
     def retrieve_employee_course_wise_lead_data(self,course,employee,start_date=False,end_date=False):
         logger = logging.getLogger("Debugger: ")
         month_dict = actions_common.get_month_list()
         leads_count = 0
         lead_conversion_rate = 0
         converted_lead_count = 0
+        hot_lead_count = 0
+        warm_lead_count = 0
+        cold_lead_count = 0
         lead_domain = [('base_course_id','!=',False),('base_course_id','=',course.id),('leads_assign','=',employee.id)]
         leads = self.env['leads.logic'].sudo().search(lead_domain)
         month,year = self.get_leads_month_year(start_date,end_date)
@@ -224,19 +256,36 @@ class SalesTracker(models.Model):
                 month_lead_obj = year_lead_target_obj.month_ids.filtered(lambda month_obj: month_obj.month==month_dict[month])
                 month_year_lead_target = month_lead_obj[0].target
                 # leads = leads.filtered(lambda lead: lead.date_of_adding.year==year and lead.date_of_adding.month==month)
-        leads_count+=len(leads_without_admission)
+        for lead_without_admission in leads_without_admission:
+            leads_count+=1
+            if lead_without_admission.lead_quality=='hot':
+                hot_lead_count+=1
+            elif lead_without_admission.lead_quality=='warm':
+                warm_lead_count+=1
+            elif lead_without_admission.lead_quality=='cold':
+                cold_lead_count+=1
 
         for lead_with_admission in leads_with_admission:
             leads_count+=1
+            if lead_with_admission.lead_quality=='hot':
+                hot_lead_count+=1
+            elif lead_with_admission.lead_quality=='warm':
+                warm_lead_count+=1
+            elif lead_with_admission.lead_quality=='cold':
+                cold_lead_count+=1
+
             if month:
                 if lead_with_admission.admission_date.month==month and lead_with_admission.admission_date.year==year:
                     converted_lead_count+=1
             else:
                 converted_lead_count+=1
+                
         if leads_count>0:
             lead_conversion_rate = round(100 * (converted_lead_count/leads_count),2)
             # lead_conversion_rate = 100 * round(converted_lead_count/leads_count,3)
-        return {'leads_count':leads_count, 'leads_conversion_rate': lead_conversion_rate, 'converted_lead_count': converted_lead_count}
+
+        course_revenue = course.course_fee * converted_lead_count
+        return {'course_revenue': course_revenue,'leads_count':leads_count, 'leads_conversion_rate': lead_conversion_rate, 'converted_lead_count': converted_lead_count, 'course_revenue': course_revenue}
     
 
     def retrieve_leads_target_count(self,employee,start_date=False,end_date=False):
@@ -293,11 +342,27 @@ class SalesTracker(models.Model):
         converted_lead_count = 0
         lead_conversion_rate = 0
         leads_count = 0
+        hot_lead_count = 0
+        warm_lead_count = 0
+        cold_lead_count = 0
 
-        leads_count+=len(leads_without_admission)
+        for lead_without_admission in leads_without_admission:
+            leads_count+=1
+            if lead_without_admission.lead_quality=='hot':
+                hot_lead_count+=1
+            elif lead_without_admission.lead_quality=='warm':
+                warm_lead_count+=1
+            elif lead_without_admission.lead_quality=='cold':
+                cold_lead_count+=1
 
         for lead_with_admission in leads_with_admission:
             leads_count+=1
+            if lead_with_admission.lead_quality=='hot':
+                hot_lead_count+=1
+            elif lead_with_admission.lead_quality=='warm':
+                warm_lead_count+=1
+            elif lead_with_admission.lead_quality=='cold':
+                cold_lead_count+=1
             if month:
                 if lead_with_admission.admission_date.month==month and lead_with_admission.admission_date.year==year:
                     converted_lead_count+=1
