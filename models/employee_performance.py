@@ -525,7 +525,7 @@ class LogicEmployeePerformance(models.Model):
         return employee_data
     
     @api.model
-    def get_employee_performance_report_pdf(self,html_template,employee_name):
+    def get_performance_report_pdf(self,html_template,employee_name):
         logger = logging.getLogger('PDF Debug: ')
         options = {'enable-local-file-access': None, 'page-size':'A4','encoding': "UTF-8"}
         pdfkit.from_string(html_template,'/tmp/performance.pdf',options=options)

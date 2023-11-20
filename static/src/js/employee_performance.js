@@ -35,7 +35,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
 
     var EmployeePerformanceAction = AbstractAction.extend({
 
-        xmlDependencies: ['/logic_performance_tracker/static/src/xml/employee_performance_templates.xml','/logic_performance_tracker/static/src/xml/batch_data_templates.xml','/logic_performance_tracker/static/src/xml/employee_performance_report_templates.xml'],
+        xmlDependencies: ['/logic_performance_tracker/static/src/xml/employee_performance_templates.xml','/logic_performance_tracker/static/src/xml/batch_data_templates.xml','/logic_performance_tracker/static/src/xml/report_templates/employee_performance_report_templates.xml'],
 
         events: {
             'click .model_record_card': '_onModelCardClickAction',
@@ -717,8 +717,8 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                 console.log(employee_data)
                 console.log(report_template)
                 self._rpc({
-                    model: 'logic.employee.performance', // Replace with your actual model name
-                    method: 'get_employee_performance_report_pdf', // Use 'search_read' to retrieve records
+                    model: 'performance.tracker', // Replace with your actual model name
+                    method: 'get_performance_report_pdf', // Use 'search_read' to retrieve records
                     args: [report_template,employee_data['personal_data']['name']], 
                 }).then(function(pdf_data){
                     var link = `data:application/pdf;base64, ${pdf_data.pdf_b64}`

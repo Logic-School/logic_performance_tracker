@@ -91,18 +91,6 @@
                                                                 <span class="label1">Branch:</span>
                                                                 <span class="value" t-esc="values['personal_data']['branch']"/>
                                                             </div>
-                                                            <!-- <div class="detail-item mt-3">
-                                                                <span class="label">Projects Completed:</span>
-                                                                <span class="value">15</span>
-                                                            </div>
-                                                            <div class="detail-item">
-                                                                <span class="label">Tasks Completed:</span>
-                                                                <span class="value">50</span>
-                                                            </div>
-                                                            <div class="detail-item">
-                                                                <span class="label">Student Feedback Score:</span>
-                                                                <span class="value">4.5/5</span>
-                                                            </div> -->
 
                                                         </div>
                                                     </div>
@@ -246,7 +234,7 @@
 
             <div class="row" t-if="values['sales_data']">
             <!-- <div class="row" t-if="values['sales_data']"> -->
-                    <div class="col-6 container-fluid">
+                    <div class="col container-fluid">
                         <div class="row justify-content-start">
                             <div class="col m-2">
                                 <div class="container-fluid mt-3">
@@ -266,10 +254,12 @@
                             </div>
                         </div>
                     </div>
+            </div>
                 <!-- </div> -->
 
                 <!-- <div class="row" t-if="values['sales_data']"> -->
-                    <div class="col-6 container-fluid">
+            <div class="row">
+                    <div class="col container-fluid">
                         <div class="row justify-content-start">
                             <div class="col m-2">
                                 <div class="container-fluid mt-3">
@@ -289,7 +279,6 @@
                             </div>
                         </div>
                     </div>
-                <!-- </div> -->
             </div>
 
             <div class="row m-2">

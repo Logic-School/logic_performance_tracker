@@ -35,6 +35,8 @@ odoo.define('logic_performance_tracker.marketing_dashboard', function (require) 
 
         xmlDependencies: [
             '/logic_performance_tracker/static/src/xml/marketing_templates.xml',
+            '/logic_performance_tracker/static/src/xml/report_templates/marketing_report_templates.xml',
+
             // '/logic_performance_tracker/static/src/xml/organizational_chart.xml'
         ],
 
@@ -43,6 +45,8 @@ odoo.define('logic_performance_tracker.marketing_dashboard', function (require) 
             'click .o_filter_reset': 'filter_reset',
             'click .o_employee_name': '_onEmployeeNameClicked',
             'click .node':'_onEmployeeNodeClicked',
+            'click .report_download_btn': '_downloadPDFReport',
+
 
             // uncomment the below line to view records on clicking the card
             // 'click .o_model_count': '_onCardActionClicked',
@@ -316,7 +320,51 @@ odoo.define('logic_performance_tracker.marketing_dashboard', function (require) 
             });
         
         },
+
+        _downloadPDFReport: function(){
+            self = this;
+            var fromDate = this.$('.from_date').val();
+            var endDate = this.$('.end_date').val();
+            var department_head_id = this.$('.department_head').val()
+
+            if (fromDate == '' || endDate == '') {
+                fromDate = false
+                endDate = false
+            }
+            var def = self._rpc({
+                model: 'marketing.tracker', // Replace with your actual model name
+                method: 'get_marketing_performance_report_data', // Use 'search_read' to retrieve records
+                args: [fromDate, endDate, department_head_id], // Define search domain if needed
+                // kwargs: {},
+            }).then(function(marketing_data){
+                var report_template = QWeb.render('logic_performance_tracker.marketing_report_template',{'values':marketing_data})
+                console.log(marketing_data)
+                console.log(report_template)
+                self._rpc({
+                    model: 'performance.tracker', // Replace with your actual model name
+                    method: 'get_performance_report_pdf', // Use 'search_read' to retrieve records
+                    args: [report_template,'Marketing Performance'], 
+                }).then(function(pdf_data){
+                    var link = `data:application/pdf;base64, ${pdf_data.pdf_b64}`
+                    console.log(link)
+                    self.$('.o_dashboard_card').append("<a id='report_download' target='_blank'><a/>")
+                    var download_link = self.$('#report_download')
+                    download_link.attr('href',link)
+                    download_link.attr('download',pdf_data.filename)
+                    console.log(download_link[0])
+                    download_link[0].click()
+                    download_link.remove()
+                    // download_link.remove()
+                    // window.open('data:application/pdf;base64, '+pdf_file)
+                }).catch(function(err){
+                    console.log(err)
+                })
+            }).catch(function(err){
+                console.log(err)
+            })
+        },
     });
+
 
         core.action_registry.add('marketing_dashboard', DashboardCardAction);
     return DashboardCardAction;

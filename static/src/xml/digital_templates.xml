@@ -23,6 +23,16 @@
             </style>
             <div class="o_dashboard_card" style="overflow-x: auto;">
 
+                <div class="inline-container mt-3">
+                    <div style="margin-left: auto; margin-right: 0;">   
+                        <span class="font-weight-bold">From: </span>
+                        <input class="from_date date-picker-icon custom-date-input" type="date"/>
+                        <span class="font-weight-bold"> To: </span>
+                        <input placeholder="From: " class="end_date date-picker-icon custom-date-input" type="date"/>
+                        <button class="ml-2 filter-button btn-md o_filter_performance" type="button">Filter</button>
+                        <button class="rounded btn-md btn-warning o_filter_reset" type="button">Reset</button>
+                    </div>
+                </div>
             <div t-if="values">
                 <div t-if="values">
 
@@ -92,16 +102,6 @@
 
 
                     <div class="m-3 mt-5">
-                        <div class="inline-container mt-2 mb-2">
-                            <div style="margin-left: auto; margin-right: 0;">   
-                                <span class="font-weight-bold">From: </span>
-                                <input class="from_date date-picker-icon custom-date-input" type="date"/>
-                                <span class="font-weight-bold"> To: </span>
-                                <input placeholder="From: " class="end_date date-picker-icon custom-date-input" type="date"/>
-                                <button class="ml-2 filter-button btn-md o_filter_performance" type="button">Filter</button>
-                                <button class="rounded btn-md btn-warning o_filter_reset" type="button">Reset</button>
-                            </div>
-                        </div>
                         
 
                         <div class="h-100 table-responsive card " style="border-radius:10px;"> 

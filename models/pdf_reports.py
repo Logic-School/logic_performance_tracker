@@ -33,24 +33,6 @@ def get_employee_common_performance_data(self,employee,start_date=False,end_date
 
     return common_performance_data
 
-
-
-    # qualitative_average_rating = 0    
-    # if not start_date or not end_date:
-    #     quality_records = self.env['base.qualitative.analysis'].sudo().search([('name','=',employee.id)])
-    # else:
-    #     quality_records = self.env['base.qualitative.analysis'].sudo().search([('name','=',employee.id),('added_date','>=',start_date),('added_date','<=',end_date)])
-    # if quality_records:
-    #     for quality_rec in quality_records:
-    #         average_rating = 0
-    #         if quality_rec.attribute_ids:
-    #             for attribute in quality_rec.attribute_ids:
-    #                 average_rating+=int(attribute.performance)
-    #             average_rating = average_rating/len(quality_rec.attribute_ids)
-    #         qualitative_average_rating+=average_rating 
-    #     qualitative_average_rating = round(qualitative_average_rating/len(quality_records),2)
-    
-
 def get_employee_sales_data(self, employee, start_date=False, end_date=False):
     sales_data = {}
     sales_data['source_leads_data'] = self.env['sales.tracker'].sudo().retrieve_employee_all_source_wise_lead_data(str(employee.id),start_date,end_date)
@@ -107,5 +89,23 @@ def get_employee_marketing_data(self, employee, start_date=False, end_date=False
     return marketing_data
 
 
+def get_marketing_report_data(self,employees, start_date=False, end_date=False):
+    marketing_data = {}
+    if start_date and end_date:
+        start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
+        marketing_data['start_date'] = start_date.strftime("%d / %m / %Y")
+        marketing_data['end_date'] = end_date.strftime("%d / %m / %Y")
+    marketing_data['seminar_leaderboard_data'] = get_seminar_leaderboard_data(self,employees,start_date,end_date)
+    marketing_data['common_task_performances'] = get_common_performance_data(self,employees,start_date,end_date)
+    return marketing_data
 
+def get_seminar_leaderboard_data(self,employees, start_date=False,end_date=False):
+    for employee in employees:
+        self.env['marketing.tracker'].sudo().create_employee_seminar_leaderboard_data(employee,start_date,end_date)
+    seminar_leaderboard_data = self.env['marketing.tracker'].sudo().get_seminar_leaderboard_data(employees)
+    return seminar_leaderboard_data
 
+def get_common_performance_data(self,employees, start_date=False, end_date=False):
+    for employee in employees:
+        self.env['logic.common.task.performance'].sudo().create_employee_common_task_performance(employee,start_date,end_date)
+    return self.env['logic.common.task.performance'].sudo().get_employee_common_task_performances(employees)

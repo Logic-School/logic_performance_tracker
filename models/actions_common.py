@@ -2,6 +2,8 @@ from odoo import models,fields,api
 from odoo.exceptions import UserError
 from datetime import date
 import logging
+import pdfkit
+from . import pdf_reports
 
 class StateAction(models.Model):
     _name = "performance.tracker"
@@ -28,6 +30,16 @@ class StateAction(models.Model):
             return action
         else:
             raise UserError("You do not have access to this application!")
+        
+    @api.model
+    def get_performance_report_pdf(self,html_template,employee_name):
+        logger = logging.getLogger('PDF Debug: ')
+        options = {'enable-local-file-access': None, 'page-size':'A4','encoding': "UTF-8"}
+        pdfkit.from_string(html_template,'/tmp/performance.pdf',options=options)
+        with open('/tmp/performance.pdf','rb') as pdf_data:
+            b64_pdf = pdf_reports.pdf_to_base64(pdf_data)
+            logger.error("b64pdf"+str(type(b64_pdf)))
+            return {'pdf_b64':b64_pdf, 'filename': str(employee_name)+'.pdf'}
     
     @api.model
     def retrieve_dashboard_data(self):

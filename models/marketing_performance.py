@@ -3,6 +3,7 @@ import logging
 from . import actions_common
 import random
 from datetime import date
+from . import pdf_reports
 
 class MarketingTracker(models.Model):
     _name="marketing.tracker"
@@ -191,10 +192,14 @@ class MarketingTracker(models.Model):
             employees_data[emp_id]['seminar_count'] = perf_obj.seminar_count
             employees_data[emp_id]['webinar_count'] = perf_obj.webinar_count
 
-
-
         return employees_data
 
+    @api.model
+    def get_marketing_performance_report_data(self, start_date=False, end_date=False, manager_id=False):
+        employees = self.env['hr.employee'].sudo().search([('parent_id','=',int(manager_id))])
+        employees+= self.env['hr.employee'].sudo().browse(int(manager_id))
+        employee_data = pdf_reports.get_marketing_report_data(self,employees, start_date, end_date)
+        return employee_data
 
 class EmployeeMarketingPerformance(models.Model):
     _name = "logic.employee.marketing.performance"
