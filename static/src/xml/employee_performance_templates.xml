@@ -118,11 +118,15 @@
                                                 <h2 class="card-title"><u>Performance Details</u></h2>
                                                 <div class="detail-item" t-if="values['common_performance']">
                                                     <span class="label1">Miscellaneous Tasks:</span>
-                                                    <span class="number-value" t-esc="values['common_performance']['misc_task_count']"/>
+                                                    <span class="number-value" t-esc="values['common_performance']['completed_misc_count']"/>
+                                                    <span class="" t-esc="' ( '+values['common_performance']['delayed_misc_count'] + ' Delayed )'"/>
+
                                                 </div>
                                                 <div class="detail-item">
                                                     <span class="label1">To Do Tasks:</span>
-                                                    <span class="number-value" t-esc="values['common_performance']['to_do_count']"/>
+                                                    <span class="number-value" t-esc="values['common_performance']['completed_to_do_count']"/>
+                                                    <span class="" t-esc="' ( '+values['common_performance']['delayed_to_do_count'] + ' Delayed )'"/>
+
                                                 </div>
                                                 <div class="detail-item" t-if="values['marketing_data']">
                                                     <span class="label1">Seminar Target:</span>
@@ -147,7 +151,7 @@
                                                 </div>
                                                 <div class="detail-item" t-if="values['common_performance']">
                                                     <span class="label1">Qualitative rating:</span>
-                                                    <span class="number-value" t-esc="values['common_performance']['qualitative_rating']"/>
+                                                    <span class="number-value" t-esc="values['common_performance']['qualitative_average_rating']"/>
                                                     <span>/ 5</span>
                                                 </div>
                                             </div>
@@ -297,7 +301,7 @@
                                     <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/miscellaneous.png"/></div>
                                     <div class="stat-content">
                                         <div class="stat-text">Miscellaneous</div>
-                                        <div class="stat-digit"><t t-esc="values['common_performance']['misc_task_count']"/></div>
+                                        <div class="stat-digit"><t t-esc="values['common_performance']['completed_misc_count']"/></div>
                                     </div>
                                 </div>
                             </div>
@@ -311,7 +315,7 @@
                                     <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/to_do.png"/></div>
                                     <div class="stat-content">
                                         <div class="stat-text">To Do</div>
-                                        <div class="stat-digit"><t t-esc="values['common_performance']['to_do_count']"/></div>
+                                        <div class="stat-digit"><t t-esc="values['common_performance']['completed_to_do_count']"/></div>
                                     </div>
                                 </div>
                             </div>
