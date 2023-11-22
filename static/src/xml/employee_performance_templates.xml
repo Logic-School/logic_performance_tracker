@@ -258,7 +258,7 @@
                 <!-- </div> -->
 
                 <!-- <div class="row" t-if="values['sales_data']"> -->
-            <div class="row">
+            <div class="row"  t-if="values['sales_data']">
                     <div class="col container-fluid">
                         <div class="row justify-content-start">
                             <div class="col m-2">
@@ -489,7 +489,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                        <!-- <div class="col-md-2 col-sm-6 oh-payslip" >
                             <div class="oh-card model_record_card" id="attendance.session" name="Attendance">
                                 <div class="oh-card-body">
                                     <div class="stat-widget-one">
@@ -497,6 +497,20 @@
                                         <div class="stat-content">
                                             <div class="stat-text">Attendance</div>
                                             <div class="stat-digit"><t t-esc="values['academic_data']['attendance_count']"/></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                            <div class="oh-card model_record_card" id="financial.planning.form" name="FPP">
+                                <div class="oh-card-body">
+                                    <div class="stat-widget-one">
+                                        <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/fpp.png"/></div>
+                                        <div class="stat-content">
+                                            <div class="stat-text">FPP</div>
+                                            <div class="stat-digit"><t t-esc="values['academic_data']['fpp_count']"/></div>
                                         </div>
                                     </div>
                                 </div>

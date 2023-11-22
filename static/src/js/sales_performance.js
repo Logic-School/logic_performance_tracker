@@ -47,7 +47,8 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
             'click .node':'_onEmployeeNodeClicked',
             'change .lead_source_id': 'render_lead_source_charts',
             'click .report_download_btn': '_downloadPDFReport',
-
+            'change .from_date': '_downloadBtnVisibility',
+            'change .end_date': '_downloadBtnVisibility',
             // uncomment the below line to view records on clicking the card
             // 'click .o_model_count': '_onCardActionClicked',
         },
@@ -82,6 +83,19 @@ odoo.define('logic_performance_tracker.sales_dashboard', function (require) {
             this.render_organisation_chart()
             // this.render_sourcewise_chart()
             this.render_lead_source_charts()
+        },
+
+        _downloadBtnVisibility: function(){
+            var self = this
+            var fromDate = this.$('.from_date').val();
+            var endDate = this.$('.end_date').val();
+            if (fromDate == '' || endDate == '') {
+                self.$('.report_download_btn').css("display","none")
+            }
+            else{
+                self.$('.report_download_btn').css("display","")
+
+            }
         },
 
         render_organisation_chart: function(){

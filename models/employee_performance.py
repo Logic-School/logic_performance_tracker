@@ -30,7 +30,7 @@ class LogicEmployeePerformance(models.Model):
                 domain.extend([('date_one','>=',start_date),('date_one','<=',end_date)])
 
         elif model_name=="student.faculty":
-            domain = [['coordinator','=',employee.user_id.id]]
+            domain = [('coordinator','=',employee.user_id.id),('state','in',('confirm','sent_to_approve','approved','payment_request','paid'))]
             if start_date and end_date:
                 domain.extend([('date','>=',start_date),('date','<=',end_date)])
 
@@ -45,22 +45,27 @@ class LogicEmployeePerformance(models.Model):
                 domain.extend([('added_date','>=',start_date),('added_date','<=',end_date)])
 
         elif model_name=="logic.mock_interview":
-            domain = [['coordinator','=',employee.user_id.id]]
+            domain = [('coordinator','=',employee.user_id.id),('state','=','done')]
             if start_date and end_date:
                 domain.extend([('date','>=',start_date),('date','<=',end_date)])
 
         elif model_name=="logic.cip.form":
-            domain = [['coordinator_id','=',employee.user_id.id]]
+            domain = [('coordinator_id','=',employee.user_id.id),('state','=','completed')]
             if start_date and end_date:
                 domain.extend([('date','>=',start_date),('date','<=',end_date)])
 
         elif model_name=="bring.your.buddy":
-            domain = [['coordinator_id','=',employee.user_id.id]]
+            domain = [('coordinator_id','=',employee.user_id.id),('state','=','done')]
             if start_date and end_date:
                 domain.extend([('date','>=',start_date),('date','<=',end_date)])
 
+        elif model_name=="financial.planning.form":
+            domain = [('coordinator_id','=',employee.user_id.id),('state','=','completed')]
+            if start_date and end_date:
+                domain.extend([('scheduled_date_one','>=',start_date),('scheduled_date_one','<=',end_date)])            
+
         elif model_name=='logic.task.other':
-            domain = [['task_creator','=',employee.user_id.id]]
+            domain = [('task_creator','=',employee.user_id.id), ('state','=','completed')]
             if start_date and end_date:
                 domain.extend([('date_completed','>=',start_date),('date_completed','<=',end_date)])
         
@@ -251,6 +256,7 @@ class LogicEmployeePerformance(models.Model):
                     'bring_buddy_count': employee_academic_counts['bring_buddy_count'],
                     'presentation_count': employee_academic_counts['presentation_count'],
                     'attendance_count': employee_academic_counts['attendance_count'],
+                    'fpp_count': employee_academic_counts['fpp_count'],
                     'total_completed': total_completed
                 }
 

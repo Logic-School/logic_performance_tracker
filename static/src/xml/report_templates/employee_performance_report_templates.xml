@@ -237,7 +237,7 @@
                                         <td t-esc="values['sales_data']['course_leads_data'][lead_source]['leads_conversion_rate']" class="text-center"/>
                                         <td class="text-center font-weight-bold">
                                             <div class="d-flex align-items-center justify-content-center">
-                                                <span class="mt-2" t-esc="'₹'+ values['sales_data']['course_leads_data'][lead_source]['course_revenue']"></span>
+                                                <span class="mt-2" t-esc="values['sales_data']['course_leads_data'][lead_source]['course_revenue'].toLocaleString('en-IN', {'style':'currency', 'currency':'INR'})"></span>
                                             </div>
                                         </td>
                                     </tr>
@@ -251,12 +251,9 @@
                                     <td t-esc="values['sales_data']['overall_course_leads_data']['total_conversion_rate']" class="text-center font-weight-bold"/>
                                     <td class="text-center font-weight-bold">
                                         <div class="d-flex align-items-center justify-content-center">
-                                            <span class="mt-2" t-esc="'₹'+ values['sales_data']['overall_course_leads_data']['total_course_revenue']"></span>
+                                            <span class="mt-2" t-esc="values['sales_data']['overall_course_leads_data']['total_course_revenue'].toLocaleString('en-IN', {'style':'currency', 'currency':'INR'})"></span>
                                         </div>
                                     </td>
-                                    
-                                    
-                                    
                                 </tr>
 
                             </tbody>

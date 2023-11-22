@@ -36,6 +36,7 @@ class AcademicTracker(models.Model):
             'mock_interview_count':academic_counts['mock_interview_count'],
             'cip_excel_count':academic_counts['cip_excel_count'],
             'bring_buddy_count':academic_counts['bring_buddy_count'],
+            'fpp_count': academic_counts['fpp_count'],
             'department_heads': department_heads_data,
             }
 
@@ -59,6 +60,7 @@ class AcademicTracker(models.Model):
                 'mock_interview_count': employee_academic_counts['mock_interview_count'],
                 'cip_excel_count': employee_academic_counts['cip_excel_count'],
                 'bring_buddy_count': employee_academic_counts['bring_buddy_count'],
+                'fpp_count': employee_academic_counts['fpp_count'],
                 'total_completed': total_completed
             }
 
@@ -84,6 +86,7 @@ class AcademicTracker(models.Model):
             employees_data[emp_id_name]['mock_interview_count'] = coord_perf.mock_interview_count
             employees_data[emp_id_name]['cip_excel_count'] = coord_perf.cip_excel_count
             employees_data[emp_id_name]['bring_buddy_count'] = coord_perf.bring_buddy_count
+            employees_data[emp_id_name]['fpp_count'] = coord_perf.fpp_count
             employees_data[emp_id_name]['total_completed'] = coord_perf.total_completed
             # coord_perf.total_completed = 
 

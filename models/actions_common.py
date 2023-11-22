@@ -45,7 +45,7 @@ class StateAction(models.Model):
     def retrieve_dashboard_data(self):
         dashboard_data = {}
         sales_department_obj = self.env['hr.department'].sudo().search([('name','=','Sales')])
-        sales_dept_childs = self.env['hr.department'].sudo().search([('parent_id','=',sales_department_obj[0].ids)])
+        sales_dept_childs = self.env['hr.department'].sudo().search([('parent_id','=',sales_department_obj[0].id)])
         dashboard_data['sales_employees_count'] = self.env['hr.employee'].sudo().search_count([('department_id','in',sales_dept_childs.ids)])
 
         academic_department_obj = self.env['hr.department'].sudo().search([('name','=','ACADEMICS')])
@@ -204,31 +204,6 @@ def get_academic_windows(self,employee):
     return academic_windows_data
 
 
-    # @api.model
-    # def action_open_view(self,model_name,state):
-    #     return {
-    #         'type': 'ir.actions.act_window',
-    #         'name': model_name,
-    #         'view_mode': 'tree',
-    #         'res_model': model_name,
-    #         'domain': [('state','=',state)],
-    #         'target': 'current',
-    #     }
-    
-    # @api.model
-    # def retrieve_dashboard_data(self,model_name):
-    #     records = self.env[model_name].search([])
-    #     dashboard_data = {}
-    #     states = {}
-    #     for record in records:
-    #         try:
-    #             states[record.state][1]+=1
-    #         except:
-    #             states[record.state] = [dict(record._fields['state'].selection).get(record.state),1]
-    #     dashboard_data['states'] = states
-    #     dashboard_data['performances'] = self.env['digital.executive.performance'].action_executive_performance()
-    #     return dashboard_data
-
 def get_academic_domains(self,department_obj,start_date=False,end_date=False,manager=False,managers=False,employee_user_ids=False,batch=False):
     logger = logging.getLogger("Debugger: ")
     upaya_domain = [('state','=','complete')]
@@ -241,6 +216,7 @@ def get_academic_domains(self,department_obj,start_date=False,end_date=False,man
     bring_buddy_domain = [('state','=','done')]
     presentation_domain = []
     attendance_domain = []
+    fpp_domain = [('state','=','completed')]
 
     logger.error(department_obj)
 
@@ -255,6 +231,7 @@ def get_academic_domains(self,department_obj,start_date=False,end_date=False,man
         bring_buddy_domain.extend([('date','>=',start_date),('date','<=',end_date)])
         presentation_domain.extend([('date','>=',start_date),('date','<=',end_date)])
         attendance_domain.extend([('date','>=',start_date),('date','<=',end_date)])
+        fpp_domain.extend([('scheduled_date_one','>=',start_date),('scheduled_date_one','<=',end_date)])
 
     if batch:
         upaya_domain.extend([('batch_id','=',batch.id)])
@@ -267,6 +244,7 @@ def get_academic_domains(self,department_obj,start_date=False,end_date=False,man
         bring_buddy_domain.extend([('batch_id','=',batch.id)])
         presentation_domain.extend([('batch_id','=',batch.id)])
         attendance_domain.extend([('batch_id','=',batch.id)])
+        fpp_domain.extend([('batch_id','=',batch.id)])
 
     if (manager or managers or employee_user_ids):
         logger.error("inside ss")
@@ -286,6 +264,7 @@ def get_academic_domains(self,department_obj,start_date=False,end_date=False,man
         bring_buddy_domain.extend([('coordinator_id','in',employee_user_ids),('coordinator_id','!=',False)])
         presentation_domain.extend([('coordinator','in',employee_user_ids),('coordinator','!=',False)])
         attendance_domain.extend([('coordinator','in',employee_user_ids),('coordinator','!=',False)])
+        fpp_domain.extend([('coordinator_id','in',employee_user_ids),('coordinator_id','!=',False)])
 
     return {
         'upaya_domain':upaya_domain,
@@ -297,7 +276,8 @@ def get_academic_domains(self,department_obj,start_date=False,end_date=False,man
         'cip_domain':cip_domain,
         'bring_buddy_domain':bring_buddy_domain,
         'attendance_domain':attendance_domain,
-        'presentation_domain':presentation_domain
+        'presentation_domain':presentation_domain,
+        'fpp_domain': fpp_domain,
     }
 
 def get_academic_counts(self,academic_domains):
@@ -311,8 +291,8 @@ def get_academic_counts(self,academic_domains):
         'cip_excel_count' : self.env['logic.cip.form'].sudo().search_count(academic_domains['cip_domain']),
         'bring_buddy_count' : self.env['bring.your.buddy'].sudo().search_count(academic_domains['bring_buddy_domain']),
         'presentation_count': self.env['logic.presentations'].sudo().search_count(academic_domains['presentation_domain']),
-        'attendance_count': self.env['attendance.session'].sudo().search_count(academic_domains['attendance_domain'])
-
+        'attendance_count': self.env['attendance.session'].sudo().search_count(academic_domains['attendance_domain']),
+        'fpp_count': self.env['financial.planning.form'].sudo().search_count(academic_domains['fpp_domain']),
     }
 
 def get_employee_to_do_data(self,employee,start_date=False,end_date=False):

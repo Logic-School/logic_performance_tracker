@@ -110,7 +110,7 @@ def get_seminar_leaderboard_data(self,employees, start_date=False,end_date=False
 
 def get_sales_report_data(self,employees, start_date=False, end_date=False):
     sales_data = {}
-    sales_data['coursewise_sales_data'] = get_coursewise_sales_data(self,employees,start_date,end_date)
+    sales_data['coursewise_sales_data'], sales_data['coursewise_total_sales_data'] = get_coursewise_sales_data(self,employees,start_date,end_date)
     if start_date and end_date:
         start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
         sales_data['start_date'] = start_date.strftime("%d / %m / %Y")
@@ -128,6 +128,8 @@ def get_leads_leaderboard_data(self, employees, start_date=False, end_date=False
 
 def get_coursewise_sales_data(self, employees, start_date=False, end_date=False):
     coursewise_data = {}
+    courses = self.env['logic.base.courses'].sudo().search([('name','not in',('Nill',"DON'T USE",'Nil')), ('type','!=','crash')])
+    coursewise_total_data = {}
     for employee in employees:
         emp_id_name = employee.name
         course_leads_data = self.env['sales.tracker'].sudo().retrieve_employee_all_course_wise_lead_data(str(employee.id),start_date,end_date)
@@ -136,7 +138,20 @@ def get_coursewise_sales_data(self, employees, start_date=False, end_date=False)
             total_revenue+=course_leads_data[course]['course_revenue']
         # course_leads_data['total_revenue'] = total_revenue
         coursewise_data[emp_id_name] = {'coursewise_data': course_leads_data, 'total_revenue': total_revenue}
-    return coursewise_data
+    
+    if start_date and end_date:
+        start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
+
+    overall_total_revenue = 0
+    for course in courses:
+        if not start_date or not end_date:
+            admission_count = self.env['leads.logic'].sudo().search_count([('leads_assign','in',employees.ids), ('base_course_id','=',course.id), ('admission_status','=',True),('admission_date','!=',False)])
+        else:
+            admission_count = self.env['leads.logic'].sudo().search_count([('leads_assign','in',employees.ids),('admission_date','>=',start_date),('admission_date','<=',end_date),('base_course_id','=',course.id), ('admission_status','=',True)])
+        coursewise_total_data[course.name] = course.course_fee  * admission_count
+        overall_total_revenue += coursewise_total_data[course.name] 
+    coursewise_total_data['total_revenue'] = overall_total_revenue
+    return coursewise_data,coursewise_total_data
         
 
 def get_common_performance_data(self,employees, start_date=False, end_date=False):

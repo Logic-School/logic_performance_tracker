@@ -99,9 +99,9 @@
                                     <td t-att-colspan="values['course_names'].length + 3" class="text-center font-weight-bold"><h5>Coursewise Revenue</h5></td>
                                 </tr>
                             </thead>
-                            <thead>
+                            <thead style="font-size:15px;">
                                 <th scope="col" width="7%">#</th>
-                                <th scope="col" width="25%">Employee</th>
+                                <th scope="col" width="17%">Employee</th>
                                 <t t-foreach="values['course_names']" t-as="course">
                                     <th scope="col" t-esc="course"/>
 
@@ -117,11 +117,11 @@
                                         <td class="text-center" t-esc="employee"/>
                                         <t t-foreach="Object.keys(values['coursewise_sales_data'][employee]['coursewise_data'])" t-as="course">
                                             <td class="text-center">
-                                                <span t-esc="'₹'+ values['coursewise_sales_data'][employee]['coursewise_data'][course]['course_revenue']"/>
+                                                <span t-esc="values['coursewise_sales_data'][employee]['coursewise_data'][course]['course_revenue'].toLocaleString('en-IN', {'style':'currency', 'currency':'INR'})"/>
                                             </td>
                                         </t>
                                         <td class="text-center">
-                                            <span t-esc="'₹'+ values['coursewise_sales_data'][employee]['total_revenue']"/>
+                                            <span t-esc="values['coursewise_sales_data'][employee]['total_revenue'].toLocaleString('en-IN', {'style':'currency', 'currency':'INR'})"/>
 
                                         </td>
 
@@ -129,6 +129,17 @@
                                 <t t-set="index" t-value="index+1"/>
 
                                 </t>
+
+                                <tr>
+                                    <td t-esc="''"/>
+                                    <td t-esc="'Total'" class="text-center font-weight-bold"/>
+                                    <t t-foreach="Object.keys(values['coursewise_total_sales_data'])" t-as="course">
+                                        <td class="text-center">
+                                            <span t-esc="values['coursewise_total_sales_data'][course].toLocaleString('en-IN', {'style':'currency', 'currency':'INR'})"/>
+                                        </td>
+                                    </t>
+                                    
+                                </tr>
                             </tbody>
 
                         </table>

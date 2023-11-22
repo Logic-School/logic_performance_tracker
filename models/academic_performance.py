@@ -14,6 +14,7 @@ class AcademicCoordinatorPerformance(models.Model):
     bring_buddy_count = fields.Integer()
     presentation_count = fields.Integer()
     attendance_count = fields.Integer()
+    fpp_count = fields.Integer()
     total_completed = fields.Integer()
     previous_total = fields.Integer()
 

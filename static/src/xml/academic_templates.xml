@@ -119,7 +119,7 @@
                             <table style="font-size:14px;" class="table table-striped  table-hover rounded-table table-borderless">
                                 <thead>
                                     <tr class="rounded" style="background-color:#78787859;">
-                                        <td class="text-center" colspan="10"><h2>Coordinator Performances</h2></td>
+                                        <td class="text-center" colspan="11"><h2>Coordinator Performances</h2></td>
                                     </tr>
                                 </thead>
                                 <thead style="background-color:#e0e0de" class="">
@@ -174,6 +174,12 @@
                                             BB
                                         </div>
                                     </th>
+                                    <th scope="col">
+                                        <div class="">
+                                            <img src="/logic_performance_tracker/static/src/icons/fpp.png" alt="" height='25' width='25'/>
+                                            FPP
+                                        </div>
+                                    </th>
                                     <!-- <th scope="col">
                                         <div class="">
                                             <img src="/logic_performance_tracker/static/src/icons/total_completed.png" alt="" height='25' width='25'/>
@@ -200,6 +206,8 @@
                                                 <td style="color: green" t-esc="values['coordinator_data'][employee]['mock_interview_count']"/>
                                                 <td style="color: green" t-esc="values['coordinator_data'][employee]['cip_excel_count']"/>
                                                 <td style="color: green" t-esc="values['coordinator_data'][employee]['bring_buddy_count']"/>
+                                                <td style="color: green" t-esc="values['coordinator_data'][employee]['fpp_count']"/>
+
                                                 <!-- <td style="color: green" t-esc="values['coordinator_data'][employee]['total_completed']"/> -->
 
                                             </tr>

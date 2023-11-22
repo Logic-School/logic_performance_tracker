@@ -97,7 +97,7 @@ class CommonTaskPerformance(models.Model):
     
     def get_employee_common_task_performances(self,employees):
         logger = logging.getLogger("Common perf debug: ")
-        common_task_perf_objs = self.env['logic.common.task.performance'].sudo().search([('employee','=',employees.ids)], order="score desc")
+        common_task_perf_objs = self.env['logic.common.task.performance'].sudo().search([('employee','in',employees.ids)], order="score desc")
         employee_performances = {}
 
         for common_task_perf_obj in common_task_perf_objs:
