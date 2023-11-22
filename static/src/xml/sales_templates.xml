@@ -32,6 +32,8 @@
                         <input placeholder="From: " class="end_date date-picker-icon custom-date-input" type="date"/>
                         <button class="ml-2 filter-button btn-md o_filter_performance" type="button">Filter</button>
                         <button class="rounded btn-md btn-warning o_filter_reset" type="button">Reset</button>
+                        <button class="rounded btn-md btn-primary report_download_btn" >Download</button>
+
                     </div>
                 </div>
                 

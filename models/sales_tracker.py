@@ -3,6 +3,7 @@ from . import actions_common
 import logging
 import random
 from datetime import date
+from . import pdf_reports
 
 class SalesTracker(models.Model):
     _name = "sales.tracker"
@@ -433,6 +434,13 @@ class SalesTracker(models.Model):
             employees_data[emp_id]['converted_target_ratio'] = perf_obj.converted_target_ratio
 
         return employees_data
+    
+    @api.model
+    def get_sales_performance_report_data(self, start_date=False, end_date=False, manager_id=False):
+        employees = self.env['hr.employee'].sudo().search([('parent_id','=',int(manager_id))])
+        employees+= self.env['hr.employee'].sudo().browse(int(manager_id))
+        employee_data = pdf_reports.get_sales_report_data(self,employees, start_date, end_date)
+        return employee_data
 
 class EmployeeSalesPerformance(models.Model):
     _name = "logic.employee.sales.performance"

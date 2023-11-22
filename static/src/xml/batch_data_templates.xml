@@ -13,6 +13,12 @@
     </t>
 
     <t t-name="logic_performance_tracker.batch_data_template">
+        <style>
+            .progress_display{
+
+                white-space: nowrap;
+            } 
+        </style>
         <div class="col-auto academic_batch_data_sub_div m-0 p-0">
             <div class="card-body">
                 <div class="container-fluid m-0 p-0">

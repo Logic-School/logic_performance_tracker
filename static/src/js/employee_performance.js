@@ -222,7 +222,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                             "ui-progressbar": "highlight"
                         }
                     })
-                    self.$(".upaya_attended").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span>${data.upaya_data.attended_count} / ${data.batch_strength}</span></div>`)
+                    self.$(".upaya_attended").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span class='progress_display'>${data.upaya_data.attended_count} / ${data.batch_strength}</span></div>`)
                    
                     self.$(".yes_plus_average").progressbar({
                         value: data.yes_plus_data.average_attendance,
@@ -231,7 +231,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                             "ui-progressbar": "highlight"
                         }
                     })
-                    self.$(".yes_plus_average").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span>${data.yes_plus_data.average_attendance} / ${data.batch_strength}</span></div>`)
+                    self.$(".yes_plus_average").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span class='progress_display'>${data.yes_plus_data.average_attendance} / ${data.batch_strength}</span></div>`)
 
 
                     self.$(".presentation_attended").progressbar({
@@ -241,7 +241,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                             "ui-progressbar": "highlight"
                         }
                     })
-                    self.$(".presentation_attended").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span>${data.presentation_data.presented_count} / ${data.batch_strength}</span></div>`)
+                    self.$(".presentation_attended").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span class='progress_display'>${data.presentation_data.presented_count} / ${data.batch_strength}</span></div>`)
                    
                     self.$(".one_to_one_attended").progressbar({
                         value: data.one_to_one_data.total_conducted,
@@ -250,7 +250,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                             "ui-progressbar": "highlight"
                         }
                     })
-                    self.$(".one_to_one_attended").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span>${data.one_to_one_data.total_conducted} / ${data.batch_strength}</span></div>`)
+                    self.$(".one_to_one_attended").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span class='progress_display'>${data.one_to_one_data.total_conducted} / ${data.batch_strength}</span></div>`)
                    
                     
                     self.$(".cip_average").progressbar({
@@ -260,7 +260,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                             "ui-progressbar": "highlight"
                         }
                     })
-                    self.$(".cip_average").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span>${data.cip_data.average_attendance} / ${data.batch_strength}</span></div>`)
+                    self.$(".cip_average").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span class='progress_display'>${data.cip_data.average_attendance} / ${data.batch_strength}</span></div>`)
 
                     self.$(".excel_average").progressbar({
                         value: data.excel_data.average_attendance,
@@ -269,7 +269,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                             "ui-progressbar": "highlight"
                         }
                     })
-                    self.$(".excel_average").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span>${data.excel_data.average_attendance} / ${data.batch_strength}</span></div>`)
+                    self.$(".excel_average").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span class='progress_display'>${data.excel_data.average_attendance} / ${data.batch_strength}</span></div>`)
 
                     self.$(".bb_average").progressbar({
                         value: data.bb_data.attendance,
@@ -278,7 +278,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                             "ui-progressbar": "highlight"
                         }
                     })
-                    self.$(".bb_average").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span>${data.bb_data.attendance} / ${data.batch_strength}</span></div>`)
+                    self.$(".bb_average").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span class='progress_display'>${data.bb_data.attendance} / ${data.batch_strength}</span></div>`)
 
                     self.$(".mock_average").progressbar({
                         value: data.mock_interview_data.total_conducted,
@@ -287,7 +287,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                             "ui-progressbar": "highlight"
                         }
                     })
-                    self.$(".mock_average").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span>${data.mock_interview_data.total_conducted} / ${data.batch_strength}</span></div>`)
+                    self.$(".mock_average").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span class='progress_display'>${data.mock_interview_data.total_conducted} / ${data.batch_strength}</span></div>`)
 
                     self.$(".attendance_average").progressbar({
                         value: data.attendance_data.average_attendance,
@@ -296,7 +296,7 @@ odoo.define('logic_performance_tracker.employee_performance', function (require)
                             "ui-progressbar": "highlight"
                         }
                     })
-                    self.$(".attendance_average").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span>${data.attendance_data.average_attendance} / ${data.batch_strength}</span></div>`)
+                    self.$(".attendance_average").find('.ui-progressbar-value').html(`<div class='d-flex justify-content-center'><span class='progress_display'>${data.attendance_data.average_attendance} / ${data.batch_strength}</span></div>`)
                 
                     var data = {
                         labels: ['Pass (%)'],

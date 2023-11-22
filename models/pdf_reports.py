@@ -97,13 +97,47 @@ def get_marketing_report_data(self,employees, start_date=False, end_date=False):
         marketing_data['end_date'] = end_date.strftime("%d / %m / %Y")
     marketing_data['seminar_leaderboard_data'] = get_seminar_leaderboard_data(self,employees,start_date,end_date)
     marketing_data['common_task_performances'] = get_common_performance_data(self,employees,start_date,end_date)
+
     return marketing_data
+
 
 def get_seminar_leaderboard_data(self,employees, start_date=False,end_date=False):
     for employee in employees:
         self.env['marketing.tracker'].sudo().create_employee_seminar_leaderboard_data(employee,start_date,end_date)
     seminar_leaderboard_data = self.env['marketing.tracker'].sudo().get_seminar_leaderboard_data(employees)
     return seminar_leaderboard_data
+
+
+def get_sales_report_data(self,employees, start_date=False, end_date=False):
+    sales_data = {}
+    sales_data['coursewise_sales_data'] = get_coursewise_sales_data(self,employees,start_date,end_date)
+    if start_date and end_date:
+        start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
+        sales_data['start_date'] = start_date.strftime("%d / %m / %Y")
+        sales_data['end_date'] = end_date.strftime("%d / %m / %Y")
+    sales_data['leads_leaderboard_data'] = get_leads_leaderboard_data(self,employees, start_date=False, end_date=False)
+    sales_data['course_names'] = self.env['logic.base.courses'].sudo().search([('name','not in',('Nill',"DON'T USE",'Nil'))]).mapped('name')
+
+    sales_data['common_task_performances'] = get_common_performance_data(self,employees,start_date,end_date)
+    return sales_data
+
+def get_leads_leaderboard_data(self, employees, start_date=False, end_date=False):
+    for employee in employees:
+        self.env['sales.tracker'].sudo().create_employee_leads_leaderboard_data(employee,start_date,end_date)
+    return self.env['sales.tracker'].sudo().get_leads_leaderboard_data(employees)
+
+def get_coursewise_sales_data(self, employees, start_date=False, end_date=False):
+    coursewise_data = {}
+    for employee in employees:
+        emp_id_name = employee.name
+        course_leads_data = self.env['sales.tracker'].sudo().retrieve_employee_all_course_wise_lead_data(str(employee.id),start_date,end_date)
+        total_revenue = 0
+        for course in course_leads_data.keys():
+            total_revenue+=course_leads_data[course]['course_revenue']
+        # course_leads_data['total_revenue'] = total_revenue
+        coursewise_data[emp_id_name] = {'coursewise_data': course_leads_data, 'total_revenue': total_revenue}
+    return coursewise_data
+        
 
 def get_common_performance_data(self,employees, start_date=False, end_date=False):
     for employee in employees:
