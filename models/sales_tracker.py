@@ -230,7 +230,7 @@ class SalesTracker(models.Model):
         if start_date and end_date:
             start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
         employee = self.env['hr.employee'].sudo().browse(int(employee_id.strip()))
-        courses = self.env['logic.base.courses'].sudo().search([('name','not in',('Nill',"DON'T USE",'Nil'))])
+        courses = self.env['logic.base.courses'].sudo().search([('name','not in',('Nill',"DON'T USE",'Nil')), ('type','!=','crash')])
         employee_data = {}
         for course in courses:
             employee_data[course.name] = self.retrieve_employee_course_wise_lead_data(course,employee,start_date,end_date)

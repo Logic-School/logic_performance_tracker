@@ -116,7 +116,7 @@ def get_sales_report_data(self,employees, start_date=False, end_date=False):
         sales_data['start_date'] = start_date.strftime("%d / %m / %Y")
         sales_data['end_date'] = end_date.strftime("%d / %m / %Y")
     sales_data['leads_leaderboard_data'] = get_leads_leaderboard_data(self,employees, start_date=False, end_date=False)
-    sales_data['course_names'] = self.env['logic.base.courses'].sudo().search([('name','not in',('Nill',"DON'T USE",'Nil'))]).mapped('name')
+    sales_data['course_names'] = self.env['logic.base.courses'].sudo().search([('name','not in',('Nill',"DON'T USE",'Nil')), ('type','!=','crash')]).mapped('name')
 
     sales_data['common_task_performances'] = get_common_performance_data(self,employees,start_date,end_date)
     return sales_data
