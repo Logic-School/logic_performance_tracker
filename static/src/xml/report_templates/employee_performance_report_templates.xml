@@ -181,7 +181,7 @@
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col" class="text-center">Subordinates</th>
-                                        <th width="50%" scope="col" class="text-center">Batches</th>
+                                        <th width="70%" scope="col" class="text-center">Batches</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -193,12 +193,15 @@
                                             <td class="align-middle text-center"  t-esc="subordinate"/>
                                             <td class="align-middle text-center"> 
                                                 <t t-if="batch_data_length>0" t-foreach="values['academic_data']['academic_head_data']['subordinates_data'][subordinate]['batches_data']" t-as="batch_data">
-                                                    <span t-esc="batch_data['batch_name']" class="text-center m-1" style="display:block"/>
-                                                    <span t-esc="' ( Students: '"/>
-                                                    <span class="text-info" t-esc="batch_data['students_count']"/>
-                                                    <span t-esc="', Rating:'"/>
-                                                    <span class="text-info" t-esc="batch_data['students_rating']"/>
-                                                    <span t-esc="' )'"/>
+                                                    <span class="text-nowrap mt-1" style="display:block;">
+                                                        <span t-esc="batch_data['batch_name']" class="text-center"/>
+                                                        <span t-esc="' ( Students: '"/>
+                                                        <span class="text-info" t-esc="batch_data['students_count']"/>
+                                                        <span t-esc="', Rating:'"/>
+                                                        <span class="text-info" t-esc="batch_data['students_rating']"/>
+                                                        <span t-esc="' )'"/>
+                                                    </span>
+
                                                 </t>
                                                 <t t-if="batch_data_length==0">
                                                     <span t-esc="''"/>
