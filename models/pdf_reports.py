@@ -45,7 +45,7 @@ def get_employee_academic_data(self,employee,start_date=False,end_date=False):
 def get_academic_head_data(self,employee):
     academic_head_data = {}
     batch_count = 0
-    courses = self.env['logic.base.courses'].sudo().search([('academic_head','=',employee.user_id.id)])
+    courses = self.env['logic.base.courses'].sudo().search([('academic_head','=',employee.user_id.id),('name','not in',('Nill',"DON'T USE",'Nil')),('type','!=','crash')])
     course_names = courses.mapped('name')
     batches = self.env['logic.base.batch'].sudo().search([('course_id','in',courses.ids)])
     subordinates = employee.child_ids
