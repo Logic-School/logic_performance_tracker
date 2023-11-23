@@ -55,11 +55,14 @@ def get_academic_head_data(self,employee):
     subordinates_data = {}
     for subordinate in subordinates:
         subordinates_data[subordinate.name] = {}
-        subordinates_data[subordinate.name]['batch_names'] = []
+        subordinates_data[subordinate.name]['batches_data'] = []
         batches = self.env['logic.base.batch'].sudo().search([('academic_coordinator','=',subordinate.user_id.id)])
         for batch in batches:
-            student_count = self.env['logic.students'].sudo().search_count([('batch_id','=',batch.id),('current_status','=',True)])
-            subordinates_data[subordinate.name]['batch_names'].append(batch.name + " ( "+str(student_count) + " Students )")
+            batch_data = {}
+            batch_data['batch_name'] = batch.name
+            batch_data['students_rating'] = self.env['academic.tracker'].sudo().get_batchwise_coordinator_rating(employee,batch)
+            batch_data['students_count'] = self.env['logic.students'].sudo().search_count([('batch_id','=',batch.id),('current_status','=',True)])
+            subordinates_data[subordinate.name]['batches_data'].append(batch_data)
     return {'course_names': course_names, 'subordinates_data': subordinates_data}
 
 def get_employee_sales_data(self, employee, start_date=False, end_date=False):

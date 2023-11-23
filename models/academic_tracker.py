@@ -101,6 +101,17 @@ class AcademicTracker(models.Model):
         dashboard_data['org_datas'],dashboard_data['dept_names'] = actions_common.get_org_datas_dept_names(manager,managers)
         return dashboard_data
     
+    def get_batchwise_coordinator_rating(self,employee,batch):
+        student_feedbacks = self.env['student.feedback'].sudo().search([('coordinator_id','=',employee.user_id.id),('batch_id','=',batch.id)])
+        if student_feedbacks:
+            total_rating = 0
+            for feedback in student_feedbacks:
+                total_rating+= int(feedback.star_rating)
+            average_rating = round(total_rating/len(student_feedbacks),2)
+            return average_rating
+        else:
+            return 0
+    
     @api.model
     def retrieve_employee_academic_data(self,employee_id,start_date=False,end_date=False):
         employee_id = int(employee_id.strip())

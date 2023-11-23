@@ -181,21 +181,26 @@
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col" class="text-center">Subordinates</th>
-                                        <th scope="col" class="text-center">Batches</th>
+                                        <th width="50%" scope="col" class="text-center">Batches</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <t t-set="index" t-value="1"/>
                                     <t t-foreach="Object.keys(values['academic_data']['academic_head_data']['subordinates_data'])" t-as="subordinate">
-                                        <t t-set="batch_names_length" t-value="values['academic_data']['academic_head_data']['subordinates_data'][subordinate]['batch_names'].length"/>
+                                        <t t-set="batch_data_length" t-value="values['academic_data']['academic_head_data']['subordinates_data'][subordinate]['batches_data'].length"/>
                                         <tr>
                                             <td class="align-middle text-center"  t-esc="index"/>
                                             <td class="align-middle text-center"  t-esc="subordinate"/>
                                             <td class="align-middle text-center"> 
-                                                <t t-if="batch_names_length>0" t-foreach="values['academic_data']['academic_head_data']['subordinates_data'][subordinate]['batch_names']" t-as="batch_name">
-                                                    <span t-esc="batch_name" class="text-center m-1" style="display:block"/>
+                                                <t t-if="batch_data_length>0" t-foreach="values['academic_data']['academic_head_data']['subordinates_data'][subordinate]['batches_data']" t-as="batch_data">
+                                                    <span t-esc="batch_data['name']" class="text-center m-1" style="display:block"/>
+                                                    <span t-esc="' ( Students: '"/>
+                                                    <span class="text-info" t-esc="batch_data['students_count']"/>
+                                                    <span t-esc="', Rating:'"/>
+                                                    <span class="text-info" t-esc="batch_data['students_rating']"/>
+                                                    <span t-esc="' )'"/>
                                                 </t>
-                                                <t t-if="batch_names_length==0">
+                                                <t t-if="batch_data_length==0">
                                                     <span t-esc="''"/>
                                                 </t>
                                             </td>
