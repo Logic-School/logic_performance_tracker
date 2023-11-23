@@ -15,6 +15,8 @@ def get_employee_performance_data(self,employee_id,start_date,end_date):
             start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
         if employee.department_id.parent_id.name == 'Marketing':
             employee_data['marketing_data'] = get_employee_marketing_data(self,employee,start_date,end_date)
+        elif employee.department_id.parent_id.name=='ACADEMICS':
+            employee_data['academic_data'] = get_employee_academic_data(self,employee,start_date,end_date)
     employee_data['personal_data'] = self.env['logic.employee.performance'].sudo().get_employee_personal_data(employee)
     if start_date and end_date:
         # start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
@@ -32,6 +34,33 @@ def get_employee_common_performance_data(self,employee,start_date=False,end_date
     common_performance_data = self.env['logic.common.task.performance'].sudo().create_employee_common_task_performance(employee,start_date,end_date)
 
     return common_performance_data
+
+def get_employee_academic_data(self,employee,start_date=False,end_date=False):
+    academic_data = {}
+    academic_data['is_academic_head'] = employee.department_id.manager_id.id == employee.id
+    if academic_data['is_academic_head']:
+        academic_data['academic_head_data'] = get_academic_head_data(self,employee)
+    return academic_data
+
+def get_academic_head_data(self,employee):
+    academic_head_data = {}
+    batch_count = 0
+    courses = self.env['logic.base.courses'].sudo().search([('academic_head','=',employee.user_id.id)])
+    course_names = courses.mapped('name')
+    batches = self.env['logic.base.batch'].sudo().search([('course_id','in',courses.ids)])
+    subordinates = employee.child_ids
+    academic_head_data['batch_count'] = len(batches)
+    academic_head_data['course_count'] = len(courses)
+    academic_head_data['subordinates_count'] = len(subordinates)
+    subordinates_data = {}
+    for subordinate in subordinates:
+        subordinates_data[subordinate.name] = {}
+        subordinates_data[subordinate.name]['batch_names'] = []
+        batches = self.env['logic.base.batch'].sudo().search([('academic_coordinator','=',subordinate.user_id.id)])
+        for batch in batches:
+            student_count = self.env['logic.students'].sudo().search_count([('batch_id','=',batch.id),('current_status','=',True)])
+            subordinates_data[subordinate.name]['batch_names'].append(batch.name + " ( "+str(student_count) + " Students )")
+    return {'course_names': course_names, 'subordinates_data': subordinates_data}
 
 def get_employee_sales_data(self, employee, start_date=False, end_date=False):
     sales_data = {}

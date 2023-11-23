@@ -146,6 +146,69 @@
                     </div>
                 </div>
             </div>
+
+            <div t-if="values['academic_data']">
+                <div t-if="values['academic_data']['academic_head_data']">
+
+                    <div class="row mt-3">
+                        <t t-set="badge_colors" t-value="['badge-primary','badge-secondary', 'badge-info', 'badge-success']"/>
+                        <div class="col-6">
+                            <div class="">
+                                <div class="row">
+                                    <div class="col-5">
+                                        <span class="label1">Courses :</span>
+                                    </div>
+                                    <div class="col-7">
+                                        <t t-foreach="values['academic_data']['academic_head_data']['course_names']" t-as="course_name">
+                                            <span style="font-size:14px;" t-att-class="'badge ' + badge_colors[Math.floor((Math.random()*badge_colors.length))] " t-esc="course_name"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5">
+                        <div class="table-responsive table-sm card performance-table">
+                            <!-- Add 'table-bordered' class for borders -->
+                            <table class="table table-striped table-hover table-bordered">
+                                <thead>
+                                    <tr class="rounded" style="background-color:#78787859;">
+                                        <td colspan="8" class="text-center font-weight-bold"><h5>Subordinates and Batches</h5></td>
+                                    </tr>
+                                </thead>
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col" class="text-center">Subordinates</th>
+                                        <th scope="col" class="text-center">Batches</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="index" t-value="1"/>
+                                    <t t-foreach="Object.keys(values['academic_data']['academic_head_data']['subordinates_data'])" t-as="subordinate">
+                                        <t t-set="batch_names_length" t-value="values['academic_data']['academic_head_data']['subordinates_data'][subordinate]['batch_names'].length"/>
+                                        <tr>
+                                            <td class="align-middle text-center"  t-esc="index"/>
+                                            <td class="align-middle text-center"  t-esc="subordinate"/>
+                                            <td class="align-middle text-center"> 
+                                                <t t-if="batch_names_length>0" t-foreach="values['academic_data']['academic_head_data']['subordinates_data'][subordinate]['batch_names']" t-as="batch_name">
+                                                    <span t-esc="batch_name" class="text-center m-1" style="display:block"/>
+                                                </t>
+                                                <t t-if="batch_names_length==0">
+                                                    <span t-esc="''"/>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                        <t t-set="index" t-value="index+1"/>
+                                    </t>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
     
             <div t-if="values['sales_data']">
                 <div class="mt-5">
