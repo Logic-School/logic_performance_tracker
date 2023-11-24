@@ -23,7 +23,6 @@
             }
         </style>
         <div t-if="values" class="container-fluid employee_performance" style="margin:0;padding:0;">
-
             <div class="row">
                 <div class="container-fluid mt-3 mr-0 ml-0 p-0">
                     <div class="row justify-content-center">
@@ -59,8 +58,6 @@
                     </div>
                 </div>
             </div>
-            
-
 
             <div class="row">
                 <div class="container-fluid">
@@ -78,39 +75,47 @@
                                                             <div class="text-center" >
                                                                 <img t-att-src="values['personal_data']['image']" class="m-3" style="height: 100px; width:auto; border-radius:20px;" />
                                                             </div>
-                                                            <div class="detail-item row">
+                                                            <div class="detail-item row mb-1">
                                                                 <div class="col-4">
                                                                     <span class="label1 font-weight-normal badge badge-secondary">Name</span>
 
                                                                 </div>
                                                                 <div class="col-8">
+                                                                    <span class="label1 font-weight-normal">: </span>
+
                                                                     <span class="value font-weight-bold" t-esc="values['personal_data']['name']"/>
 
                                                                 </div>
                                                             </div>
-                                                            <div class="detail-item row">
+                                                            <div class="detail-item row mb-1">
                                                                 <div class="col-4">
                                                                     <span class="label1 badge badge-info">Position</span>
 
                                                                 </div>
                                                                 <div class="col-8">
+                                                                    <span class="label1 font-weight-normal">: </span>
+
                                                                     <span class="value font-weight-bold" t-esc="values['personal_data']['job_title']"/>
 
                                                                 </div>
                                                             </div>
-                                                            <div class="detail-item row">
+                                                            <div class="detail-item row mb-1">
                                                                 <div class="col-4">
                                                                     <span class="label1 badge badge-primary">Department</span>
                                                                 </div>
                                                                 <div class="col-8">
+                                                                    <span class="label1 font-weight-normal">: </span>
+
                                                                     <span class="value font-weight-bold" t-esc="values['personal_data']['department_name']"/>
                                                                 </div>
                                                             </div>
-                                                            <div class="detail-item row" t-if="values['personal_data']['branch']">
+                                                            <div class="detail-item row mb-1" t-if="values['personal_data']['branch']">
                                                                 <div class="col-4">
                                                                     <span class="label1 badge badge-warning">Branch</span>
                                                                 </div>
                                                                 <div class="col-8">
+                                                                    <span class="label1 font-weight-normal">: </span>
+
                                                                     <span class="value font-weight-bold" t-esc="values['personal_data']['branch']"/>
                                                                 </div>
                                                             </div>
@@ -130,10 +135,13 @@
 
                                                 <div class="detail-item row" t-if="values['common_performance']">
                                                     <div class="col-7">
-                                                        <span class="label1 text-nowrap">Miscellaneous Tasks:</span>
+                                                        <span class="label1 text-nowrap">Miscellaneous Tasks</span>
+
 
                                                     </div>
                                                     <div class="col-5 ml-0 mr-0 p-0">
+                                                        <span class="label1 font-weight-normal">: </span>
+
                                                         <span class="number-value" t-esc="values['common_performance']['completed_misc_count']"/>
                                                         <span class="" t-esc="' ( '+values['common_performance']['delayed_misc_count'] + ' Delayed )'"/>    
                                                     </div>
@@ -145,6 +153,8 @@
                                                         <span class="label1">To Do Tasks:</span>
                                                     </div>
                                                     <div class="col-5 ml-0 mr-0 p-0">
+                                                        <span class="label1 font-weight-normal">: </span>
+
                                                         <span class="number-value" t-esc="values['common_performance']['completed_to_do_count']"/>
                                                         <span class="" t-esc="' ( '+values['common_performance']['delayed_to_do_count'] + ' Delayed )'"/>
                                                     </div>
@@ -155,6 +165,8 @@
                                                         <span class="label1">Seminar Target:</span>
                                                     </div>
                                                     <div class="col-5 ml-0 mr-0 p-0">
+                                                        <span class="label1 font-weight-normal">: </span>
+
                                                         <span class="number-value" t-esc="values['marketing_data']['year_leads_count']"/>
                                                         <span>/</span>
                                                         <span class="number-value text-primary" t-esc="values['marketing_data']['year_leads_target']"/>
@@ -167,6 +179,8 @@
                                                         <span class="label1">Admission Target:</span>
                                                     </div>
                                                     <div class="col-5 ml-0 mr-0 p-0 text-nowrap">
+                                                        <span class="label1 font-weight-normal">: </span>
+
                                                         <span class="number-value" t-esc="values['sales_data']['month_year_converted_leads_count']"/>
                                                         <span>/</span>
                                                         <span class="number-value text-primary" t-esc="values['sales_data']['month_year_leads_target']"/>
@@ -179,6 +193,8 @@
                                                         <span class="label1">Student rating:</span>
                                                     </div>
                                                     <div class="col-5 ml-0 mr-0 p-0 text-nowrap">
+                                                        <span class="label1 font-weight-normal">: </span>
+
                                                         <span class="number-value" t-esc="values['academic_data']['student_feedback_rating']"/>
                                                         <span class="number-value text-primary">/ 5</span>
                                                     </div>
@@ -188,6 +204,8 @@
                                                         <span class="label1">Qualitative rating:</span>
                                                     </div>
                                                     <div class="col-5 ml-0 mr-0 p-0 text-nowrap">
+                                                        <span class="label1 font-weight-normal">: </span>
+
                                                         <span class="number-value" t-esc="values['common_performance']['qualitative_average_rating']"/>
                                                         <span class="number-value text-primary">/ 5</span>
                                                     </div>

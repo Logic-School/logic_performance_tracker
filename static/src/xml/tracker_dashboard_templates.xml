@@ -97,6 +97,21 @@
                                 </div>
                             </div>
                         </div>
+
+
+                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                            <div class="oh-card tracker_type_card" id="crash_dashboard" name="Crash" style="padding:12px;">
+                                <div class="oh-card-body">
+                                    <div class="stat-widget-one">
+                                        <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/crash.png"/></div>
+                                        <div class="stat-content">
+                                            <div class="stat-text"><h2>Crash</h2></div>
+                                            <div class="stat-digit"><t t-esc="values['crash_employees_count'] + ' Employees'"/></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 

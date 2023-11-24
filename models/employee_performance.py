@@ -189,6 +189,11 @@ class LogicEmployeePerformance(models.Model):
         personal_data['department_name'] = employee.department_id.name
         personal_data['head_name'] = employee.parent_id.name if employee.parent_id else False
         personal_data['date_of_joining'] = employee.joining_date
+        personal_data['employment_duration'] = False
+        if employee.joining_date:
+            days, months, years = actions_common.get_day_month_year_from_timedelta(date.today() - employee.joining_date)
+            personal_data['employment_duration'] = f'( {years} Years, {months} Months and {days} Days )'
+
         personal_data['branch'] = dict(employee._fields['branch'].selection).get(employee.branch) if employee.branch else False 
         personal_data['image'] = 'data:image/png;base64, ' + str(employee.image_1920, 'UTF-8')
         return personal_data
@@ -274,11 +279,18 @@ class LogicEmployeePerformance(models.Model):
                 return employee_data
         return False
         
-    def get_employee_sales_data(self,employee,start_date=False,end_date=False):
+    def get_employee_sales_data(self,employee,start_date=False,end_date=False,crash=False):
         sales_dept_obj = self.env['hr.department'].sudo().search([('name','=','Sales')])
-        if employee.department_id.id in sales_dept_obj.child_ids.ids:
+        crash_dept_obj = self.env['hr.department'].sudo().search([('name','=','Crash')])
+        if employee.department_id.id in crash_dept_obj.child_ids.ids:
+            crash=True
+        if employee.department_id.id in sales_dept_obj.child_ids.ids or employee.department_id.id in crash_dept_obj.child_ids.ids:
             lead_sources = self.env['leads.sources'].sudo().search([])
-            lead_courses = self.env['logic.base.courses'].sudo().search([('name','not in',('Nill',"DON'T USE",'Nil')), ('type','!=','crash')])
+            if not crash:
+                lead_courses = self.env['logic.base.courses'].sudo().search([('name','not in',('Nill',"DON'T USE",'Nil')), ('type','!=','crash')])
+            else:
+                lead_courses = self.env['logic.base.courses'].sudo().search([('name','not in',('Nill',"DON'T USE",'Nil')), ('type','=','crash')])
+
             lead_source_names = lead_sources.mapped('name')
             lead_course_names = lead_courses.mapped('name')
             employee_leads_data = {'lead_sources':lead_source_names, 'sourcewise_leads_dataset': [], 'lead_courses': lead_course_names,'coursewise_leads_dataset': [], }
@@ -330,7 +342,6 @@ class LogicEmployeePerformance(models.Model):
                 'borderWidth': 1,
                 'data': []
             }  
-
 
             coursewise_leads_conversion_data = {
                 'type':'line',

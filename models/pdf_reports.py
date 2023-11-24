@@ -47,6 +47,7 @@ def get_academic_head_data(self,employee):
     batch_count = 0
     courses = self.env['logic.base.courses'].sudo().search([('academic_head','=',employee.user_id.id),('name','not in',('Nill',"DON'T USE",'Nil')),('type','!=','crash')])
     course_names = courses.mapped('name')
+    branch_names = self.env['logic.base.branches'].sudo().search([('branch_name','!=','Nil')]).mapped('branch_name')
     batches = self.env['logic.base.batch'].sudo().search([('course_id','in',courses.ids)])
     subordinates = employee.child_ids
     academic_head_data['batch_count'] = len(batches)
@@ -63,7 +64,7 @@ def get_academic_head_data(self,employee):
             batch_data['students_rating'] = self.env['academic.tracker'].sudo().get_batchwise_coordinator_rating(employee,batch)
             batch_data['students_count'] = self.env['logic.students'].sudo().search_count([('batch_id','=',batch.id),('current_status','=',True)])
             subordinates_data[subordinate.name]['batches_data'].append(batch_data)
-    return {'course_names': course_names, 'subordinates_data': subordinates_data}
+    return {'branch_names':branch_names,'course_names': course_names, 'subordinates_data': subordinates_data}
 
 def get_employee_sales_data(self, employee, start_date=False, end_date=False):
     sales_data = {}
@@ -158,9 +159,13 @@ def get_leads_leaderboard_data(self, employees, start_date=False, end_date=False
         self.env['sales.tracker'].sudo().create_employee_leads_leaderboard_data(employee,start_date,end_date)
     return self.env['sales.tracker'].sudo().get_leads_leaderboard_data(employees)
 
-def get_coursewise_sales_data(self, employees, start_date=False, end_date=False):
+def get_coursewise_sales_data(self, employees, start_date=False, end_date=False,crash=False):
     coursewise_data = {}
-    courses = self.env['logic.base.courses'].sudo().search([('name','not in',('Nill',"DON'T USE",'Nil')), ('type','!=','crash')])
+    if not crash:
+        courses = self.env['logic.base.courses'].sudo().search([('name','not in',('Nill',"DON'T USE",'Nil')), ('type','!=','crash')])
+    else:
+        courses = self.env['logic.base.courses'].sudo().search([('name','not in',('Nill',"DON'T USE",'Nil')), ('type','=','crash')])
+
     coursewise_total_data = {}
     for employee in employees:
         emp_id_name = employee.name

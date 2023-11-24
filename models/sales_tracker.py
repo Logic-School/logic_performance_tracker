@@ -226,11 +226,15 @@ class SalesTracker(models.Model):
             # lead_conversion_rate = 100 * round(converted_lead_count/leads_count,3)
         return {'leads_count':leads_count, 'leads_conversion_rate': lead_conversion_rate, 'converted_lead_count': converted_lead_count, 'hot_leads_count':hot_lead_count, 'warm_leads_count':warm_lead_count, 'cold_leads_count':cold_lead_count}
     
-    def retrieve_employee_all_course_wise_lead_data(self,employee_id,start_date=False,end_date=False):
+    def retrieve_employee_all_course_wise_lead_data(self,employee_id,start_date=False,end_date=False,crash=False):
         if start_date and end_date:
             start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
         employee = self.env['hr.employee'].sudo().browse(int(employee_id.strip()))
-        courses = self.env['logic.base.courses'].sudo().search([('name','not in',('Nill',"DON'T USE",'Nil')), ('type','!=','crash')])
+        if not crash:
+            courses = self.env['logic.base.courses'].sudo().search([('name','not in',('Nill',"DON'T USE",'Nil')), ('type','!=','crash')])
+        else:
+            courses = self.env['logic.base.courses'].sudo().search([('name','not in',('Nill',"DON'T USE",'Nil')), ('type','=','crash')])
+
         employee_data = {}
         for course in courses:
             employee_data[course.name] = self.retrieve_employee_course_wise_lead_data(course,employee,start_date,end_date)

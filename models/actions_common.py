@@ -28,6 +28,9 @@ class StateAction(models.Model):
         elif self.env.user.has_group('logic_performance_tracker.group_perf_accounts_head'):
             action = self.env.ref("logic_performance_tracker.accounts_performance_action").sudo().read()[0]
             return action
+        elif self.env.user.has_group('logic_performance_tracker.group_perf_crash_head'):
+            action = self.env.ref("logic_performance_tracker.crash_performance_action").sudo().read()[0]
+            return action
         else:
             raise UserError("You do not have access to this application!")
         
@@ -63,6 +66,11 @@ class StateAction(models.Model):
         accounts_department_obj = self.env['hr.department'].sudo().search([('name','=','Accounts')])
         accounts_dept_childs = self.env['hr.department'].sudo().search([('parent_id','=',accounts_department_obj[0].id)])
         dashboard_data['accounts_employees_count'] = self.env['hr.employee'].sudo().search_count([('department_id','in',accounts_dept_childs.ids)])
+        
+        crash_department_obj = self.env['hr.department'].sudo().search([('name','=','Crash')])
+        crash_dept_childs = self.env['hr.department'].sudo().search([('parent_id','=',crash_department_obj[0].id)])
+        dashboard_data['crash_employees_count'] = self.env['hr.employee'].sudo().search_count([('department_id','in',crash_dept_childs.ids)])
+        
         return dashboard_data
 
 def get_date_obj_from_string(from_date,end_date):
@@ -318,3 +326,16 @@ def get_month_list():
         12: 'december',
     }
 
+def get_day_month_year_from_timedelta(timedelta):
+    logger = logging.getLogger("Timedelta Debug: ")
+    total_days = timedelta.days
+
+    logger.error('total_days'+str(total_days))
+
+    # Calculate years, months, and remaining days
+    years = total_days // 365
+    remaining_days = total_days % 365
+    months = remaining_days // 30
+    days = remaining_days % 30
+
+    return days, months, years
