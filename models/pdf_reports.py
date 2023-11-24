@@ -10,7 +10,9 @@ def get_employee_performance_data(self,employee_id,start_date,end_date):
     if employee.department_id:
         if employee.department_id.parent_id.name == 'Sales':
             employee_data['sales_data'] = get_employee_sales_data(self,employee,start_date,end_date)
-
+        elif employee.department_id.parent_id.name == 'Crash':
+            employee_data['sales_data'] = get_employee_sales_data(self,employee,start_date,end_date,crash=True)
+            employee_data['crash_data'] = get_employee_crash_data(self,employee,start_date,end_date)
         if start_date and end_date:
             start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
         if employee.department_id.parent_id.name == 'Marketing':
@@ -42,6 +44,9 @@ def get_employee_academic_data(self,employee,start_date=False,end_date=False):
         academic_data['academic_head_data'] = get_academic_head_data(self,employee)
     return academic_data
 
+def get_employee_crash_data(self,employee,start_date=False,end_date=False):
+    return {}
+
 def get_academic_head_data(self,employee):
     academic_head_data = {}
     batch_count = 0
@@ -66,7 +71,7 @@ def get_academic_head_data(self,employee):
             subordinates_data[subordinate.name]['batches_data'].append(batch_data)
     return {'branch_names':branch_names,'course_names': course_names, 'subordinates_data': subordinates_data}
 
-def get_employee_sales_data(self, employee, start_date=False, end_date=False):
+def get_employee_sales_data(self, employee, start_date=False, end_date=False, crash=False):
     sales_data = {}
     sales_data['source_leads_data'] = self.env['sales.tracker'].sudo().retrieve_employee_all_source_wise_lead_data(str(employee.id),start_date,end_date)
     sales_data['overall_source_leads_data'] = {'total_leads_count':0, 'total_converted_leads':0, 'total_conversion_rate':0, 'total_hot_leads':0, 'total_warm_leads':0, 'total_cold_leads':0}
@@ -80,7 +85,7 @@ def get_employee_sales_data(self, employee, start_date=False, end_date=False):
     if sales_data['overall_source_leads_data']['total_leads_count']>0:
         sales_data['overall_source_leads_data']['total_conversion_rate'] = round((sales_data['overall_source_leads_data']['total_converted_leads']/sales_data['overall_source_leads_data']['total_leads_count']) * 100 , 2)
     
-    sales_data['course_leads_data'] = self.env['sales.tracker'].sudo().retrieve_employee_all_course_wise_lead_data(str(employee.id),start_date,end_date)
+    sales_data['course_leads_data'] = self.env['sales.tracker'].sudo().retrieve_employee_all_course_wise_lead_data(str(employee.id),start_date,end_date,crash=crash)
     sales_data['overall_course_leads_data'] = {'total_leads_count':0, 'total_converted_leads':0, 'total_conversion_rate':0, 'total_course_revenue':0}
     for course in sales_data['course_leads_data'].keys():
 

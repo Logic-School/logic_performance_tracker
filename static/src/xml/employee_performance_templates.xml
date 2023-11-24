@@ -78,12 +78,9 @@
                                                             <div class="detail-item row mb-1">
                                                                 <div class="col-4">
                                                                     <span class="label1 font-weight-normal badge badge-secondary">Name</span>
-
                                                                 </div>
                                                                 <div class="col-8">
-                                                                    <span class="label1 font-weight-normal">: </span>
-
-                                                                    <span class="value font-weight-bold" t-esc="values['personal_data']['name']"/>
+                                                                        <span class="value font-weight-bold" t-esc="values['personal_data']['name']"/>
 
                                                                 </div>
                                                             </div>
@@ -93,7 +90,7 @@
 
                                                                 </div>
                                                                 <div class="col-8">
-                                                                    <span class="label1 font-weight-normal">: </span>
+                                                                    <!-- <span class="label1 font-weight-normal">: </span> -->
 
                                                                     <span class="value font-weight-bold" t-esc="values['personal_data']['job_title']"/>
 
@@ -102,9 +99,9 @@
                                                             <div class="detail-item row mb-1">
                                                                 <div class="col-4">
                                                                     <span class="label1 badge badge-primary">Department</span>
+
                                                                 </div>
                                                                 <div class="col-8">
-                                                                    <span class="label1 font-weight-normal">: </span>
 
                                                                     <span class="value font-weight-bold" t-esc="values['personal_data']['department_name']"/>
                                                                 </div>
@@ -114,7 +111,7 @@
                                                                     <span class="label1 badge badge-warning">Branch</span>
                                                                 </div>
                                                                 <div class="col-8">
-                                                                    <span class="label1 font-weight-normal">: </span>
+                                                                    <!-- <span class="label1 font-weight-normal">: </span> -->
 
                                                                     <span class="value font-weight-bold" t-esc="values['personal_data']['branch']"/>
                                                                 </div>
