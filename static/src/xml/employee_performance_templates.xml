@@ -214,7 +214,7 @@
                             </div>
                         </div>
 
-                        <!-- <div class="col m-2">
+                        <div class="col m-2">
                             <div class="container-fluid mt-3">
                                 <div class="row justify-content-center">
                                     <div class="col-md-10" style="width:100%">
@@ -232,12 +232,11 @@
                                     </div>
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
 
-                        <div class="col-7 m-3" t-if="values['leave_data']">
+                        <!-- <div class="col-7 m-3" t-if="values['leave_data']">
                             <div class="col m-2">
 
-                                <!-- <h1 class="inline">Miscellaneous Works</h1> -->
                                 <div class="h-100 table-responsive card" style="border-radius:10px;"> 
                                     <table style="font-size:14px;" class="table table-sm table-striped table-hover rounded-table table-borderless h-full">
                                         <thead>
@@ -269,14 +268,14 @@
                                     </table>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
 
 
 
-            <div class="row m-2">
+            <!-- <div class="row m-2">
                 <div class="container-fluid mt-3">
                     <div class="row justify-content-center">
                         <div class="col-8">
@@ -290,17 +289,11 @@
                                 <span class="font-weight-bold">Year: </span>
                                 <span class="filter_year font-weight-bold" t-esc="values['year']"/>
 
-                                <!-- <select class="graph_year form-control mr-2" style="display: inline-block; width: auto;background-color:#bfc1c2;">
-                                    <t t-foreach="values['years']" t-as="year">
-                                        <option t-att-value="year" t-esc="year"/>
-                                    </t>
-                                </select> -->
-
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <div class="row" t-if="values['marketing_data']">
                 <div class="container-fluid">
