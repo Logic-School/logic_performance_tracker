@@ -7,6 +7,7 @@ from . import actions_common
 from . import academic_data
 from . import pdf_reports
 import pdfkit
+from . import leave_data
 
 class LogicEmployeePerformance(models.Model):
     _name = "logic.employee.performance"
@@ -522,6 +523,8 @@ class LogicEmployeePerformance(models.Model):
         employee_data['digital_data'] = self.get_digital_performance_data(employee,start_date,end_date)
         employee_data['marketing_data'] = self.get_employee_marketing_data(employee,start_date,end_date)
         employee_data['sales_data'] = self.get_employee_sales_data(employee,start_date,end_date)
+
+        employee_data['leave_data'] = leave_data.get_employee_leave_data(self,employee,start_date,end_date)
 
         test = self.env['logic.common.task.performance'].sudo().create_employee_common_task_performance(employee,start_date,end_date)
 

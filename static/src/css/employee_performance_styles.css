@@ -30,11 +30,11 @@
 .employee_details_card {
     border-radius: 10px;
     background-color: #ffffff;
-    /* padding-top: 3px; */
-    /* padding-bottom: 6px; */
+    padding-top: 3px;
+    padding-bottom: 6px;
 
     padding-left: 4px;
-    /* padding-right: 8px; */
+    padding-right: 4px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 

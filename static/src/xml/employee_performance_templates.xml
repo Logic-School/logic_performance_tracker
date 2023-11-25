@@ -214,7 +214,7 @@
                             </div>
                         </div>
 
-                        <div class="col m-2">
+                        <!-- <div class="col m-2">
                             <div class="container-fluid mt-3">
                                 <div class="row justify-content-center">
                                     <div class="col-md-10" style="width:100%">
@@ -228,11 +228,93 @@
                                             <span class="font-weight-bold">Year: </span>
                                             <span class="filter_year font-weight-bold" t-esc="values['year']"/>
 
-                                            <!-- <select class="graph_year form-control mr-2" style="display: inline-block; width: auto;background-color:#bfc1c2;">
-                                                <t t-foreach="values['years']" t-as="year">
-                                                    <option t-att-value="year" t-esc="year"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <div class="col-7 m-3" t-if="values['leave_data']">
+                            <div class="col m-2">
+
+                                <!-- <h1 class="inline">Miscellaneous Works</h1> -->
+                                <div class="h-100 table-responsive card" style="border-radius:10px;"> 
+                                    <table style="font-size:14px;" class="table table-sm table-striped table-hover rounded-table table-borderless h-full">
+                                        <thead>
+                                            <tr class="rounded" style="background-color:#78787859;">
+                                                <td colspan="5" class="text-center"><h2>Leaves</h2></td>
+                                            </tr>
+                                        </thead>
+                                        <thead style="background-color:#e0e0de" class="">
+                                        <tr>
+                                            <th scope="col" width="7%" class="text-center">#</th>
+                                            <th scope="col" width="60%" class="text-center" >Leave Type</th>
+                                            <th class="text-center" width="33%" scope="col">Leaves Taken</th>
+                
+                
+                                        </tr>
+                                        </thead>
+                                        <tbody style="font-size:14px;">
+                                            <t t-set="index" t-value="1"/>
+                                            <t t-foreach="Object.keys(values['leave_data'])" t-as="leave_type">
+                
+                                                <tr class="">
+                                                    <td t-esc="index" class="text-center"/>
+                                                    <td t-esc="leave_type" class="text-center"/>
+                                                    <td style="color: green" t-esc="values['leave_data'][leave_type]['taken_leaves']" class="text-center"/>
+                                                </tr>
+                                                <t t-set="index" t-value="index+1"/>
                                                 </t>
-                                            </select> -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row m-2">
+                <div class="container-fluid mt-3">
+                    <div class="row justify-content-center">
+                        <div class="col-8">
+                            <div class="linechart-canvas-container" style="position:relative;height:400px;">
+                                <canvas id="LineChart1" style="width:600px;height:350px;"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-1 inline-block" >
+                            <div style="margin-left: auto; margin-right: 0;">
+                                <span class="font-weight-bold">Year: </span>
+                                <span class="filter_year font-weight-bold" t-esc="values['year']"/>
+
+                                <!-- <select class="graph_year form-control mr-2" style="display: inline-block; width: auto;background-color:#bfc1c2;">
+                                    <t t-foreach="values['years']" t-as="year">
+                                        <option t-att-value="year" t-esc="year"/>
+                                    </t>
+                                </select> -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" t-if="values['marketing_data']">
+                <div class="container-fluid">
+                    <div class="row justify-content-center">
+                        <div class="col m-2">
+                            <div class="container-fluid mt-3">
+                                <div>
+                                    <div class="container-fluid mt-3">
+                                        <div class="row justify-content-center">
+                                            <div class="col">                            
+                                                <div class="districtchart-canvas-container" style="position:relative;height:500px;">
+                                                    <canvas id="districtWiseLeadChart" style="width:700px;height:450px;"></canvas>
+                                                </div>
+                                            </div>
 
                                         </div>
                                     </div>
@@ -273,29 +355,6 @@
                 </div>
             </div>
 
-
-            <div class="row" t-if="values['marketing_data']">
-                <div class="container-fluid">
-                    <div class="row justify-content-start">
-                        <div class="col m-2">
-                            <div class="container-fluid mt-3">
-                                <div>
-                                    <div class="container-fluid mt-3">
-                                        <div class="row justify-content-center">
-                                            <div class="col">                            
-                                                <div class="districtchart-canvas-container" style="position:relative;height:500px;">
-                                                    <canvas id="districtWiseLeadChart" style="width:700px;height:450px;"></canvas>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <div class="row" t-if="values['sales_data']">
             <!-- <div class="row" t-if="values['sales_data']"> -->

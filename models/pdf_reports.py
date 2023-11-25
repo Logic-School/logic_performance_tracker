@@ -1,5 +1,5 @@
 import base64
-from . import actions_common
+from . import actions_common,leave_data
 import logging
 def get_employee_performance_data(self,employee_id,start_date,end_date):
     employee = self.env['hr.employee'].sudo().browse(int(employee_id))
@@ -20,6 +20,7 @@ def get_employee_performance_data(self,employee_id,start_date,end_date):
         elif employee.department_id.parent_id.name=='ACADEMICS':
             employee_data['academic_data'] = get_employee_academic_data(self,employee,start_date,end_date)
     employee_data['personal_data'] = self.env['logic.employee.performance'].sudo().get_employee_personal_data(employee)
+    employee_data['leave_data'] = leave_data.get_employee_leave_data(self,employee,start_date,end_date)
     if start_date and end_date:
         # start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
         employee_data['start_date'] = start_date.strftime("%d / %m / %Y")
