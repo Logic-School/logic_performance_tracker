@@ -35,8 +35,8 @@
                                     <div class="stat-widget-one">
                                         <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/marketing.png"/></div>
                                         <div class="stat-content">
-                                            <div class="stat-text"><h2>Marketing</h2></div>
-                                            <div class="stat-digit"><t t-esc="values['marketing_employees_count'] + ' Employees'"/></div>
+                                            <div class="stat-text"><h3>Marketing</h3></div>
+                                            <div class="stat-digit"><h6 t-esc="values['marketing_employees_count'] + ' Employees'"/></div>
                                         </div>
                                     </div>
                                 </div>
@@ -49,8 +49,8 @@
                                     <div class="stat-widget-one">
                                         <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/sales.png"/></div>
                                         <div class="stat-content">
-                                            <div class="stat-text"><h2>Sales</h2></div>
-                                            <div class="stat-digit"><t t-esc="values['sales_employees_count'] + ' Employees'"/></div>
+                                            <div class="stat-text"><h3>Sales</h3></div>
+                                            <div class="stat-digit"><h6 t-esc="values['sales_employees_count'] + ' Employees'"/></div>
                                         </div>
                                     </div>
                                 </div>
@@ -65,8 +65,8 @@
                                     <div class="stat-widget-one">
                                         <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/residential.png"/></div>
                                         <div class="stat-content">
-                                            <div class="stat-text"><h2>Residential</h2></div>
-                                            <div class="stat-digit"><t t-esc="values['residential_employees_count'] + ' Employees'"/></div>
+                                            <div class="stat-text"><h3>Residential</h3></div>
+                                            <div class="stat-digit"><h6 t-esc="values['residential_employees_count'] + ' Employees'"/></div>
                                         </div>
                                     </div>
                                 </div>
@@ -80,8 +80,8 @@
                                     <div class="stat-widget-one">
                                         <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/academic.png"/></div>
                                         <div class="stat-content">
-                                            <div class="stat-text"><h2>Academic</h2></div>
-                                            <div class="stat-digit"><t t-esc="values['academic_employees_count'] + ' Employees'"/></div>
+                                            <div class="stat-text"><h3>Academic</h3></div>
+                                            <div class="stat-digit"><h6 t-esc="values['academic_employees_count'] + ' Employees'"/></div>
                                         </div>
                                     </div>
                                 </div>
@@ -94,8 +94,8 @@
                                     <div class="stat-widget-one">
                                         <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/crash.png"/></div>
                                         <div class="stat-content">
-                                            <div class="stat-text"><h2>Crash</h2></div>
-                                            <div class="stat-digit"><t t-esc="values['crash_employees_count'] + ' Employees'"/></div>
+                                            <div class="stat-text"><h3>Crash</h3></div>
+                                            <div class="stat-digit"><h6 t-esc="values['crash_employees_count'] + ' Employees'"/></div>
                                         </div>
                                     </div>
                                 </div>
@@ -111,8 +111,8 @@
                                     <div class="stat-widget-one">
                                         <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/digital_tracker.png"/></div>
                                         <div class="stat-content">
-                                            <div class="stat-text"><h2>Digital</h2></div>
-                                            <div class="stat-digit mr-2 ml-3"><t t-esc="values['digital_employees_count'] + ' Employees'"/></div>
+                                            <div class="stat-text"><h3>Digital</h3></div>
+                                            <div class="stat-digit"><h6 t-esc="values['digital_employees_count'] + ' Employees'"/></div>
                                         </div>
                                     </div>
                                 </div>
@@ -125,8 +125,8 @@
                                     <div class="stat-widget-one">
                                         <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/accounts.png"/></div>
                                         <div class="stat-content">
-                                            <div class="stat-text"><h2>Accounts</h2></div>
-                                            <div class="stat-digit"><t t-esc="values['accounts_employees_count'] + ' Employees'"/></div>
+                                            <div class="stat-text"><h3>Accounts</h3></div>
+                                            <div class="stat-digit"><h6 t-esc="values['accounts_employees_count'] + ' Employees'"/></div>
                                         </div>
                                     </div>
                                 </div>
