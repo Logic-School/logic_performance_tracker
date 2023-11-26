@@ -2,7 +2,7 @@ from odoo import fields,models,api
 
 class AcademicCoordinatorPerformance(models.Model):
     _name="academic.coordinator.performance"
-    _order="total_completed desc"
+    _order="score desc"
     employee = fields.Many2one("hr.employee",string="Employee")
     upaya_count = fields.Integer()
     yes_plus_count = fields.Integer()
@@ -16,5 +16,6 @@ class AcademicCoordinatorPerformance(models.Model):
     attendance_count = fields.Integer()
     fpp_count = fields.Integer()
     total_completed = fields.Integer()
+    score = fields.Float()
     previous_total = fields.Integer()
 

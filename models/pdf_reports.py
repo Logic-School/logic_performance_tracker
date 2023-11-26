@@ -197,6 +197,13 @@ def get_coursewise_sales_data(self, employees, start_date=False, end_date=False,
     return coursewise_data,coursewise_total_data
         
 
+def get_academic_report_data(self,manager_id, start_date=False, end_date=False):
+    academic_data = False
+    if manager_id:
+        academic_data = self.env['academic.tracker'].retrieve_dashboard_data(start_date,end_date,manager_id=int(manager_id))
+    return academic_data
+
+
 def get_common_performance_data(self,employees, start_date=False, end_date=False):
     for employee in employees:
         self.env['logic.common.task.performance'].sudo().create_employee_common_task_performance(employee,start_date,end_date)

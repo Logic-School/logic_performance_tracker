@@ -31,6 +31,9 @@ class StateAction(models.Model):
         elif self.env.user.has_group('logic_performance_tracker.group_perf_crash_head'):
             action = self.env.ref("logic_performance_tracker.crash_performance_action").sudo().read()[0]
             return action
+        elif self.env.user.has_group('logic_performance_tracker.group_perf_residential_head'):
+            action = self.env.ref("logic_performance_tracker.residential_performance_action").sudo().read()[0]
+            return action
         else:
             raise UserError("You do not have access to this application!")
         
@@ -164,6 +167,7 @@ def create_employee_qualitative_performance(self,qualitatives,employee):
             'employee': employee.id,
             'overall_average': qualitative_average,
         })
+    return qualitative_average
 
 def get_raw_qualitative_data(self,employees=False,start_date=False,end_date=False):
     if start_date and end_date:

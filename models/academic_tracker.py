@@ -2,6 +2,7 @@ from odoo import models,fields,api
 from odoo.exceptions import UserError
 from . import actions_common
 import logging
+from . import pdf_reports
 class AcademicTracker(models.Model):
     _name = "academic.tracker"
     
@@ -14,6 +15,7 @@ class AcademicTracker(models.Model):
             start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
 
         dashboard_data = {}
+
         employees_data = {}
         department_obj = self.env['hr.department'].sudo().search([('name','=','ACADEMICS')])
 
@@ -23,6 +25,8 @@ class AcademicTracker(models.Model):
         manager,managers,department_heads_data = actions_common.get_manager_managers_heads_data(self,department_obj,manager_id)
 
         employees = actions_common.get_employees(self,department_obj,manager,managers)
+
+
 
         academic_domains = actions_common.get_academic_domains(self,department_obj=department_obj,start_date=start_date,end_date=end_date,manager=manager,managers=managers,employee_user_ids=employees.mapped('user_id.id'))
 
@@ -50,6 +54,7 @@ class AcademicTracker(models.Model):
             self.env['logic.common.task.performance'].sudo().create_employee_common_task_performance(employee,start_date,end_date)
 
             total_completed = sum(list(employee_academic_counts.values()))
+            score = round(self.env['logic.common.task.performance'].sudo().search([('employee','=',employee.id)])[0].qualitative_average_rating * total_completed, 2)
             values = {
                 'employee': employee.id,
                 'upaya_count': employee_academic_counts['upaya_count'],
@@ -61,7 +66,8 @@ class AcademicTracker(models.Model):
                 'cip_excel_count': employee_academic_counts['cip_excel_count'],
                 'bring_buddy_count': employee_academic_counts['bring_buddy_count'],
                 'fpp_count': employee_academic_counts['fpp_count'],
-                'total_completed': total_completed
+                'total_completed': total_completed,
+                'score':score,
             }
 
             acad_coord_perf_obj = self.env['academic.coordinator.performance'].sudo().search([('employee','=',employee.id)])
@@ -88,6 +94,8 @@ class AcademicTracker(models.Model):
             employees_data[emp_id_name]['bring_buddy_count'] = coord_perf.bring_buddy_count
             employees_data[emp_id_name]['fpp_count'] = coord_perf.fpp_count
             employees_data[emp_id_name]['total_completed'] = coord_perf.total_completed
+            employees_data[emp_id_name]['score'] = coord_perf.score
+
             # coord_perf.total_completed = 
 
         dashboard_data['coordinator_data'] = employees_data
@@ -175,3 +183,10 @@ class AcademicTracker(models.Model):
             return employee_datas
         else:
             return False
+        
+    @api.model
+    def get_academic_performance_report_data(self, start_date=False, end_date=False, manager_id=False):
+        employees = self.env['hr.employee'].sudo().search([('parent_id','=',int(manager_id))])
+        employees+= self.env['hr.employee'].sudo().browse(int(manager_id))
+        employee_data = pdf_reports.get_academic_report_data(self,manager_id, start_date, end_date)
+        return employee_data
