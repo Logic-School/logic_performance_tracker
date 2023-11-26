@@ -71,6 +71,11 @@ class StateAction(models.Model):
         crash_dept_childs = self.env['hr.department'].sudo().search([('parent_id','=',crash_department_obj[0].id)])
         dashboard_data['crash_employees_count'] = self.env['hr.employee'].sudo().search_count([('department_id','in',crash_dept_childs.ids)])
         
+        residential_department_obj = self.env['hr.department'].sudo().search([('name','=','Residential')])
+        residential_dept_childs = self.env['hr.department'].sudo().search([('parent_id','=',residential_department_obj[0].id)])
+        dashboard_data['residential_employees_count'] = self.env['hr.employee'].sudo().search_count([('department_id','in',residential_dept_childs.ids)])
+        
+    
         return dashboard_data
 
 def get_date_obj_from_string(from_date,end_date):

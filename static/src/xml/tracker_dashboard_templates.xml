@@ -24,38 +24,11 @@
               }
         </style>
         <div t-if="values">
-            <div class="o_dashboard_card">
-                <div class="row">
-                    <div class="dept_cards">
-                        <div class="col-md-2 col-sm-6 oh-payslip" >
-                            <div class="oh-card tracker_type_card" id="digital_dashboard" name="Digital" style="padding:12px;">
-                                <div class="oh-card-body">
-                                    <div class="stat-widget-one">
-                                        <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/digital_tracker.png"/></div>
-                                        <div class="stat-content">
-                                            <div class="stat-text"><h2>Digital</h2></div>
-                                            <div class="stat-digit mr-2 ml-3"><t t-esc="values['digital_employees_count'] + ' Employees'"/></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <div class="col-12">
+                <div class="container-fluid">
 
-                        <div class="col-md-2 col-sm-6 oh-payslip" >
-                            <div class="oh-card tracker_type_card" id="academic_dashboard" name="Academic" style="padding:12px;">
-                                <div class="oh-card-body">
-                                    <div class="stat-widget-one">
-                                        <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/academic.png"/></div>
-                                        <div class="stat-content">
-                                            <div class="stat-text"><h2>Academic</h2></div>
-                                            <div class="stat-digit"><t t-esc="values['academic_employees_count'] + ' Employees'"/></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
+                    <div class="row justify-content-center">
+                        
                         <div class="col-md-2 col-sm-6 oh-payslip" >
                             <div class="oh-card tracker_type_card" id="marketing_dashboard" name="Marketing" style="padding:12px;">
                                 <div class="oh-card-body">
@@ -83,21 +56,37 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
 
+                    <div class="row justify-content-center">
                         <div class="col-md-2 col-sm-6 oh-payslip" >
-                            <div class="oh-card tracker_type_card" id="accounts_dashboard" name="Accounts" style="padding:12px;">
+                            <div class="oh-card tracker_type_card" id="residential_dashboard" name="Residential" style="padding:12px;">
                                 <div class="oh-card-body">
                                     <div class="stat-widget-one">
-                                        <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/accounts.png"/></div>
+                                        <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/residential.png"/></div>
                                         <div class="stat-content">
-                                            <div class="stat-text"><h2>Accounts</h2></div>
-                                            <div class="stat-digit"><t t-esc="values['accounts_employees_count'] + ' Employees'"/></div>
+                                            <div class="stat-text"><h2>Residential</h2></div>
+                                            <div class="stat-digit"><t t-esc="values['residential_employees_count'] + ' Employees'"/></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+
+                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                            <div class="oh-card tracker_type_card" id="academic_dashboard" name="Academic" style="padding:12px;">
+                                <div class="oh-card-body">
+                                    <div class="stat-widget-one">
+                                        <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/academic.png"/></div>
+                                        <div class="stat-content">
+                                            <div class="stat-text"><h2>Academic</h2></div>
+                                            <div class="stat-digit"><t t-esc="values['academic_employees_count'] + ' Employees'"/></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="col-md-2 col-sm-6 oh-payslip" >
                             <div class="oh-card tracker_type_card" id="crash_dashboard" name="Crash" style="padding:12px;">
@@ -113,7 +102,41 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="row justify-content-center">
+                        <!-- <div class="dept_cards"> -->
+                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                            <div class="oh-card tracker_type_card" id="digital_dashboard" name="Digital" style="padding:12px;">
+                                <div class="oh-card-body">
+                                    <div class="stat-widget-one">
+                                        <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/digital_tracker.png"/></div>
+                                        <div class="stat-content">
+                                            <div class="stat-text"><h2>Digital</h2></div>
+                                            <div class="stat-digit mr-2 ml-3"><t t-esc="values['digital_employees_count'] + ' Employees'"/></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                            <div class="oh-card tracker_type_card" id="accounts_dashboard" name="Accounts" style="padding:12px;">
+                                <div class="oh-card-body">
+                                    <div class="stat-widget-one">
+                                        <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/accounts.png"/></div>
+                                        <div class="stat-content">
+                                            <div class="stat-text"><h2>Accounts</h2></div>
+                                            <div class="stat-digit"><t t-esc="values['accounts_employees_count'] + ' Employees'"/></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
+
+
                 
             </div>
         </div>
