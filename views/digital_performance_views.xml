@@ -17,6 +17,7 @@
             <script type="text/javascript" src="/logic_performance_tracker/static/src/js/sales_performance.js"/>
             <script type="text/javascript" src="/logic_performance_tracker/static/src/js/accounts_performance.js"/>
             <script type="text/javascript" src="/logic_performance_tracker/static/src/js/crash_performance.js"/>
+            <script type="text/javascript" src="/logic_performance_tracker/static/src/js/residential_performance.js"/>
 
             <script type="text/javascript" src="/logic_performance_tracker/static/src/js/employee_performance.js"/>
             <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
@@ -78,6 +79,11 @@
         <field name="tag">crash_dashboard</field>
     </record>
 
+    <record id="residential_performance_action" model="ir.actions.client">
+        <field name="name">Residential</field>
+        <field name="tag">residential_dashboard</field>
+    </record>
+
     <menuitem name="Performance Tracker" id="menu_performance_tracker"
               action="open_perf_tracker_action"
               sequence="6"
@@ -125,6 +131,12 @@
               groups="group_perf_crash_head,group_perf_admin"
               />
 
+    <menuitem name="Residential" id="menu_residential_performance"
+              sequence="9"
+              parent="menu_performance_tracker"
+              action="residential_performance_action"
+              groups="group_perf_residential_head,group_perf_admin"
+              />
     <!-- <menuitem name="Tasks" id="menu_digital_performance_tasks"
               sequence="9"
               parent="menu_digital_performance"

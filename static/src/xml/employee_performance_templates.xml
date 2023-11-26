@@ -185,7 +185,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="detail-item row" t-if="values['academic_data']">
+                                                <div class="detail-item row" t-if="values['academic_data'] || values['residential_data']">
                                                     <div class="col-7">
                                                         <span class="label1">Student rating:</span>
                                                     </div>
@@ -193,6 +193,7 @@
                                                         <span class="label1 font-weight-normal">: </span>
 
                                                         <span class="number-value" t-esc="values['academic_data']['student_feedback_rating']"/>
+                                                        <span class="number-value" t-esc="values['residential_data']['student_feedback_rating']"/>
                                                         <span class="number-value text-primary">/ 5</span>
                                                     </div>
                                                 </div>
@@ -521,22 +522,6 @@
                             </div>
                         </div>
 
-
-
-                        <div class="col-md-2 col-sm-6 oh-payslip" >
-                            <div class="oh-card model_record_card" id="exam.details" name="Exams">
-                                <div class="oh-card-body">
-                                    <div class="stat-widget-one">
-                                        <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/exam.png"/></div>
-                                        <div class="stat-content">
-                                            <div class="stat-text">Exams</div>
-                                            <div class="stat-digit"><t t-esc="values['academic_data']['exam_count']"/></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="col-md-2 col-sm-6 oh-payslip" >
                             <div class="oh-card model_record_card" id="one_to_one.meeting" name="One to One">
                                 <div class="oh-card-body">
@@ -635,6 +620,25 @@
                         </div>
                     </t>
                 </t>
+
+                <t t-if="values['academic_data'] || values['residential_data']">
+                    <div class="col-md-2 col-sm-6 oh-payslip" >
+                        <div class="oh-card model_record_card" id="exam.details" name="Exams">
+                            <div class="oh-card-body">
+                                <div class="stat-widget-one">
+                                    <div class="stat-icon"><img class="overflow-auto img-fluid" src="/logic_performance_tracker/static/src/icons/exam.png"/></div>
+                                    <div class="stat-content">
+                                        <div class="stat-text">Exams</div>
+                                        <div t-if="values['academic_data']" class="stat-digit"><t t-esc="values['academic_data']['exam_count']"/></div>
+                                        <div t-if="values['residential_data']" class="stat-digit"><t t-esc="values['residential_data']['exam_count']"/></div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
             </div>
 
 

@@ -241,6 +241,44 @@ class LogicEmployeePerformance(models.Model):
         batch_data['one_to_one_data'] = academic_data.get_one_to_one_data(self,batch_obj)
         return batch_data
     
+    def get_employee_residential_data(self,employee,start_date=False,end_date=False):
+        department_obj = employee.department_id
+        employee_data = {}
+        if department_obj.parent_id:
+            if department_obj.parent_id.name=='Residential':
+                employee_academic_domains = actions_common.get_academic_domains(self,department_obj=department_obj,start_date=start_date,end_date=end_date,manager=False,managers=False,employee_user_ids=[employee.user_id.id])
+                employee_academic_counts = actions_common.get_academic_counts(self,employee_academic_domains)
+                total_completed = sum(list(employee_academic_counts.values()))
+                values = {
+                    'employee': employee.id,
+                    'upaya_count': employee_academic_counts['upaya_count'],
+                    'yes_plus_count': employee_academic_counts['yes_plus_count'],
+                    'one2one_count': employee_academic_counts['one_to_one_count'],
+                    'sfc_count': employee_academic_counts['sfc_count'],
+                    'exam_count': employee_academic_counts['exam_count'],
+                    'mock_interview_count': employee_academic_counts['mock_interview_count'],
+                    'cip_excel_count': employee_academic_counts['cip_excel_count'],
+                    'bring_buddy_count': employee_academic_counts['bring_buddy_count'],
+                    'presentation_count': employee_academic_counts['presentation_count'],
+                    'attendance_count': employee_academic_counts['attendance_count'],
+                    'fpp_count': employee_academic_counts['fpp_count'],
+                    'total_completed': total_completed
+                }
+
+                acad_coord_perf_obj = self.env['academic.coordinator.performance'].sudo().search([('employee','=',employee.id)])
+                if acad_coord_perf_obj:
+                    acad_coord_perf_obj.write(values)
+                else:
+                    self.env['academic.coordinator.performance'].create(values)
+                employee_data.update(values)
+                employee_data['name'] = employee.name
+                employee_data['student_feedback_rating'] = self.get_student_feedback_average(employee)
+                employee_data['batches'] = self.get_employee_academic_batches(employee.id)
+                employee_data['academic_windows'] = actions_common.get_academic_windows(self,employee)
+                employee_data['is_associate_faculty'] = employee.is_associate_faculty
+                return employee_data
+        return False
+    
     def get_employee_academic_data(self,employee,start_date=False,end_date=False):
         department_obj = employee.department_id
         employee_data = {}
@@ -523,11 +561,11 @@ class LogicEmployeePerformance(models.Model):
         employee_data['digital_data'] = self.get_digital_performance_data(employee,start_date,end_date)
         employee_data['marketing_data'] = self.get_employee_marketing_data(employee,start_date,end_date)
         employee_data['sales_data'] = self.get_employee_sales_data(employee,start_date,end_date)
+        employee_data['residential_data'] = self.get_employee_residential_data(employee,start_date,end_date)
 
         employee_data['leave_data'] = leave_data.get_employee_leave_data(self,employee,start_date,end_date)
 
         test = self.env['logic.common.task.performance'].sudo().create_employee_common_task_performance(employee,start_date,end_date)
-
 
         employee_data['year'] = year
         employee_data['month'] = month.capitalize()

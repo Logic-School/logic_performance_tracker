@@ -122,10 +122,21 @@ class MarketingTracker(models.Model):
         seminar_count = 0
         webinar_count = 0
         seminar_domain = [('state','=','done')]
+        mou_domain = [('state','=','signed'),('create_uid','=',employee.user_id.id)]
+        seminar_cip_domain = [('state','in',('register_payment','paid')),('seminar_user_id','=',employee.user_id.id)]
         if start_date and end_date:
             seminar_domain.extend([('seminar_date','>=',start_date),('seminar_date','<=',end_date)])
+            mou_domain.extend([('mou_sign_date','>=',start_date),('mou_sign_date','<=',end_date)])
         seminars = self.env['seminar.leads'].sudo().search(seminar_domain)
-        # seminars.filtered(lambda seminar: (seminar.attended_by.id==employee.id) or (seminar.attended_by==False and seminar.create_uid.id==employee.user_id.id))
+        mou_count = self.env['seminar.mou.form'].sudo().search_count(mou_domain)
+        seminar_cips = self.env['seminar.cip.records'].sudo().search(seminar_cip_domain)
+        seminar_cip_rec_count = 0
+        for seminar_cip in seminar_cips:
+            if seminar_cip.seminar_cip_ids:
+                if start_date and end_date:
+                    seminar_cip_rec_count += len(seminar_cip.seminar_cip_ids.filtered(lambda cip_rec: cip_rec.date>=start_date and cip_rec.date<=end_date))
+                else:
+                    seminar_cip_rec_count = len(seminar_cip.seminar_cip_ids)
         converted_lead_count = 0
 
         # checked_institute_ids = []
@@ -170,6 +181,8 @@ class MarketingTracker(models.Model):
             'converted_target_ratio': converted_target_ratio,
             'seminar_count': seminar_count,
             'webinar_count': webinar_count,
+            'mou_count': mou_count,
+            'seminar_cip_rec_count': seminar_cip_rec_count,
         }
         emp_mark_perf_obj = self.env['logic.employee.marketing.performance'].sudo().search([('employee','=',employee.id)])
         if emp_mark_perf_obj:
@@ -191,6 +204,9 @@ class MarketingTracker(models.Model):
             employees_data[emp_id]['converted_target_ratio'] = perf_obj.converted_target_ratio
             employees_data[emp_id]['seminar_count'] = perf_obj.seminar_count
             employees_data[emp_id]['webinar_count'] = perf_obj.webinar_count
+            employees_data[emp_id]['mou_count'] = perf_obj.mou_count
+            employees_data[emp_id]['seminar_cip_rec_count'] = perf_obj.seminar_cip_rec_count
+
 
         return employees_data
 
@@ -209,7 +225,8 @@ class EmployeeMarketingPerformance(models.Model):
     lead_target = fields.Integer(string="Lead Target")
     seminar_count = fields.Integer(string="Seminar Count")
     webinar_count = fields.Integer(string="Webinar Count")
-
+    mou_count = fields.Integer(string="MOU Count")
+    seminar_cip_rec_count = fields.Integer(string="Seminar CIP Counr")
     lead_converted = fields.Integer(string="Lead Achieved")
     converted_target_ratio = fields.Float(string="Lead Converted Target Ratio")
     conversion_rate = fields.Float(string="Conversion Rate")

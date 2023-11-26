@@ -47,20 +47,21 @@
                         <table class="table table-striped table-hover table-bordered">
                             <thead>
                                 <tr class="rounded" style="background-color:#78787859;">
-                                    <td colspan="8" class="text-center font-weight-bold"><h5>Leaderboard</h5></td>
+                                    <td colspan="9" class="text-center font-weight-bold"><h5>Leaderboard</h5></td>
                                 </tr>
                             </thead>
                             <thead class="bg-light">
                                 <tr>
                                     <th scope="col" width="7%">#</th>
                                     <th scope="col" width="15%">Employee</th>
-                                    <th class="text-center" width="15%" scope="col">Leads</th>
-                                    <th class="text-center" width="15%" scope="col">Seminars</th>
-                                    <th class="text-center" width="12%" scope="col">Webinars</th>
+                                    <th class="text-center" width="10%" scope="col">Leads</th>
+                                    <th class="text-center" width="10%" scope="col">Seminars</th>
+                                    <th class="text-center" width="10%" scope="col">Webinars</th>
+                                    <th class="text-center" width="10%" scope="col">MOUs</th>
+                                    <th class="text-center" width="8%" scope="col">CIPs</th>
+                                    <th scope="col" class="text-center" width="15%">Seminar Target</th>
     
-                                    <th scope="col" class="text-center" width="18%">Seminar Target</th>
-    
-                                    <th scope="col" class="text-center" width="18%">Conversion Rate (%)</th>
+                                    <th scope="col" class="text-center" width="15%">Conversion Rate (%)</th>
     
                                 </tr>
                             </thead>
@@ -74,6 +75,8 @@
                                         <td style="color: green" t-esc="values['seminar_leaderboard_data'][employee]['lead_count']" class="text-center"/>
                                         <td style="color: green" t-esc="values['seminar_leaderboard_data'][employee]['seminar_count']" class="text-center"/>
                                         <td style="color: green" t-esc="values['seminar_leaderboard_data'][employee]['webinar_count']" class="text-center"/>
+                                        <td style="color: green" t-esc="values['seminar_leaderboard_data'][employee]['mou_count']" class="text-center"/>
+                                        <td style="color: green" t-esc="values['seminar_leaderboard_data'][employee]['seminar_cip_rec_count']" class="text-center"/>
 
                                         <td class="text-center">
                                             <span style="color: brown" t-esc="values['seminar_leaderboard_data'][employee]['seminar_count']"/>
