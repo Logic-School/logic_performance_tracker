@@ -350,7 +350,7 @@ odoo.define('logic_performance_tracker.academic_dashboard', function (require) {
                 self._rpc({
                     model: 'performance.tracker', // Replace with your actual model name
                     method: 'get_performance_report_pdf', // Use 'search_read' to retrieve records
-                    args: [report_template,'Marketing Performance'], 
+                    args: [report_template,'Academic Performance'], 
                 }).then(function(pdf_data){
                     var link = `data:application/pdf;base64, ${pdf_data.pdf_b64}`
                     console.log(link)

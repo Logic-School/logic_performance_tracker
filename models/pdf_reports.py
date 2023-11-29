@@ -1,6 +1,7 @@
 import base64
 from . import actions_common,leave_data
 import logging
+from . import academic_data
 def get_employee_performance_data(self,employee_id,start_date,end_date):
     employee = self.env['hr.employee'].sudo().browse(int(employee_id))
     employee_data = {}
@@ -39,11 +40,12 @@ def get_employee_common_performance_data(self,employee,start_date=False,end_date
     return common_performance_data
 
 def get_employee_academic_data(self,employee,start_date=False,end_date=False):
-    academic_data = {}
-    academic_data['is_academic_head'] = employee.department_id.manager_id.id == employee.id
-    if academic_data['is_academic_head']:
-        academic_data['academic_head_data'] = get_academic_head_data(self,employee)
-    return academic_data
+    employee_academic_data = {}
+    employee_academic_data['is_academic_head'] = employee.department_id.manager_id.id == employee.id
+    if employee_academic_data['is_academic_head']:
+        employee_academic_data['academic_head_data'] = get_academic_head_data(self,employee)
+    employee_academic_data['batch_datas'] = get_employee_batch_datas(self,employee,start_date,end_date)
+    return employee_academic_data
 
 def get_employee_crash_data(self,employee,start_date=False,end_date=False):
     return {}
@@ -71,6 +73,25 @@ def get_academic_head_data(self,employee):
             batch_data['students_count'] = self.env['logic.students'].sudo().search_count([('batch_id','=',batch.id),('current_status','=',True)])
             subordinates_data[subordinate.name]['batches_data'].append(batch_data)
     return {'branch_names':branch_names,'course_names': course_names, 'subordinates_data': subordinates_data}
+
+def get_employee_batch_datas(self,employee, start_date=False, end_date=False):
+    batches = self.env['logic.base.batch'].sudo().search([('academic_coordinator','=',employee.user_id.id)])
+    batch_datas = []
+    for batch_obj in batches:
+        batch_strength = self.env['logic.students'].sudo().search_count([('batch_id','=',batch_obj.id)])
+        batch_data = {'batch_name': batch_obj.name, 'batch_strength': batch_strength}
+        batch_data['upaya_data'] = academic_data.get_upaya_data(self,batch_obj)
+        batch_data['yes_plus_data'] = academic_data.get_yes_plus_data(self,batch_obj)
+        batch_data['presentation_data'] = academic_data.get_presentation_data(self,batch_obj)
+        batch_data['excel_data'] = academic_data.get_excel_data(self,batch_obj)
+        batch_data['cip_data'] = academic_data.get_cip_data(self,batch_obj)
+        batch_data['bb_data'] = academic_data.get_bb_data(self,batch_obj)
+        batch_data['mock_interview_data'] = academic_data.get_mock_interview_data(self,batch_obj)
+        batch_data['attendance_data'] = academic_data.get_attendance_data(self,batch_obj)
+        batch_data['exam_data'] = academic_data.get_exam_data(self,batch_obj)
+        batch_data['one_to_one_data'] = academic_data.get_one_to_one_data(self,batch_obj)
+        batch_datas.append(batch_data)
+    return batch_datas
 
 def get_employee_sales_data(self, employee, start_date=False, end_date=False, crash=False):
     sales_data = {}
@@ -201,6 +222,10 @@ def get_academic_report_data(self,manager_id, start_date=False, end_date=False):
     academic_data = False
     if manager_id:
         academic_data = self.env['academic.tracker'].retrieve_dashboard_data(start_date,end_date,manager_id=int(manager_id))
+    if start_date and end_date:
+        start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
+        academic_data['start_date'] = start_date.strftime("%d / %m / %Y")
+        academic_data['end_date'] = end_date.strftime("%d / %m / %Y")
     return academic_data
 
 

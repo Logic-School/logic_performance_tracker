@@ -44,7 +44,7 @@ odoo.define('logic_performance_tracker.crash_dashboard', function (require) {
             'click .o_filter_reset': 'filter_reset',
             'click .o_employee_name': '_onEmployeeNameClicked',
             'click .node':'_onEmployeeNodeClicked',
-            'click .report_download_btn': '_downloadPDFReport',
+            // 'click .report_download_btn': '_downloadPDFReport',
             'click .o_employee_leads_data_name': '_onEmployeeLeadsDataNameClicked',
             'change .lead_source_id': 'render_lead_source_charts',
 
@@ -442,46 +442,48 @@ odoo.define('logic_performance_tracker.crash_dashboard', function (require) {
         
         },
 
-        _downloadPDFReport: function(){
-            self = this;
-            var fromDate = this.$('.from_date').val();
-            var endDate = this.$('.end_date').val();
-            if (fromDate == '' || endDate == '') {
-                fromDate = false
-                endDate = false
-            }
-            var def = self._rpc({
-                model: 'logic.employee.performance', // Replace with your actual model name
-                method: 'get_employee_performance_report_data', // Use 'search_read' to retrieve records
-                args: [self.employee_id, fromDate, endDate], // Define search domain if needed
-                // kwargs: {},
-            }).then(function(employee_data){
-                var report_template = QWeb.render('logic_performance_tracker.employee_performance_report_template',{'values':employee_data})
-                console.log(employee_data)
-                console.log(report_template)
-                self._rpc({
-                    model: 'performance.tracker', // Replace with your actual model name
-                    method: 'get_performance_report_pdf', // Use 'search_read' to retrieve records
-                    args: [report_template,employee_data['personal_data']['name']], 
-                }).then(function(pdf_data){
-                    var link = `data:application/pdf;base64, ${pdf_data.pdf_b64}`
-                    console.log(link)
-                    self.$('.employee_performance').append("<a id='report_download' target='_blank'><a/>")
-                    var download_link = self.$('#report_download')
-                    download_link.attr('href',link)
-                    download_link.attr('download',pdf_data.filename)
-                    console.log(download_link[0])
-                    download_link[0].click()
-                    download_link.remove()
-                    // download_link.remove()
-                    // window.open('data:application/pdf;base64, '+pdf_file)
-                }).catch(function(err){
-                    console.log(err)
-                })
-            }).catch(function(err){
-                console.log(err)
-            })
-        },
+        // _downloadPDFReport: function(){
+        //     self = this;
+        //     var fromDate = this.$('.from_date').val();
+        //     var endDate = this.$('.end_date').val();
+        //     var department_head_id = this.$('.department_head').val()
+
+        //     if (fromDate == '' || endDate == '') {
+        //         fromDate = false
+        //         endDate = false
+        //     }
+        //     var def = self._rpc({
+        //         model: 'sales.tracker', // Replace with your actual model name
+        //         method: 'get_sales_performance_report_data', // Use 'search_read' to retrieve records
+        //         args: [fromDate, endDate, department_head_id], // Define search domain if needed
+        //         // kwargs: {},
+        //     }).then(function(sales_data){
+        //         var report_template = QWeb.render('logic_performance_tracker.sales_report_template',{'values':marketing_data})
+        //         console.log(marketing_data)
+        //         console.log(report_template)
+        //         self._rpc({
+        //             model: 'performance.tracker', // Replace with your actual model name
+        //             method: 'get_performance_report_pdf', // Use 'search_read' to retrieve records
+        //             args: [report_template,'Marketing Performance'], 
+        //         }).then(function(pdf_data){
+        //             var link = `data:application/pdf;base64, ${pdf_data.pdf_b64}`
+        //             console.log(link)
+        //             self.$('.o_dashboard_card').append("<a id='report_download' target='_blank'><a/>")
+        //             var download_link = self.$('#report_download')
+        //             download_link.attr('href',link)
+        //             download_link.attr('download',pdf_data.filename)
+        //             console.log(download_link[0])
+        //             download_link[0].click()
+        //             download_link.remove()
+        //             // download_link.remove()
+        //             // window.open('data:application/pdf;base64, '+pdf_file)
+        //         }).catch(function(err){
+        //             console.log(err)
+        //         })
+        //     }).catch(function(err){
+        //         console.log(err)
+        //     })
+        // },
     });
 
 

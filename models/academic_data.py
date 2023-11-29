@@ -152,13 +152,12 @@ def get_exam_data(self,batch):
     # exam_recs = self.env['exam.details'].sudo().search([('batch','=',batch.id),('exam_type','=','quarterly')])
     quart_percents = ['25','50','75','100']
     exam_data = {'exam_datasets':[]}
-
-    for quart_percent in quart_percents:
-        exam_rec = self.env['exam.details'].sudo().search([('batch','=',batch.id),('exam_type','=','quarterly'),('quart_percent','=',quart_percent)])
+    exams = self.env['exam.details'].sudo().search([('batch','=',batch.id)])
+    for exam_rec in exams:
         if exam_rec:
             exam_dataset = {
                 'type':'bar',
-                'label': quart_percent + '% Exam',
+                'label': exam_rec.name,
                 'fill': True,
                 'barPercentage': 0.5,
                 # 'barThickness': 60,
@@ -166,7 +165,7 @@ def get_exam_data(self,batch):
                 'backgroundColor': rgba_colors.pop(random.randint(0,20)),
                 'borderColor': rgba_colors.pop(random.randint(0,20)),
                 'borderWidth': 1,
-                'data': get_quart_exam_pass_fail_percent(self,exam_rec[0])
+                'data': get_exam_pass_fail_percent(self,exam_rec)
             }
             exam_data['exam_datasets'].append(exam_dataset)
     return exam_data
@@ -179,7 +178,7 @@ def get_one_to_one_data(self,batch):
         if one_to_one_count>0:
             attendance_data['total_conducted']+=1
     return attendance_data
-def get_quart_exam_pass_fail_percent(self,exam_rec):
+def get_exam_pass_fail_percent(self,exam_rec):
     pass_count = 0
     fail_count = 0
     for result in exam_rec.student_results:

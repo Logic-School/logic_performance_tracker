@@ -151,14 +151,14 @@
     
                                         <!-- <td t-esc="exec_performance['average_rating']"/> -->
                                         <t t-set="star_count" t-value="Math.round(values['common_task_performances'][employee]['combined_rating'])"/>
-                                        <td>
-                                            <t t-foreach="Array.from(Array(star_count).keys())" t-as="star_ind">
+                                        <td class="text-center">
+                                            <!-- <t t-foreach="Array.from(Array(star_count).keys())" t-as="star_ind">
                                                 <span class="fa fa-star checked"></span>
                                             </t>
                                             <t t-foreach="Array.from(Array(5-star_count).keys())" t-as="star_ind">
                                                 <span class="fa fa-star"></span>
-                                            </t>
-                                            <span class="ml-2" t-esc="values['common_task_performances'][employee]['combined_rating']"/>
+                                            </t> -->
+                                            <span class="" t-esc="values['common_task_performances'][employee]['combined_rating']"/>
                                         </td>
                                         <td style="color: green" t-esc="values['common_task_performances'][employee]['score']" class="text-center"/>
     
