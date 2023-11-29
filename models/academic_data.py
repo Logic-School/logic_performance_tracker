@@ -143,6 +143,7 @@ def get_attendance_data(self,batch):
                     attendance_count+=0.5
             student_attendance_avg = round(attendance_count/len(attendance_recs),2)
         attendance_data['average_attendance']+=student_attendance_avg
+    attendance_data['average_attendance'] = round(attendance_data['average_attendance'],2)
     return attendance_data
 
 
