@@ -5,13 +5,17 @@ def get_employee_leave_data(self,employee,start_date=False,end_date=False):
     logger = logging.getLogger("Leave debug: ")
     employee_data = {}
     leave_types = self.env['hr.leave.type'].sudo().search([])
-    for leave_type in leave_types:
-        employee_data[leave_type.name] = {'taken_leaves':0}
+    # for leave_type in leave_types:
+    #     employee_data[leave_type.name] = {'taken_leaves':0}
+
     leave_objs = self.env['hr.leave'].sudo().search([('state','=','validate'),('employee_id','=',employee.id)])
-    if start_date or end_date:
-        leave_objs.filtered(lambda leave: leave.date_from.date() >= start_date and leave.date_from.date() <= end_date)
-    
+
+    if start_date and end_date:
+        leave_objs = leave_objs.filtered(lambda leave_obj: leave_obj.date_from.date() >= start_date and leave_obj.date_from.date() <= end_date)
+
     for leave in leave_objs:
+        if not employee_data.get(leave.holiday_status_id.name):
+            employee_data[leave.holiday_status_id.name] = {'taken_leaves':0}
         leave_days = leave.number_of_days
         if start_date and end_date:
             if leave.date_to.date() > end_date:
