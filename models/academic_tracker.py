@@ -105,7 +105,7 @@ class AcademicTracker(models.Model):
 
         logger.error("dashboard_data['other_performances'] "+str(dashboard_data['other_performances']))
 
-
+        dashboard_data['department_name'] = employees[0].department_id.name
         dashboard_data['org_datas'],dashboard_data['dept_names'] = actions_common.get_org_datas_dept_names(manager,managers)
         return dashboard_data
     
