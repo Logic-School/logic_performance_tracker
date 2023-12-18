@@ -219,7 +219,7 @@ class LogicEmployeePerformance(models.Model):
         batches = []
         for batch_obj in batch_objs:
             batch = {'id':batch_obj.id,'name':batch_obj.name}
-            batch['strength'] = self.env['logic.students'].sudo().search_count([('batch_id','=',batch_obj.id),('current_status','=',True)])
+            batch['strength'] = self.env['logic.students'].sudo().search_count([('batch_id','=',batch_obj.id)])
             batches.append(batch)
         return batches
     
