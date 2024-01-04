@@ -88,7 +88,7 @@
               action="open_perf_tracker_action"
               sequence="6"
               web_icon="logic_performance_tracker/static/description/icon.png"
-              groups="group_perf_academic_head,group_perf_digital_head,group_perf_admin,group_perf_marketing_head"
+              groups="group_perf_academic_head,group_perf_digital_head,group_perf_admin,group_perf_marketing_head,group_perf_crash_head,group_perf_residential_head,group_perf_sales_head,group_perf_accounts_head"
               />
     <menuitem name="Digital" id="menu_digital_performance"
               sequence="9"

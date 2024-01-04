@@ -10,7 +10,10 @@ class StateAction(models.Model):
 
     # @api.model
     def perf_tracker_open_action(self):
-        if self.env.user.has_group('logic_performance_tracker.group_perf_admin'):
+        if self.env.user.has_group('logic_performance_tracker.group_perf_crash_head'):
+            action = self.env.ref("logic_performance_tracker.crash_performance_action").sudo().read()[0]
+            return action
+        elif self.env.user.has_group('logic_performance_tracker.group_perf_admin'):
             action = self.env.ref("logic_performance_tracker.tracker_dashboard_action").sudo().read()[0]
             return action
         elif self.env.user.has_group('logic_performance_tracker.group_perf_digital_head'):
@@ -28,9 +31,7 @@ class StateAction(models.Model):
         elif self.env.user.has_group('logic_performance_tracker.group_perf_accounts_head'):
             action = self.env.ref("logic_performance_tracker.accounts_performance_action").sudo().read()[0]
             return action
-        elif self.env.user.has_group('logic_performance_tracker.group_perf_crash_head'):
-            action = self.env.ref("logic_performance_tracker.crash_performance_action").sudo().read()[0]
-            return action
+
         elif self.env.user.has_group('logic_performance_tracker.group_perf_residential_head'):
             action = self.env.ref("logic_performance_tracker.residential_performance_action").sudo().read()[0]
             return action
