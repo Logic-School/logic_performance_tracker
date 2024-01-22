@@ -19,7 +19,7 @@
     'qweb': [
         "static/src/xml/dashboard_templates.xml",
         "static/src/xml/academic_templates.xml",
-        "static/src/xml/digital_templates.xml"
+        "static/src/xml/digital_templates.xml",
              ],
     'assets': {
         'web.assets_backend': [

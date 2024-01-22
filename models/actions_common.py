@@ -22,11 +22,18 @@ class StateAction(models.Model):
         elif self.env.user.has_group('logic_performance_tracker.group_perf_academic_head'):
             action = self.env.ref("logic_performance_tracker.academic_performance_action").sudo().read()[0]
             return action
+        elif self.env.user.has_group('logic_performance_tracker.group_perf_operations_head'):
+            action = self.env.ref("logic_performance_tracker.operations_performance_action").sudo().read()[0]
+            return action
+
         elif self.env.user.has_group('logic_performance_tracker.group_perf_marketing_head'):
             action = self.env.ref("logic_performance_tracker.marketing_performance_action").sudo().read()[0]
             return action
         elif self.env.user.has_group('logic_performance_tracker.group_perf_sales_head'):
             action = self.env.ref("logic_performance_tracker.sales_performance_action").sudo().read()[0]
+            return action
+        elif self.env.user.has_group('logic_performance_tracker.group_perf_it_head'):
+            action = self.env.ref("logic_performance_tracker.it_performance_action").sudo().read()[0]
             return action
         elif self.env.user.has_group('logic_performance_tracker.group_perf_accounts_head'):
             action = self.env.ref("logic_performance_tracker.accounts_performance_action").sudo().read()[0]
@@ -35,11 +42,14 @@ class StateAction(models.Model):
         elif self.env.user.has_group('logic_performance_tracker.group_perf_residential_head'):
             action = self.env.ref("logic_performance_tracker.residential_performance_action").sudo().read()[0]
             return action
+        elif self.env.user.has_group('logic_performance_tracker.group_perf_hr_head'):
+            action = self.env.ref("logic_performance_tracker.hr_performance_action").sudo().read()[0]
+            return action
         else:
             raise UserError("You do not have access to this application!")
         
     @api.model
-    def get_performance_report_pdf(self,html_template,employee_name):
+    def get_performance_report_pdf(self,html_template, employee_name):
         logger = logging.getLogger('PDF Debug: ')
         options = {'enable-local-file-access': None, 'page-size':'A4','encoding': "UTF-8"}
         pdfkit.from_string(html_template,'/tmp/performance.pdf',options=options)
@@ -51,17 +61,22 @@ class StateAction(models.Model):
     @api.model
     def retrieve_dashboard_data(self):
         dashboard_data = {}
-        sales_department_obj = self.env['hr.department'].sudo().search([('name','=','Sales')])
-        sales_dept_childs = self.env['hr.department'].sudo().search([('parent_id','=',sales_department_obj[0].id)])
+        sales_department_obj = self.env['hr.department'].sudo().search([('name', '=', 'Sales')])
+        sales_dept_childs = self.env['hr.department'].sudo().search([('parent_id', '=', sales_department_obj[0].id)])
         dashboard_data['sales_employees_count'] = self.env['hr.employee'].sudo().search_count([('department_id','in',sales_dept_childs.ids)])
+
+        it_department_obj = self.env['hr.department'].sudo().search([('name', '=', 'IT')])
+        it_dept_childs = self.env['hr.department'].sudo().search([('parent_id', '=', it_department_obj[0].id)])
+        dashboard_data['it_employees_count'] = self.env['hr.employee'].sudo().search_count(
+            [('department_id', 'in', it_dept_childs.ids)])
 
         academic_department_obj = self.env['hr.department'].sudo().search([('name','=','ACADEMICS')])
         academic_dept_childs = self.env['hr.department'].sudo().search([('parent_id','=',academic_department_obj[0].id)])
         dashboard_data['academic_employees_count'] = self.env['hr.employee'].sudo().search_count([('department_id','in',academic_dept_childs.ids)])
 
         digital_department_obj = self.env['hr.department'].sudo().search([('name','=','Digital')])
-        # digital_dept_childs = self.env['hr.department'].sudo().search([('parent_id','=',digital_department_obj[0].id)])
-        dashboard_data['digital_employees_count'] = self.env['hr.employee'].sudo().search_count([('department_id','=',digital_department_obj.id)])
+        digital_dept_childs = self.env['hr.department'].sudo().search([('parent_id','=',digital_department_obj[0].id)])
+        dashboard_data['digital_employees_count'] = self.env['hr.employee'].sudo().search_count([('department_id','in',digital_dept_childs.ids)])
 
         marketing_department_obj = self.env['hr.department'].sudo().search([('name','=','Marketing')])
         marketing_dept_childs = self.env['hr.department'].sudo().search([('parent_id','=',marketing_department_obj[0].id)])
@@ -74,12 +89,22 @@ class StateAction(models.Model):
         crash_department_obj = self.env['hr.department'].sudo().search([('name','=','Crash')])
         crash_dept_childs = self.env['hr.department'].sudo().search([('parent_id','=',crash_department_obj[0].id)])
         dashboard_data['crash_employees_count'] = self.env['hr.employee'].sudo().search_count([('department_id','in',crash_dept_childs.ids)])
+
+        operations_department_obj = self.env['hr.department'].sudo().search([('name', '=', 'Operations')])
+        operations_dept_childs = self.env['hr.department'].sudo().search([('parent_id', '=', operations_department_obj[0].id)])
+        dashboard_data['operations_employees_count'] = self.env['hr.employee'].sudo().search_count(
+            [('department_id', 'in', operations_dept_childs.ids)])
+
+        hr_department_obj = self.env['hr.department'].sudo().search([('name', '=', 'HR')])
+        hr_dept_childs = self.env['hr.department'].sudo().search(
+            [('parent_id', '=', hr_department_obj[0].id)])
+        dashboard_data['hr_employees_count'] = self.env['hr.employee'].sudo().search_count(
+            [('department_id', 'in', hr_dept_childs.ids)])
         
         residential_department_obj = self.env['hr.department'].sudo().search([('name','=','Residential')])
         residential_dept_childs = self.env['hr.department'].sudo().search([('parent_id','=',residential_department_obj[0].id)])
         dashboard_data['residential_employees_count'] = self.env['hr.employee'].sudo().search_count([('department_id','in',residential_dept_childs.ids)])
-        
-    
+
         return dashboard_data
 
 def get_date_obj_from_string(from_date,end_date):
@@ -120,7 +145,7 @@ def get_manager_managers_heads_data(self,department_obj,manager_id=False):
         elif department_obj:
 
             managers = self.env['hr.employee'].sudo().search([('id','in',[dept_head.id for dept_head in dept_heads])])
-            
+
             logger.error("managers")
             logger.error(managers)
             logger.error("department childs: "+str(department_obj[0].child_ids))
@@ -129,7 +154,7 @@ def get_manager_managers_heads_data(self,department_obj,manager_id=False):
     else:
         manager = self.env.user.employee_id
         heads_data = [{'head_id':manager.id,'name':manager.name}]
-        
+
     return manager,managers,heads_data
 
 def get_employees(self,department_obj,manager=False,managers=False):
@@ -157,7 +182,7 @@ def create_employee_qualitative_performance(self,qualitatives,employee):
         qualitative_average = round(qualitative_average/len(qualitatives[employee.name].keys()), 2)
         logger.error("qual aver: "+str(qualitative_average))
     logger.error("qual values: "+str(qualitative_values))
-    
+
     emp_qual_obj = self.env['employee.qualitative.performance'].sudo().search([('employee','=',employee.id)])
     if emp_qual_obj:
         emp_qual_obj.write({
@@ -188,7 +213,7 @@ def get_ordered_qualitative_data(self,qualitatives,employees):
             qualitatives[qualitative_overall_obj.employee.name] = {}
     logger.error("qualitative_overall_average_datas: "+str(qualitative_overall_average_datas))
     logger.error("dashboard_data['qualitatives']: "+str(qualitatives))
-    return qualitatives,qualitative_overall_average_datas 
+    return qualitatives,qualitative_overall_average_datas
 
 def get_org_datas_dept_names(manager,managers):
     if managers:
@@ -205,7 +230,7 @@ def get_miscellaneous_performances(self,employees,start_date,end_date):
     else:
         other_performances =  self.env['logic.task.other'].retrieve_performance(employees)
     return other_performances
-    
+
 def get_academic_windows(self,employee):
     academic_windows = self.env['logic.base.batch'].sudo().fields_get()['batch_window']['selection']
     academic_windows_data = []
@@ -271,7 +296,7 @@ def get_academic_domains(self,department_obj,start_date=False,end_date=False,man
             logger.error("employees: "+str(employees))
             employee_user_ids = employees.mapped('user_id.id')
         logger.error("employee_user_ids: "+str(employee_user_ids))
-        
+
         upaya_domain.extend([('coordinator_id','in',employee_user_ids),('coordinator_id','!=',False)])
         yes_plus_domain.extend([('coordinator_id','in',employee_user_ids),('coordinator_id','!=',False)])
         sfc_domain.extend([('coordinator','in',employee_user_ids),('coordinator','!=',False)])

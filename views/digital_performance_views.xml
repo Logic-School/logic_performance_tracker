@@ -17,21 +17,26 @@
             <script type="text/javascript" src="/logic_performance_tracker/static/src/js/sales_performance.js"/>
             <script type="text/javascript" src="/logic_performance_tracker/static/src/js/accounts_performance.js"/>
             <script type="text/javascript" src="/logic_performance_tracker/static/src/js/crash_performance.js"/>
+            <script type="text/javascript" src="/logic_performance_tracker/static/src/js/it_performance.js"/>
+            <script type="text/javascript" src="/logic_performance_tracker/static/src/js/operations_performance.js"/>
             <script type="text/javascript" src="/logic_performance_tracker/static/src/js/residential_performance.js"/>
-
             <script type="text/javascript" src="/logic_performance_tracker/static/src/js/employee_performance.js"/>
+            <script type="text/javascript" src="/logic_performance_tracker/static/src/js/hr_templates.js"/>
+
             <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
 
 
+            <link rel="stylesheet" type="text/css"
+                  href="/logic_performance_tracker/static/src/css/dashboard_card_view.css"/>
+            <link rel="stylesheet" type="text/css"
+                  href="/logic_performance_tracker/static/src/css/lib/jquery.orgchart.css"/>
 
-            <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/dashboard_card_view.css"/>
-            <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/lib/jquery.orgchart.css"/>
-
-            <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/orgchart_styles.css"/>
+            <link rel="stylesheet" type="text/css"
+                  href="/logic_performance_tracker/static/src/css/orgchart_styles.css"/>
             <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/other_styles.css"/>
-        <!-- <script type="text/javascript" src="https://balkan.app/js/orgchart.js"></script> -->
+            <!-- <script type="text/javascript" src="https://balkan.app/js/orgchart.js"></script> -->
 
-        <!-- <link rel="stylesheet" type="text/scss" href="/logic_performance_tracker/static/src/scss/dashboard_card_view.scss"/> -->
+            <!-- <link rel="stylesheet" type="text/scss" href="/logic_performance_tracker/static/src/scss/dashboard_card_view.scss"/> -->
         </xpath>
     </template>
 
@@ -52,6 +57,21 @@
     <record id="digital_performance_action" model="ir.actions.client">
         <field name="name">Digital</field>
         <field name="tag">digital_dashboard</field>
+    </record>
+
+    <record id="hr_performance_action" model="ir.actions.client">
+        <field name="name">HR</field>
+        <field name="tag">hr_dashboard_tracker_performance</field>
+    </record>
+
+    <record id="operations_performance_action" model="ir.actions.client">
+        <field name="name">Operations</field>
+        <field name="tag">operations_dashboard</field>
+    </record>
+
+    <record id="it_performance_action" model="ir.actions.client">
+        <field name="name">IT</field>
+        <field name="tag">it_dashboard</field>
     </record>
 
     <record id="academic_performance_action" model="ir.actions.client">
@@ -89,62 +109,77 @@
               sequence="6"
               web_icon="logic_performance_tracker/static/description/icon.png"
               groups="group_perf_academic_head,group_perf_digital_head,group_perf_admin,group_perf_marketing_head,group_perf_crash_head,group_perf_residential_head,group_perf_sales_head,group_perf_accounts_head"
-              />
+    />
     <menuitem name="Digital" id="menu_digital_performance"
               sequence="9"
               parent="menu_performance_tracker"
               action="digital_performance_action"
               groups="group_perf_digital_head,group_perf_admin"
-              />
+    />
+    <menuitem name="IT" id="menu_it_performance"
+              sequence="9"
+              parent="menu_performance_tracker"
+              action="it_performance_action"
+    />
     <menuitem name="Academic" id="menu_academic_performance"
               sequence="9"
               parent="menu_performance_tracker"
               action="academic_performance_action"
               groups="group_perf_academic_head,group_perf_admin"
-              />
+    />
 
     <menuitem name="Marketing" id="menu_marketing_performance"
               sequence="9"
               parent="menu_performance_tracker"
               action="marketing_performance_action"
               groups="group_perf_marketing_head,group_perf_admin"
-              />
+    />
 
     <menuitem name="Sales" id="menu_sales_performance"
               sequence="9"
               parent="menu_performance_tracker"
               action="sales_performance_action"
               groups="group_perf_sales_head,group_perf_admin"
-              />
+    />
 
     <menuitem name="Accounts" id="menu_accounts_performance"
               sequence="9"
               parent="menu_performance_tracker"
               action="accounts_performance_action"
               groups="group_perf_accounts_head,group_perf_admin"
-              />
+    />
 
     <menuitem name="Crash" id="menu_crash_performance"
               sequence="9"
               parent="menu_performance_tracker"
               action="crash_performance_action"
               groups="group_perf_crash_head,group_perf_admin"
-              />
+    />
+
+    <menuitem name="HR" id="menu_hr_performance"
+              sequence="9"
+              parent="menu_performance_tracker"
+              action="hr_performance_action"
+              groups="group_perf_admin"
+    />
 
     <menuitem name="Residential" id="menu_residential_performance"
               sequence="9"
               parent="menu_performance_tracker"
               action="residential_performance_action"
               groups="group_perf_residential_head,group_perf_admin"
-              />
+    />
+    <menuitem name="Operations" id="menu_operations_performance"
+              sequence="9"
+              parent="menu_performance_tracker"
+              action="operations_performance_action"
+              groups="group_perf_admin"
+    />
     <!-- <menuitem name="Tasks" id="menu_digital_performance_tasks"
               sequence="9"
               parent="menu_digital_performance"
               action="digital_performance_action"
               /> -->
 
-
-
-              
 
 </odoo>

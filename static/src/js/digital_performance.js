@@ -1,5 +1,6 @@
 odoo.define('logic_performance_tracker.digital_dashboard', function (require) {
     "use strict";
+    console.log('digital')
     
     const ActionMenus = require('web.ActionMenus');
     const ComparisonMenu = require('web.ComparisonMenu');

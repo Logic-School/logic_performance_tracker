@@ -78,10 +78,10 @@ class AcademicTracker(models.Model):
 
             actions_common.create_employee_qualitative_performance(self,dashboard_data['qualitatives'],employee)
 
-        academic_coord_perfs = self.env['academic.coordinator.performance'].sudo().search([('employee','in',employees.ids)])
+        academic_coord_perfs = self.env['academic.coordinator.performance'].sudo().search([('employee', 'in', employees.ids)])
         logger.error(academic_coord_perfs)
         for coord_perf in academic_coord_perfs:
-            emp_id_name = str(coord_perf.employee.id)+" "
+            emp_id_name = str(coord_perf.employee.id) + " "
             employees_data[emp_id_name] = {}
             employees_data[emp_id_name]['name'] = coord_perf.employee.name
             employees_data[emp_id_name]['upaya_count'] = coord_perf.upaya_count

@@ -87,7 +87,7 @@ class SalesTracker(models.Model):
         logger.error("employee_ids: "+str(employee_ids))
         logger.error("lead_source_id: "+str(lead_source_id))
 
-        lead_domain = [('leads_source','=',int(lead_source_id)),('leads_assign','in',employee_ids)]
+        lead_domain = [('leads_source','=',int(lead_source_id)), ('course_type','!=','crash'),('leads_assign','in',employee_ids)]
         
         # month,year = self.get_leads_month_year(start_date,end_date)
         leads = self.env['leads.logic'].sudo().search(lead_domain)
@@ -181,7 +181,7 @@ class SalesTracker(models.Model):
         warm_lead_count = 0
         cold_lead_count = 0
 
-        lead_domain = [('leads_source','=',lead_source.id),('leads_assign','=',employee.id)]
+        lead_domain = [('leads_source','=',lead_source.id), ('course_type','!=','crash'),('leads_assign','=',employee.id)]
 
         leads = self.env['leads.logic'].sudo().search(lead_domain)
 
@@ -249,7 +249,7 @@ class SalesTracker(models.Model):
         hot_lead_count = 0
         warm_lead_count = 0
         cold_lead_count = 0
-        lead_domain = [('base_course_id','!=',False),('base_course_id','=',course.id),('leads_assign','=',employee.id)]
+        lead_domain = [('base_course_id','!=',False),('course_type','!=','crash'),('base_course_id','=',course.id),('leads_assign','=',employee.id)]
         leads = self.env['leads.logic'].sudo().search(lead_domain)
         month,year = self.get_leads_month_year(start_date,end_date)
         
@@ -308,7 +308,7 @@ class SalesTracker(models.Model):
             year = date.today().year
             month = date.today().month
         
-        leads = self.env['leads.logic'].sudo().search([('leads_assign','=',employee.id),('admission_status','=',True),('admission_date','!=',False)])
+        leads = self.env['leads.logic'].sudo().search([('leads_assign','=',employee.id),('course_type','!=','crash'),('admission_status','=',True),('admission_date','!=',False)])
 
         year_lead_target_obj = self.env['leads.target'].sudo().search([('year','=',year),('user_id','=',employee.user_id.id)])
         if year_lead_target_obj:
@@ -352,27 +352,29 @@ class SalesTracker(models.Model):
         cold_lead_count = 0
 
         for lead_without_admission in leads_without_admission:
-            leads_count+=1
-            if lead_without_admission.lead_quality=='hot':
-                hot_lead_count+=1
-            elif lead_without_admission.lead_quality=='warm':
-                warm_lead_count+=1
-            elif lead_without_admission.lead_quality=='cold':
-                cold_lead_count+=1
+            if lead_without_admission.course_type != 'crash':
+                leads_count+=1
+                if lead_without_admission.lead_quality=='hot':
+                    hot_lead_count+=1
+                elif lead_without_admission.lead_quality=='warm':
+                    warm_lead_count+=1
+                elif lead_without_admission.lead_quality=='cold':
+                    cold_lead_count+=1
 
         for lead_with_admission in leads_with_admission:
-            leads_count+=1
-            if lead_with_admission.lead_quality=='hot':
-                hot_lead_count+=1
-            elif lead_with_admission.lead_quality=='warm':
-                warm_lead_count+=1
-            elif lead_with_admission.lead_quality=='cold':
-                cold_lead_count+=1
-            if month:
-                if lead_with_admission.admission_date.month==month and lead_with_admission.admission_date.year==year:
+            if lead_with_admission.course_type != 'crash':
+                leads_count+=1
+                if lead_with_admission.lead_quality=='hot':
+                    hot_lead_count+=1
+                elif lead_with_admission.lead_quality=='warm':
+                    warm_lead_count+=1
+                elif lead_with_admission.lead_quality=='cold':
+                    cold_lead_count+=1
+                if month:
+                    if lead_with_admission.admission_date.month==month and lead_with_admission.admission_date.year==year:
+                        converted_lead_count+=1
+                else:
                     converted_lead_count+=1
-            else:
-                converted_lead_count+=1
 
         if leads_count>0:
             lead_conversion_rate = 100 * round(converted_lead_count/leads_count,3)

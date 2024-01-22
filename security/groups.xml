@@ -10,6 +10,18 @@
             <field name="name">Academic Head</field>
             <field name="category_id" ref="module_performance_tracker"/>
         </record>
+        <record id="group_perf_operations_head" model="res.groups">
+            <field name="name">Operations Head</field>
+            <field name="category_id" ref="module_performance_tracker"/>
+        </record>
+         <record id="group_perf_hr_head" model="res.groups">
+            <field name="name">HR Head</field>
+            <field name="category_id" ref="module_performance_tracker"/>
+        </record>
+        <record id="group_perf_it_head" model="res.groups">
+            <field name="name">IT Head</field>
+            <field name="category_id" ref="module_performance_tracker"/>
+        </record>
         <record id="group_perf_digital_head" model="res.groups">
             <field name="name">Digital Head</field>
             <field name="category_id" ref="module_performance_tracker"/>
