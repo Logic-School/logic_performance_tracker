@@ -408,7 +408,7 @@
                                     <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/miscellaneous.png"/></div>
                                     <div class="stat-content">
                                         <div class="stat-text">Miscellaneous</div>
-                                        <div class="stat-digit"><t t-esc="values['common_performance']['completed_misc_count']"/></div>
+                                        <div class="stat-digit"><t t-esc="values['common_performance']['misc_task_count']"/></div>
                                     </div>
                                 </div>
                             </div>
@@ -422,7 +422,7 @@
                                     <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/to_do.png"/></div>
                                     <div class="stat-content">
                                         <div class="stat-text">To Do</div>
-                                        <div class="stat-digit"><t t-esc="values['common_performance']['completed_to_do_count']"/></div>
+                                        <div class="stat-digit"><t t-esc="values['common_performance']['to_do_count']"/></div>
                                     </div>
                                 </div>
                             </div>

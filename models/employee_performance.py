@@ -475,22 +475,24 @@ class LogicEmployeePerformance(models.Model):
         common_performance = self.env['logic.common.task.performance'].sudo().create_employee_common_task_performance(employee,start_date,end_date)
         # common_performance = {}
         # common_performance['qualitative_rating'] = 0
-        
+        #
         # qualitatives = actions_common.get_raw_qualitative_data(self,employee,start_date,end_date)
         # actions_common.create_employee_qualitative_performance(self,qualitatives,employee)
+        #
+        qualitative_perf = self.env['employee.qualitative.performance'].sudo().search([('employee','=',employee.id)])
+        if qualitative_perf:
+            common_performance['qualitative_rating'] = qualitative_perf[0].overall_average
 
-        # qualitative_perf = self.env['employee.qualitative.performance'].sudo().search([('employee','=',employee.id)])
-        # if qualitative_perf:
-        #     common_performance['qualitative_rating'] = qualitative_perf[0].overall_average
-        
-        # misc_domain = [('task_creator','=',employee.user_id.id),('state','=','completed')]
-        # to_do_domain = [('state','=','completed'),'|',('assigned_to','=',employee.user_id.id),('coworkers_ids','in',[employee.user_id.id] ), ('state','=','completed')]
-        # if start_date and end_date:
-        #     misc_domain.extend([('date_completed','>=',start_date),('date_completed','<=',end_date)])
-        #     to_do_domain.extend([('completed_date','>=',start_date),('completed_date','<=',end_date)])
+        misc_domain = [('task_creator','=',employee.user_id.id),('state','=','completed')]
+        to_do_domain = [('state','=','completed'),'|',('assigned_to','=',employee.user_id.id),('coworkers_ids','in',[employee.user_id.id] ), ('state','=','completed')]
+        if start_date and end_date:
+            misc_domain.extend([('date_completed','>=',start_date),('date_completed','<=',end_date)])
+            to_do_domain.extend([('completed_date','>=',start_date),('completed_date','<=',end_date)])
 
-        # common_performance['misc_task_count'] = self.env['logic.task.other'].sudo().search_count(misc_domain)    
-        # common_performance['to_do_count'] = self.env['to_do.tasks'].sudo().search_count(to_do_domain)        
+        common_performance['misc_task_count'] = self.env['logic.task.other'].sudo().search_count(misc_domain)
+        common_performance['to_do_count'] = self.env['to_do.tasks'].sudo().search_count(to_do_domain)
+        # print(common_performance, 'print delayed')
+        # print(common_performance, 'print completed')
             
         return common_performance
     
