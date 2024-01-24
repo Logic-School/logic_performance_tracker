@@ -102,8 +102,8 @@ class StateAction(models.Model):
         dashboard_data['hr_employees_count'] = self.env['hr.employee'].sudo().search_count(
             [('department_id', 'in', hr_dept_childs.ids)])
         
-        residential_department_obj = self.env['hr.department'].sudo().search([('name','=','Residential')])
-        residential_dept_childs = self.env['hr.department'].sudo().search([('parent_id','=',residential_department_obj[0].id)])
+        residential_department_obj = self.env['hr.department'].sudo().search([('name', '=', 'Residential')])
+        residential_dept_childs = self.env['hr.department'].sudo().search([('parent_id', '=', residential_department_obj[0].id)])
         dashboard_data['residential_employees_count'] = self.env['hr.employee'].sudo().search_count([('department_id','in',residential_dept_childs.ids)])
 
         return dashboard_data

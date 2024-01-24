@@ -491,9 +491,9 @@ class LogicEmployeePerformance(models.Model):
 
         common_performance['misc_task_count'] = self.env['logic.task.other'].sudo().search_count(misc_domain)
         common_performance['to_do_count'] = self.env['to_do.tasks'].sudo().search_count(to_do_domain)
-        # print(common_performance, 'print delayed')
-        # print(common_performance, 'print completed')
-            
+        print(common_performance, 'print delayed')
+        print(common_performance, 'print completed')
+
         return common_performance
     
     def get_digital_performance_data(self,employee,start_date=False,end_date=False):

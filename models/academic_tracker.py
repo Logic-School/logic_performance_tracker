@@ -21,15 +21,9 @@ class AcademicTracker(models.Model):
 
         if not manager_id:
             manager_id = department_obj.child_ids[0].manager_id.id
-
         manager,managers,department_heads_data = actions_common.get_manager_managers_heads_data(self,department_obj,manager_id)
-
         employees = actions_common.get_employees(self,department_obj,manager,managers)
-
-
-
         academic_domains = actions_common.get_academic_domains(self,department_obj=department_obj,start_date=start_date,end_date=end_date,manager=manager,managers=managers,employee_user_ids=employees.mapped('user_id.id'))
-
         academic_counts = actions_common.get_academic_counts(self,academic_domains)
         dashboard_data = {
             'upaya_count':academic_counts['upaya_count'],

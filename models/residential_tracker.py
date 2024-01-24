@@ -21,7 +21,7 @@ class ResidentialTracker(models.Model):
         manager,managers,department_heads_data = actions_common.get_manager_managers_heads_data(self,department_obj,manager_id)
 
         employees = actions_common.get_employees(self,department_obj,manager,managers)
-        
+
         dashboard_data['department_heads'] = department_heads_data
 
         dashboard_data['qualitatives'] = actions_common.get_raw_qualitative_data(self,employees,start_date,end_date)
