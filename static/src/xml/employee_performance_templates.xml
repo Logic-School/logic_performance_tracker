@@ -140,7 +140,7 @@
                                                         <span class="label1 font-weight-normal">: </span>
 
                                                         <span class="number-value" t-esc="values['common_performance']['completed_misc_count']"/>
-                                                        <span class="" t-esc="' ( '+values['common_performance']['delayed_misc_count'] + ' Delayed )'"/>    
+                                                        <span class="" t-esc="' ('+values['common_performance']['delayed_misc_count'] + ' Delayed )'"/>
                                                     </div>
 
                                                 </div>
@@ -152,7 +152,7 @@
                                                     <div class="col-5 ml-0 mr-0 p-0">
                                                         <span class="label1 font-weight-normal">: </span>
 
-                                                        <span class="number-value" t-esc="values['common_performance']['completed_to_do_count']"/>
+                                                        <span class="number-value" t-esc="values['common_performance']['to_do_count']"/>
                                                         <span class="" t-esc="' ( '+values['common_performance']['delayed_to_do_count'] + ' Delayed )'"/>
                                                     </div>
 

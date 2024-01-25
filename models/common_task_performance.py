@@ -95,7 +95,6 @@ class CommonTaskPerformance(models.Model):
 
         return values           
 
-    
     def get_employee_common_task_performances(self,employees):
         logger = logging.getLogger("Common perf debug: ")
         logger.error("emps: "+str(employees.mapped('name')))
