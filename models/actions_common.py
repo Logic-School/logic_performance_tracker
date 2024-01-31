@@ -375,3 +375,76 @@ def get_day_month_year_from_timedelta(timedelta):
     days = remaining_days % 30
 
     return days, months, years
+
+def get_employee_personal_to_do(self, employee, start_date=False, end_date=False):
+    logger = logging.getLogger("To do debug: ")
+    print(start_date, end_date, 'dates')
+    personal_to_do = {}
+    to_do_domain = [('state', '=', 'completed'), '|', ('assigned_to', '=', employee.user_id.id),
+                    ('coworkers_ids', 'in', [employee.user_id.id]), ('state', '=', 'completed')]
+
+    common_performance = self.env['to_do.tasks'].sudo().search(to_do_domain)
+    if start_date and end_date:
+        common_performance = common_performance.filtered(lambda filtered_to_do: filtered_to_do.assigned_date >= start_date and filtered_to_do.assigned_date <= end_date)
+    for j in common_performance:
+        print(j.name, 'common performance')
+        if not personal_to_do.get(j.name):
+            personal_to_do[j.name] = {'state': 'null'}
+        state = j.state
+        assigned_date = j.assigned_date
+        rating = j.rating
+        completed_date = j.completed_date
+        if start_date and end_date:
+            print(start_date, end_date, 'dates')
+            if start_date <= assigned_date <= end_date:
+                print(j.name, 'common performance filterd')
+                personal_to_do[j.name]['state'] = j.state
+                personal_to_do[j.name]['assigned_date'] = assigned_date
+                personal_to_do[j.name]['rating'] = rating
+                personal_to_do[j.name]['completed_date'] = completed_date
+        else:
+            print('not')
+            personal_to_do[j.name]['state'] = state
+            personal_to_do[j.name]['assigned_date'] = assigned_date
+            personal_to_do[j.name]['rating'] = rating
+            personal_to_do[j.name]['completed_date'] = completed_date
+
+
+
+
+    #
+    #     # personal_to_do[j[0]] = j[1],
+    #     # personal_to_do[1] = j.state
+    #
+    #     # personal_to_do['state'] = j.state
+    #     print(personal_to_do, 'ooo')
+    return personal_to_do
+
+def get_employee_personal_misc(self, employee, start_date=False, end_date=False):
+    personal_misc = {}
+    misc_domain = [('task_creator', '=', employee.user_id.id), ('state', '=', 'completed')]
+
+    misc_performance = self.env['logic.task.other'].sudo().search(misc_domain)
+    if start_date and end_date:
+        common_performance = misc_performance.filtered(lambda filtered_misc: filtered_misc.date >= start_date and filtered_misc.date <= end_date)
+    for j in misc_performance:
+
+        if not personal_misc.get(j.name):
+            personal_misc[j.name] = {'state': 'null'}
+        state = j.state
+        date = j.date
+        task_submission_status = j.task_submission_status
+        if start_date and end_date:
+
+            if start_date <= date <= end_date:
+                print(j.name, 'common performance filterd')
+                personal_misc[j.name]['state'] = j.state
+                personal_misc[j.name]['assigned_date'] = date
+                personal_misc[j.name]['task_submission_status'] = task_submission_status
+        else:
+
+            personal_misc[j.name]['state'] = state
+            personal_misc[j.name]['date'] = date
+            personal_misc[j.name]['task_submission_status'] = task_submission_status
+    print('misc')
+    return personal_misc

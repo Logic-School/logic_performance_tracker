@@ -413,7 +413,6 @@ class LogicEmployeePerformance(models.Model):
             employee_leads_data['month_year_leads_target'] = year_target_data['month_year_leads_target']
             employee_leads_data['month_year_converted_leads_count'] = year_target_data['month_year_converted_leads_count']
 
-
             employee_leads_data['leads_count'] = self.env['sales.tracker'].get_employee_lead_count(employee,start_date,end_date)            
             return employee_leads_data
         else:
@@ -491,7 +490,10 @@ class LogicEmployeePerformance(models.Model):
 
         common_performance['misc_task_count'] = self.env['logic.task.other'].sudo().search_count(misc_domain)
         common_performance['to_do_count'] = self.env['to_do.tasks'].sudo().search_count(to_do_domain)
-        print(common_performance, 'print delayed')
+        common_performance['to_do_tasks'] = self.env['to_do.tasks'].sudo().search(to_do_domain)
+        print(common_performance['to_do_tasks'], 'to do tasks')
+        for j in common_performance['to_do_tasks']:
+            print(j.name)
         print(common_performance, 'print completed')
 
         return common_performance
@@ -596,4 +598,3 @@ class LogicEmployeePerformance(models.Model):
             b64_pdf = pdf_reports.pdf_to_base64(pdf_data)
             logger.error("b64pdf"+str(type(b64_pdf)))
             return {'pdf_b64':b64_pdf, 'filename': str(employee_name)+'.pdf'}
-

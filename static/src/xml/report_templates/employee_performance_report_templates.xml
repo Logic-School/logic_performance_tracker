@@ -35,10 +35,12 @@
             }
         </style>
         <div t-if="values" class="container-fluid" style="margin:0;padding:0;">
-            
-            <div class="container mt-3 card-body">
+
+        <div class="container mt-3 card-body">
                 <div class="page-header">
-                    <h4>Employee Performance - <span t-esc="values['start_date']"/> - <span t-esc="values['end_date']"/></h4>
+                    <h4>Employee Performance - <span t-esc="values['start_date']"/>
+                        -
+                        <span t-esc="values['end_date']"/></h4>
                 </div>
             </div>
             <div class="row">
@@ -69,7 +71,7 @@
                                 <span t-esc="values['personal_data']['head_name']"/>
                             </div>
                         </div>
-    
+
                         <div class="row">
                             <div class="col-5">
                                 <span class="label1">Job Position:</span>
@@ -95,7 +97,8 @@
                             </div>
                             <div class="col-7">
                                 <span t-esc="values['personal_data']['date_of_joining']"/>
-                                <span style="font-size:small" class="font-weight-bold" t-esc="values['personal_data']['employment_duration']"/>
+                                <span style="font-size:small" class="font-weight-bold"
+                                      t-esc="values['personal_data']['employment_duration']"/>
                             </div>
                         </div>
                         <!-- Repeat the same structure for other details -->
@@ -107,7 +110,8 @@
                         <div class="row justify-content-center">
                             <div class="text-left">
                                 <!-- Replace with actual image URL -->
-                                <img t-att-src="values['personal_data']['image']" alt="Employee Image" class="employee-image"/>
+                                <img t-att-src="values['personal_data']['image']" alt="Employee Image"
+                                     class="employee-image"/>
                             </div>
                         </div>
                     </div>
@@ -169,7 +173,7 @@
                                             <th scope="col" class="text-center">BB</th>
 
                                             <th scope="col" class="text-center">Mock</th>
-            
+
                                             <th scope="col" class="text-center">Attendance</th>
                                         </tr>
                                     </thead>
@@ -180,21 +184,30 @@
                                             <td colspan="9" class="text-center font-weight-bold"><span style="font-size:14px;" t-esc="index+'. ' +batch_data['batch_name']"/></td>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                        <tbody>
                                         <tr>
-                                            <td class="text-center" style="font-size:12px;" t-esc="batch_data['upaya_data']['is_conducted'] ? 'Yes ( '+ batch_data['upaya_data']['attended_count']+ ' / ' +batch_data['batch_strength'] + ')': 'No'"/>
-                                            <td class="text-center" style="font-size:12px;" t-esc="batch_data['yes_plus_data']['is_conducted'] ? 'Yes ( '+ batch_data['yes_plus_data']['average_attendance']+ ' / ' +batch_data['batch_strength'] + ')': 'No'"/>
-                                            <td class="text-center" style="font-size:12px;" t-esc="batch_data['presentation_data']['presented_count'] + ' / ' + batch_data['batch_strength']"/>
-                                            <td class="text-center" style="font-size:12px;" t-esc="batch_data['one_to_one_data']['total_conducted'] + ' / ' +batch_data['batch_strength']"/>
-                                            <td class="text-center" style="font-size:12px;" t-esc="batch_data['cip_data']['average_attendance'] + ' / ' +batch_data['batch_strength']"/>
-                                            <td class="text-center" style="font-size:12px;" t-esc="batch_data['excel_data']['average_attendance'] + ' / ' +batch_data['batch_strength']"/>
-                                            <td class="text-center" style="font-size:12px;" t-esc="batch_data['bb_data']['attendance'] + ' / ' +batch_data['batch_strength']"/>
-                                            <td class="text-center" style="font-size:12px;" t-esc="batch_data['mock_interview_data']['total_conducted'] + ' / ' +batch_data['batch_strength']"/>
-                                            <td class="text-center" style="font-size:12px;" t-esc="batch_data['attendance_data']['average_attendance'] + ' / ' +batch_data['batch_strength']"/>
+                                            <td class="text-center" style="font-size:12px;"
+                                                t-esc="batch_data['upaya_data']['is_conducted'] ? 'Yes ( '+ batch_data['upaya_data']['attended_count']+ ' / ' +batch_data['batch_strength'] + ')': 'No'"/>
+                                            <td class="text-center" style="font-size:12px;"
+                                                t-esc="batch_data['yes_plus_data']['is_conducted'] ? 'Yes ( '+ batch_data['yes_plus_data']['average_attendance']+ ' / ' +batch_data['batch_strength'] + ')': 'No'"/>
+                                            <td class="text-center" style="font-size:12px;"
+                                                t-esc="batch_data['presentation_data']['presented_count'] + ' / ' + batch_data['batch_strength']"/>
+                                            <td class="text-center" style="font-size:12px;"
+                                                t-esc="batch_data['one_to_one_data']['total_conducted'] + ' / ' +batch_data['batch_strength']"/>
+                                            <td class="text-center" style="font-size:12px;"
+                                                t-esc="batch_data['cip_data']['average_attendance'] + ' / ' +batch_data['batch_strength']"/>
+                                            <td class="text-center" style="font-size:12px;"
+                                                t-esc="batch_data['excel_data']['average_attendance'] + ' / ' +batch_data['batch_strength']"/>
+                                            <td class="text-center" style="font-size:12px;"
+                                                t-esc="batch_data['bb_data']['attendance'] + ' / ' +batch_data['batch_strength']"/>
+                                            <td class="text-center" style="font-size:12px;"
+                                                t-esc="batch_data['mock_interview_data']['total_conducted'] + ' / ' +batch_data['batch_strength']"/>
+                                            <td class="text-center" style="font-size:12px;"
+                                                t-esc="batch_data['attendance_data']['average_attendance'] + ' / ' +batch_data['batch_strength']"/>
 
                                         </tr>
                                     </tbody>
-                                    <t t-set="index" t-value="index+1"/>
+                                        <t t-set="index" t-value="index+1"/>
 
                                 </t>
 
@@ -207,7 +220,8 @@
                 <div t-if="values['academic_data']['academic_head_data']">
 
                     <div class="row mt-3">
-                        <t t-set="badge_colors" t-value="['badge-primary','badge-secondary', 'badge-info', 'badge-success']"/>
+                        <t t-set="badge_colors"
+                           t-value="['badge-primary','badge-secondary', 'badge-info', 'badge-success']"/>
                         <div class="col-6">
                             <div class="">
                                 <div class="row">
@@ -215,8 +229,11 @@
                                         <span class="label1">Courses Handling:</span>
                                     </div>
                                     <div class="col-7">
-                                        <t t-foreach="values['academic_data']['academic_head_data']['course_names']" t-as="course_name">
-                                            <span style="font-size:14px;" t-att-class="'badge ' + badge_colors[Math.floor((Math.random()*badge_colors.length))] " t-esc="course_name"/>
+                                        <t t-foreach="values['academic_data']['academic_head_data']['course_names']"
+                                           t-as="course_name">
+                                            <span style="font-size:14px;"
+                                                  t-att-class="'badge ' + badge_colors[Math.floor((Math.random()*badge_colors.length))] "
+                                                  t-esc="course_name"/>
                                         </t>
                                     </div>
                                 </div>
@@ -225,7 +242,8 @@
                     </div>
 
                     <div class="row">
-                        <t t-set="badge_colors" t-value="['badge-primary','badge-secondary', 'badge-info', 'badge-success']"/>
+                        <t t-set="badge_colors"
+                           t-value="['badge-primary','badge-secondary', 'badge-info', 'badge-success']"/>
                         <div class="col-6">
                             <div class="">
                                 <div class="row">
@@ -233,8 +251,11 @@
                                         <span class="label1">Branches Handling:</span>
                                     </div>
                                     <div class="col-7">
-                                        <t t-foreach="values['academic_data']['academic_head_data']['branch_names']" t-as="branch_name">
-                                            <span style="font-size:14px;" t-att-class="'badge ' + badge_colors[Math.floor((Math.random()*badge_colors.length))] " t-esc="branch_name"/>
+                                        <t t-foreach="values['academic_data']['academic_head_data']['branch_names']"
+                                           t-as="branch_name">
+                                            <span style="font-size:14px;"
+                                                  t-att-class="'badge ' + badge_colors[Math.floor((Math.random()*badge_colors.length))] "
+                                                  t-esc="branch_name"/>
                                         </t>
                                     </div>
                                 </div>
@@ -261,22 +282,28 @@
                                 </thead>
                                 <tbody>
                                     <t t-set="index" t-value="1"/>
-                                    <t t-foreach="Object.keys(values['academic_data']['academic_head_data']['subordinates_data'])" t-as="subordinate">
-                                        <t t-set="batch_data_length" t-value="values['academic_data']['academic_head_data']['subordinates_data'][subordinate]['batches_data'].length"/>
+                                    <t t-foreach="Object.keys(values['academic_data']['academic_head_data']['subordinates_data'])"
+                                       t-as="subordinate">
+                                        <t t-set="batch_data_length"
+                                           t-value="values['academic_data']['academic_head_data']['subordinates_data'][subordinate]['batches_data'].length"/>
                                         <tr>
-                                            <td class="align-middle text-center"  t-esc="index"/>
-                                            <td class="align-middle text-center"  t-esc="subordinate"/>
+                                            <td class="align-middle text-center" t-esc="index"/>
+                                            <td class="align-middle text-center" t-esc="subordinate"/>
                                             <td class="align-middle text-center"> 
-                                                <t t-if="batch_data_length>0" t-foreach="values['academic_data']['academic_head_data']['subordinates_data'][subordinate]['batches_data']" t-as="batch_data">
+                                                <t t-if="batch_data_length>0"
+                                                   t-foreach="values['academic_data']['academic_head_data']['subordinates_data'][subordinate]['batches_data']"
+                                                   t-as="batch_data">
                                                     <span class="mt-1" style="display:block; whitespace: wrap;">
                                                         <span class="text-nowrap">
                                                             <span t-esc="batch_data['batch_name']" class="text-center"/>
                                                         </span>
                                                         <span class="">
                                                             <span t-esc="' ( Students: '"/>
-                                                            <span class="text-info" t-esc="batch_data['students_count']"/>
+                                                            <span class="text-info"
+                                                                  t-esc="batch_data['students_count']"/>
                                                             <span t-esc="', Rating:'"/>
-                                                            <span class="text-info" t-esc="batch_data['students_rating']"/>
+                                                            <span class="text-info"
+                                                                  t-esc="batch_data['students_rating']"/>
                                                             <span t-esc="' )'"/>
                                                         </span>
                                                     </span>
@@ -297,7 +324,7 @@
                     </div>
                 </div>
             </div>
-    
+
             <div t-if="values['sales_data']">
                 <div class="mt-5">
                     <div class="table-responsive table-sm card performance-table">
@@ -322,31 +349,44 @@
                             </thead>
                             <tbody>
                                 <t t-set="index" t-value="1"/>
-                                <t t-foreach="Object.keys(values['sales_data']['source_leads_data'])" t-as="lead_source">
+                                <t t-foreach="Object.keys(values['sales_data']['source_leads_data'])"
+                                   t-as="lead_source">
                                 <!-- Add rows dynamically based on data -->
                                     <tr>
                                         <td t-esc="index" class="text-center"/>
                                         <td t-esc="lead_source" class="text-center"/>
-                                        <td t-esc="values['sales_data']['source_leads_data'][lead_source]['leads_count']" class="text-center"/>
-                                        <td t-esc="values['sales_data']['source_leads_data'][lead_source]['hot_leads_count']" class="text-center"/>
-                                        <td t-esc="values['sales_data']['source_leads_data'][lead_source]['warm_leads_count']" class="text-center"/>
-                                        <td t-esc="values['sales_data']['source_leads_data'][lead_source]['cold_leads_count']" class="text-center"/>
+                                        <td t-esc="values['sales_data']['source_leads_data'][lead_source]['leads_count']"
+                                            class="text-center"/>
+                                        <td t-esc="values['sales_data']['source_leads_data'][lead_source]['hot_leads_count']"
+                                            class="text-center"/>
+                                        <td t-esc="values['sales_data']['source_leads_data'][lead_source]['warm_leads_count']"
+                                            class="text-center"/>
+                                        <td t-esc="values['sales_data']['source_leads_data'][lead_source]['cold_leads_count']"
+                                            class="text-center"/>
 
-                                        <td t-esc="values['sales_data']['source_leads_data'][lead_source]['converted_lead_count']" class="text-center"/>
-                                        <td t-esc="values['sales_data']['source_leads_data'][lead_source]['leads_conversion_rate']" class="text-center"/>
+                                        <td t-esc="values['sales_data']['source_leads_data'][lead_source]['converted_lead_count']"
+                                            class="text-center"/>
+                                        <td t-esc="values['sales_data']['source_leads_data'][lead_source]['leads_conversion_rate']"
+                                            class="text-center"/>
                                     </tr>
                                     <t t-set="index" t-value="index+1"/>
                                 </t>
                                 <tr rowspan="2">
                                     <td t-esc="''"/>
                                     <td t-esc="'Total'" class="text-center font-weight-bold"/>
-                                    <td t-esc="values['sales_data']['overall_source_leads_data']['total_leads_count']" class="text-center font-weight-bold"/>
-                                    <td t-esc="values['sales_data']['overall_source_leads_data']['total_hot_leads']" class="text-center font-weight-bold"/>
-                                    <td t-esc="values['sales_data']['overall_source_leads_data']['total_warm_leads']" class="text-center font-weight-bold"/>
-                                    <td t-esc="values['sales_data']['overall_source_leads_data']['total_cold_leads']" class="text-center font-weight-bold"/>
+                                    <td t-esc="values['sales_data']['overall_source_leads_data']['total_leads_count']"
+                                        class="text-center font-weight-bold"/>
+                                    <td t-esc="values['sales_data']['overall_source_leads_data']['total_hot_leads']"
+                                        class="text-center font-weight-bold"/>
+                                    <td t-esc="values['sales_data']['overall_source_leads_data']['total_warm_leads']"
+                                        class="text-center font-weight-bold"/>
+                                    <td t-esc="values['sales_data']['overall_source_leads_data']['total_cold_leads']"
+                                        class="text-center font-weight-bold"/>
 
-                                    <td t-esc="values['sales_data']['overall_source_leads_data']['total_converted_leads']" class="text-center font-weight-bold"/>
-                                    <td t-esc="values['sales_data']['overall_source_leads_data']['total_conversion_rate']" class="text-center font-weight-bold"/>
+                                    <td t-esc="values['sales_data']['overall_source_leads_data']['total_converted_leads']"
+                                        class="text-center font-weight-bold"/>
+                                    <td t-esc="values['sales_data']['overall_source_leads_data']['total_conversion_rate']"
+                                        class="text-center font-weight-bold"/>
                                 </tr>
 
                             </tbody>
@@ -378,17 +418,22 @@
                             </thead>
                             <tbody>
                                 <t t-set="index" t-value="1"/>
-                                <t t-foreach="Object.keys(values['sales_data']['course_leads_data'])" t-as="lead_source">
+                                <t t-foreach="Object.keys(values['sales_data']['course_leads_data'])"
+                                   t-as="lead_source">
                                 <!-- Add rows dynamically based on data -->
                                     <tr>
                                         <td t-esc="index" class="text-center"/>
                                         <td t-esc="lead_source" class="text-center"/>
-                                        <td t-esc="values['sales_data']['course_leads_data'][lead_source]['leads_count']" class="text-center"/>
-                                        <td t-esc="values['sales_data']['course_leads_data'][lead_source]['converted_lead_count']" class="text-center"/>
-                                        <td t-esc="values['sales_data']['course_leads_data'][lead_source]['leads_conversion_rate']" class="text-center"/>
+                                        <td t-esc="values['sales_data']['course_leads_data'][lead_source]['leads_count']"
+                                            class="text-center"/>
+                                        <td t-esc="values['sales_data']['course_leads_data'][lead_source]['converted_lead_count']"
+                                            class="text-center"/>
+                                        <td t-esc="values['sales_data']['course_leads_data'][lead_source]['leads_conversion_rate']"
+                                            class="text-center"/>
                                         <td class="text-center font-weight-bold">
                                             <div class="d-flex align-items-center justify-content-center">
-                                                <span class="mt-2" t-esc="values['sales_data']['course_leads_data'][lead_source]['course_revenue'].toLocaleString('en-IN', {'style':'currency', 'currency':'INR'})"></span>
+                                                <span class="mt-2"
+                                                      t-esc="values['sales_data']['course_leads_data'][lead_source]['course_revenue'].toLocaleString('en-IN', {'style':'currency', 'currency':'INR'})"></span>
                                             </div>
                                         </td>
                                     </tr>
@@ -397,12 +442,16 @@
                                 <tr rowspan="2">
                                     <td t-esc="''"/>
                                     <td t-esc="'Total'" class="text-center font-weight-bold"/>
-                                    <td t-esc="values['sales_data']['overall_course_leads_data']['total_leads_count']" class="text-center font-weight-bold"/>
-                                    <td t-esc="values['sales_data']['overall_course_leads_data']['total_converted_leads']" class="text-center font-weight-bold"/>
-                                    <td t-esc="values['sales_data']['overall_course_leads_data']['total_conversion_rate']" class="text-center font-weight-bold"/>
+                                    <td t-esc="values['sales_data']['overall_course_leads_data']['total_leads_count']"
+                                        class="text-center font-weight-bold"/>
+                                    <td t-esc="values['sales_data']['overall_course_leads_data']['total_converted_leads']"
+                                        class="text-center font-weight-bold"/>
+                                    <td t-esc="values['sales_data']['overall_course_leads_data']['total_conversion_rate']"
+                                        class="text-center font-weight-bold"/>
                                     <td class="text-center font-weight-bold">
                                         <div class="d-flex align-items-center justify-content-center">
-                                            <span class="mt-2" t-esc="values['sales_data']['overall_course_leads_data']['total_course_revenue'].toLocaleString('en-IN', {'style':'currency', 'currency':'INR'})"></span>
+                                            <span class="mt-2"
+                                                  t-esc="values['sales_data']['overall_course_leads_data']['total_course_revenue'].toLocaleString('en-IN', {'style':'currency', 'currency':'INR'})"></span>
                                         </div>
                                     </td>
                                 </tr>
@@ -441,22 +490,32 @@
                                     <tr>
                                         <td t-esc="index" class="text-center"/>
                                         <td t-esc="district" class="text-center"/>
-                                        <td t-esc="values['marketing_data']['seminar_data'][district]['seminar_count']" class="text-center"/>
-                                        <td t-esc="values['marketing_data']['seminar_data'][district]['webinar_count']" class="text-center"/>
-                                        <td t-esc="values['marketing_data']['seminar_data'][district]['leads_count']" class="text-center"/>
-                                        <td t-esc="values['marketing_data']['seminar_data'][district]['converted_leads_count']" class="text-center"/>
-                                        <td t-esc="values['marketing_data']['seminar_data'][district]['leads_conversion_rate']" class="text-center"/>
+                                        <td t-esc="values['marketing_data']['seminar_data'][district]['seminar_count']"
+                                            class="text-center"/>
+                                        <td t-esc="values['marketing_data']['seminar_data'][district]['webinar_count']"
+                                            class="text-center"/>
+                                        <td t-esc="values['marketing_data']['seminar_data'][district]['leads_count']"
+                                            class="text-center"/>
+                                        <td t-esc="values['marketing_data']['seminar_data'][district]['converted_leads_count']"
+                                            class="text-center"/>
+                                        <td t-esc="values['marketing_data']['seminar_data'][district]['leads_conversion_rate']"
+                                            class="text-center"/>
                                     </tr>
                                     <t t-set="index" t-value="index+1"/>
                                 </t>
                                 <tr>
                                     <td t-esc="''"/>
                                     <td t-esc="'Total'" class="text-center font-weight-bold"/>
-                                    <td t-esc="values['marketing_data']['overall_leads_data']['total_seminar_count']" class="text-center font-weight-bold"/>
-                                    <td t-esc="values['marketing_data']['overall_leads_data']['total_webinar_count']" class="text-center font-weight-bold"/>
-                                    <td t-esc="values['marketing_data']['overall_leads_data']['total_leads_count']" class="text-center font-weight-bold"/>
-                                    <td t-esc="values['marketing_data']['overall_leads_data']['total_converted_leads']" class="text-center font-weight-bold"/>
-                                    <td t-esc="values['marketing_data']['overall_leads_data']['total_conversion_rate']" class="text-center font-weight-bold"/>
+                                    <td t-esc="values['marketing_data']['overall_leads_data']['total_seminar_count']"
+                                        class="text-center font-weight-bold"/>
+                                    <td t-esc="values['marketing_data']['overall_leads_data']['total_webinar_count']"
+                                        class="text-center font-weight-bold"/>
+                                    <td t-esc="values['marketing_data']['overall_leads_data']['total_leads_count']"
+                                        class="text-center font-weight-bold"/>
+                                    <td t-esc="values['marketing_data']['overall_leads_data']['total_converted_leads']"
+                                        class="text-center font-weight-bold"/>
+                                    <td t-esc="values['marketing_data']['overall_leads_data']['total_conversion_rate']"
+                                        class="text-center font-weight-bold"/>
 
                                 </tr>
 
@@ -479,7 +538,7 @@
                             <thead style="background-color:#e0e0de" class="">
                             <tr>
                                 <th scope="col" width="7%" class="text-center">#</th>
-                                <th scope="col" width="60%" class="text-center" >Leave Type</th>
+                                <th scope="col" width="60%" class="text-center">Leave Type</th>
                                 <th class="text-center" width="33%" scope="col">Leaves Taken</th>
     
     
@@ -492,7 +551,96 @@
                                     <tr class="">
                                         <td t-esc="index" class="text-center"/>
                                         <td t-esc="leave_type" class="text-center"/>
-                                        <td style="color: green" t-esc="values['leave_data'][leave_type]['taken_leaves']" class="text-center"/>
+                                        <td style="color: green"
+                                            t-esc="values['leave_data'][leave_type]['taken_leaves']"
+                                            class="text-center"/>
+                                    </tr>
+                                    <t t-set="index" t-value="index+1"/>
+                                    </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div t-if="values['to_do_tasks']" style="page-break-inside: avoid;">
+                <div class="mt-5">
+                    <div class="table-responsive table-sm card performance-table">
+                        <!-- Add 'table-bordered' class for borders -->
+                        <table class="table table-striped table-hover table-bordered">
+                            <thead>
+                                <tr class="rounded" style="background-color:#78787859;">
+                                    <td colspan="5" class="text-center"><h5>To Do</h5></td>
+                                </tr>
+                            </thead>
+                            <thead style="background-color:#e0e0de" class="">
+                            <tr>
+                                <th scope="col" width="7%" class="text-center">#</th>
+                                <th scope="col" class="text-center">Task</th>
+                                <th scope="col" class="text-center">Assigned Date</th>
+                                <th scope="col" class="text-center">Completed Date</th>
+<!--                                <th scope="col" class="text-center">Status</th>-->
+                            </tr>
+                            </thead>
+                            <tbody style="font-size:14px;">
+                                <t t-set="index" t-value="1"/>
+                                <t t-foreach="Object.keys(values['to_do_tasks'])" t-as="to_do">
+
+                                    <tr class="">
+                                        <td t-esc="index" class="text-center"/>
+                                        <td t-esc="to_do" class="text-center"/>
+                                        <td t-esc="values['to_do_tasks'][to_do]['assigned_date']"
+                                            class="text-center"/>
+                                        <td t-esc="values['to_do_tasks'][to_do]['completed_date']"
+                                            class="text-center"/>
+<!--                                        <td style="color: green"-->
+<!--                                            t-esc="values['to_do_tasks'][to_do]['state']"-->
+<!--                                            class="text-center"/>-->
+                                    </tr>
+                                    <t t-set="index" t-value="index+1"/>
+                                    </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div t-if="values['miscellaneous_tasks']" style="page-break-inside: avoid;">
+                <div class="mt-5">
+                    <div class="table-responsive table-sm card performance-table">
+                        <!-- Add 'table-bordered' class for borders -->
+                        <table class="table table-striped table-hover table-bordered">
+                            <thead>
+                                <tr class="rounded" style="background-color:#78787859;">
+                                    <td colspan="5" class="text-center"><h5>Miscellaneous</h5></td>
+                                </tr>
+                            </thead>
+                            <thead style="background-color:#e0e0de" class="">
+                            <tr>
+                                <th scope="col" width="7%" class="text-center">#</th>
+                                <th scope="col" class="text-center">Task</th>
+                                <th scope="col" class="text-center">Date</th>
+                                <th scope="col" class="text-center">Completion</th>
+<!--                                <th scope="col" class="text-center">Status</th>-->
+                            </tr>
+                            </thead>
+                            <tbody style="font-size:14px;">
+                                <t t-set="index" t-value="1"/>
+                                <t t-foreach="Object.keys(values['miscellaneous_tasks'])" t-as="misc">
+                                    <tr class="">
+                                        <td t-esc="index" class="text-center"/>
+                                        <td t-esc="misc" class="text-center"/>
+                                        <td t-esc="values['miscellaneous_tasks'][misc]['date']"
+                                            class="text-center"/>
+<!--                                        <td t-esc="values['miscellaneous_tasks'][misc]['task_submission_status']"-->
+<!--                                            class="text-center"/>-->
+                                        <t t-if="values['miscellaneous_tasks'][misc]['task_submission_status'] == 'on_time'">
+                                            <td span="2" style="color: green" class="text-center">On Time</td></t>
+                                        <t t-if="values['miscellaneous_tasks'][misc]['task_submission_status'] == 'delayed'">
+                                            <td span="2" style="color: red" class="text-center">Delayed</td></t>
+<!--                                        <td style="color: green"-->
+<!--                                            t-esc="values['miscellaneous_tasks'][misc]['state']"-->
+<!--                                            class="text-center"/>-->
                                     </tr>
                                     <t t-set="index" t-value="index+1"/>
                                     </t>
