@@ -58,7 +58,7 @@ class MarketingTracker(models.Model):
         return dashboard_data
     
     def get_employee_seminar_count(self,employee,start_date,end_date):
-        seminar_domain = [('state','=','done')]
+        seminar_domain = [('state','in',['done','leads_assigned'])]
         if start_date and end_date:
             seminar_domain.extend([('seminar_date', '>=',start_date), ('seminar_date','<=',end_date)])
         seminar_count = 0
@@ -121,7 +121,7 @@ class MarketingTracker(models.Model):
         lead_conversion_rate = 0
         seminar_count = 0
         webinar_count = 0
-        seminar_domain = [('state','=','done')]
+        seminar_domain = [('state','in',['done','leads_assigned'])]
         mou_domain = [('state','=','signed'),('create_uid','=',employee.user_id.id)]
         seminar_cip_domain = [('state','in',('register_payment','paid')),('seminar_user_id','=',employee.user_id.id)]
         if start_date and end_date:
