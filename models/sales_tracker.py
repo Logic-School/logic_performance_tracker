@@ -202,24 +202,29 @@ class SalesTracker(models.Model):
             leads_count+=1
             if lead_without_admission.lead_quality=='hot':
                 hot_lead_count+=1
-            elif lead_without_admission.lead_quality=='warm':
-                warm_lead_count+=1
-            elif lead_without_admission.lead_quality=='cold':
-                cold_lead_count+=1
+            elif lead_without_admission.lead_quality == 'warm':
+                warm_lead_count += 1
+            elif lead_without_admission.lead_quality == 'cold':
+                cold_lead_count += 1
 
         for lead_with_admission in leads_with_admission:
-            leads_count+=1
-            if lead_with_admission.lead_quality=='hot':
-                hot_lead_count+=1
-            elif lead_with_admission.lead_quality=='warm':
-                warm_lead_count+=1
-            elif lead_with_admission.lead_quality=='cold':
-                cold_lead_count+=1
-            if month:
-                if lead_with_admission.admission_date.month==month and lead_with_admission.admission_date.year==year:
-                    converted_lead_count+=1
-            else:
-                converted_lead_count+=1
+            leads_count += 1
+            if lead_with_admission.lead_quality == 'hot':
+                hot_lead_count += 1
+            elif lead_with_admission.lead_quality == 'warm':
+                warm_lead_count += 1
+            elif lead_with_admission.lead_quality == 'cold':
+                cold_lead_count += 1
+            leads = self.env['leads.logic'].sudo().search(lead_domain)
+            for i in leads:
+                converted_lead_count += i.admission_count
+                # if month:
+                #     if lead_with_admission.admission_date.month == month and lead_with_admission.admission_date.year == year:
+                #         converted_lead_count += i.admission_count
+                #         # print(lead_with_admission.admission_count, 'sec count')
+                # else:
+                #     converted_lead_count += i.admission_count
+                    # print(lead_with_admission.admission_count, 'sec count')
 
         if leads_count>0:
             lead_conversion_rate = round(100 * (converted_lead_count/leads_count),2)
@@ -279,12 +284,17 @@ class SalesTracker(models.Model):
             elif lead_with_admission.lead_quality=='cold':
                 cold_lead_count+=1
 
-            if month:
-                if lead_with_admission.admission_date.month==month and lead_with_admission.admission_date.year==year:
-                    converted_lead_count+=1
-            else:
-                converted_lead_count+=1
-                
+            leads = self.env['leads.logic'].sudo().search(lead_domain)
+            for i in leads:
+                converted_lead_count += i.admission_count
+                # if month:
+                #     if lead_with_admission.admission_date.month == month and lead_with_admission.admission_date.year == year:
+                #         converted_lead_count += i.admission_count
+                #         print(i.admission_count, 'admission count')
+                # else:
+                #     converted_lead_count += i.admission_count
+                #     print(i.admission_count, 'admission count')
+
         if leads_count>0:
             lead_conversion_rate = round(100 * (converted_lead_count/leads_count),2)
             # lead_conversion_rate = 100 * round(converted_lead_count/leads_count,3)
@@ -333,7 +343,11 @@ class SalesTracker(models.Model):
         logger = logging.getLogger("Lead Debug: ")
         month_dict = actions_common.get_month_list()
         lead_domain = [('leads_assign','=',employee.id)]
+        adm_total_leads_domain = [('leads_assign','=',employee.id), ('admission_status','=',True)]
         leads = self.env['leads.logic'].sudo().search(lead_domain)
+        total_leads = len(leads)
+        adm_leads = self.env['leads.logic'].sudo().search(adm_total_leads_domain)
+        total_adm_count = len(adm_leads)
 
         leads_with_admission,leads_without_admission = self.get_leads_with_and_without_admission(leads,start_date,end_date)
         month,year = self.get_leads_month_year(start_date,end_date)
@@ -350,6 +364,7 @@ class SalesTracker(models.Model):
         hot_lead_count = 0
         warm_lead_count = 0
         cold_lead_count = 0
+        total_lead_count = 0
 
         for lead_without_admission in leads_without_admission:
             if lead_without_admission.course_type != 'crash':
@@ -370,11 +385,14 @@ class SalesTracker(models.Model):
                     warm_lead_count+=1
                 elif lead_with_admission.lead_quality=='cold':
                     cold_lead_count+=1
+
                 if month:
-                    if lead_with_admission.admission_date.month==month and lead_with_admission.admission_date.year==year:
-                        converted_lead_count+=1
+                    if lead_with_admission.admission_date.month == month and lead_with_admission.admission_date.year==year:
+                        converted_lead_count += lead_with_admission.admission_count
+                        print('adm count',lead_with_admission.name, employee.name)
                 else:
-                    converted_lead_count+=1
+                    converted_lead_count += lead_with_admission.admission_count
+                    print('adm count', lead_with_admission.name, employee.name)
 
         if leads_count>0:
             lead_conversion_rate = 100 * round(converted_lead_count/leads_count,3)
@@ -386,6 +404,8 @@ class SalesTracker(models.Model):
         values = {
             'employee': employee.id,
             'lead_count': leads_count,
+            'total_lead_count': total_leads,
+            'total_adm_count': total_adm_count,
             'conversion_rate': lead_conversion_rate,
             'lead_converted': converted_lead_count,
             'lead_target': month_year_lead_target,
@@ -433,6 +453,8 @@ class SalesTracker(models.Model):
             emp_id = str(perf_obj.employee.id) + " "
             employees_data[emp_id] = {}
             employees_data[emp_id]['name'] = perf_obj.employee.name
+            employees_data[emp_id]['total_lead_count'] = perf_obj.total_lead_count
+            employees_data[emp_id]['total_adm_count'] = perf_obj.total_adm_count
             employees_data[emp_id]['lead_count'] = perf_obj.lead_count
             employees_data[emp_id]['conversion_rate'] = round(perf_obj.conversion_rate,2)
             employees_data[emp_id]['lead_target'] = perf_obj.lead_target
@@ -450,11 +472,13 @@ class SalesTracker(models.Model):
 
 class EmployeeSalesPerformance(models.Model):
     _name = "logic.employee.sales.performance"
-    _order="converted_target_ratio desc"
+    _order = "converted_target_ratio desc"
+
     employee = fields.Many2one("hr.employee",string="Employee")
     lead_count = fields.Integer(string="Lead Count")
     lead_target = fields.Integer(string="Lead Target")
     lead_converted = fields.Integer(string="Lead Achieved")
     converted_target_ratio = fields.Float(string="Lead Converted Target Ratio")
     conversion_rate = fields.Float(string="Conversion Rate")
-
+    total_lead_count = fields.Float(string="Total Lead Count")
+    total_adm_count = fields.Float(string="Total Adm Count")

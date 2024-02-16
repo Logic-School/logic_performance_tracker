@@ -106,12 +106,12 @@ class MarketingTracker(models.Model):
                         # if seminar.college_id.id not in checked_institute_ids:
                         seminar_count+=1
                             # checked_institute_ids.append(seminar.college_id.id)
-                    elif seminar.lead_source_id.name=="Webinar":
-                        webinar_count+=1
-                leads_count+=len(seminar.seminar_ids)
+                    elif seminar.lead_source_id.name == "Webinar":
+                        webinar_count += 1
+                leads_count += len(seminar.seminar_ids)
                 for student_lead in seminar.seminar_ids:
                     if student_lead.admission_status == 'yes':
-                        converted_lead_count+=1
+                        converted_lead_count += 1
         if leads_count>0:
             lead_conversion_rate = round(100 * converted_lead_count/leads_count,2)
         return {'leads_count':leads_count, 'seminar_count':seminar_count, 'webinar_count': webinar_count, 'converted_leads_count': converted_lead_count, 'leads_conversion_rate': lead_conversion_rate}

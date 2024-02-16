@@ -12,20 +12,32 @@ class CommonTaskPerformance(models.Model):
     to_do_average_rating = fields.Float()
     qualitative_average_rating = fields.Float()
     score = fields.Float()
+    total_leads_count = fields.Float()
+    admission_lead_count = fields.Float()
 
     def create_employee_common_task_performance(self,employee, start_date=False, end_date=False):
         logger = logging.getLogger("Common perf debug: ")
         employee_data = {'completed_to_do_count':0, 'completed_misc_count':0, 'delayed_to_do_count':0, 'delayed_misc_count':0, 'combined_rating':0, 'score':0}
         misc_domain = [('task_creator_employee','=',employee.id),('state','=',('completed')),('expected_completion','!=',False)]
-        to_do_domain = [('state','=','completed'),'|',('assigned_to','=',employee.user_id.id),('coworkers_ids','in',[employee.user_id.id] ), ('completed_date','!=',False)]
+        leads_total_domain = [('leads_assign','=',employee.user_id.employee_id.id)]
+        adm_leads_count = [('leads_assign','=',employee.user_id.employee_id.id),('admission_status', '=', True)]
+        to_do_domain = [('state','=','completed'), '|', ('assigned_to','=',employee.user_id.id),('coworkers_ids','in',[employee.user_id.id] ), ('completed_date','!=',False)]
         if start_date and end_date:
             misc_domain.extend([('date_completed','>=',start_date),('date_completed','<=',end_date)])
             to_do_domain.extend([('completed_date','>=',start_date),('completed_date','<=',end_date)])
+            adm_leads_count.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
+            leads_total_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
         misc_tasks = self.env['logic.task.other'].sudo().search(misc_domain)
         to_do_tasks = self.env['to_do.tasks'].sudo().search(to_do_domain)
+        leads_total_count = self.env['leads.logic'].sudo().search(leads_total_domain)
+        adm_total_count_lead = self.env['leads.logic'].sudo().search(adm_leads_count)
         misc_average_rating = 0
         to_do_average_rating = 0
         employee_data['completed_to_do_count'] = len(to_do_tasks)
+        employee_data['adm_completed_count'] = len(adm_total_count_lead)
+
+        employee_data['total_leads_count'] = len(leads_total_count)
+
         employee_data['completed_misc_count'] = len(misc_tasks)
         total_tasks = employee_data['completed_to_do_count'] + employee_data['completed_misc_count']
         for task in misc_tasks:
@@ -76,15 +88,17 @@ class CommonTaskPerformance(models.Model):
         
         values = {
             'employee': employee.id,
-            'completed_to_do_count':employee_data['completed_to_do_count'], 
-            'completed_misc_count':employee_data['completed_misc_count'], 
-            'delayed_to_do_count':employee_data['delayed_to_do_count'], 
-            'delayed_misc_count':employee_data['delayed_misc_count'], 
-            'combined_rating':employee_data['combined_rating'], 
-            'score':employee_data['score'],
+            'completed_to_do_count': employee_data['completed_to_do_count'],
+            'completed_misc_count': employee_data['completed_misc_count'],
+            'delayed_to_do_count': employee_data['delayed_to_do_count'],
+            'delayed_misc_count': employee_data['delayed_misc_count'],
+            'combined_rating': employee_data['combined_rating'],
+            'score': employee_data['score'],
             'qualitative_average_rating': qualitative_average_rating,
             'misc_average_rating': misc_average_rating,
             'to_do_average_rating': to_do_average_rating,
+            'total_leads_count': employee_data['total_leads_count'],
+            'admission_lead_count': employee_data['adm_completed_count']
         }
 
         if common_task_perf_obj:
@@ -106,14 +120,17 @@ class CommonTaskPerformance(models.Model):
             employee_performances[emp_id_name] = {}
             employee_performances[emp_id_name]['name'] = common_task_perf_obj.employee.name
             employee_performances[emp_id_name]['completed_to_do_count'] = common_task_perf_obj.completed_to_do_count
-            employee_performances[emp_id_name]['completed_misc_count']=common_task_perf_obj.completed_misc_count
-            employee_performances[emp_id_name]['delayed_to_do_count']=common_task_perf_obj.delayed_to_do_count
-            employee_performances[emp_id_name]['delayed_misc_count']=common_task_perf_obj.delayed_misc_count
-            employee_performances[emp_id_name]['combined_rating']=common_task_perf_obj.combined_rating
-            employee_performances[emp_id_name]['score']=common_task_perf_obj.score
+            employee_performances[emp_id_name]['completed_misc_count'] = common_task_perf_obj.completed_misc_count
+            employee_performances[emp_id_name]['delayed_to_do_count'] = common_task_perf_obj.delayed_to_do_count
+            employee_performances[emp_id_name]['delayed_misc_count'] = common_task_perf_obj.delayed_misc_count
+            employee_performances[emp_id_name]['combined_rating'] = common_task_perf_obj.combined_rating
+            employee_performances[emp_id_name]['score'] = common_task_perf_obj.score
             employee_performances[emp_id_name]['misc_average_rating'] = common_task_perf_obj.misc_average_rating
             employee_performances[emp_id_name]['to_do_average_rating'] = common_task_perf_obj.to_do_average_rating
             employee_performances[emp_id_name]['qualitative_average_rating'] = common_task_perf_obj.qualitative_average_rating
+            employee_performances[emp_id_name]['total_lead_count'] = common_task_perf_obj.total_leads_count
+            employee_performances[emp_id_name]['admission_lead_count'] = common_task_perf_obj.admission_lead_count
 
         logger.error('common perfs: '+str(employee_performances))
+        print(employee_performances, "employee_performances")
         return employee_performances
