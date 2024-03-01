@@ -123,9 +123,10 @@
                                class="table table-striped table-hover rounded-table table-borderless">
                             <thead>
                                 <tr class="rounded" style="background-color:#78787859;">
-                                    <td colspan="5" class="text-center"><h2>Leaderboard <span t-if="values['month']"
-                                                                                              class="text-info"
-                                                                                              t-esc="'( '+values['month'] +' '+ values['year'] +' )'"/></h2></td>
+                                    <td colspan="5" class="text-center">
+                                        <h2>Leaderboard
+                                            <span t-if="values['month']" class="text-info"
+                                                  t-esc="'( '+values['month'] +' '+ values['year'] +' )'"/></h2></td>
                                 </tr>
                             </thead>
                             <thead style="background-color:#e0e0de" class="">
@@ -202,7 +203,6 @@
                                     <th scope="col" width="10%" class="text-center">To Do</th>
                                     <th scope="col" width="10%" class="text-center">Miscellaneous</th>
                                     <th scope="col" width="10%" class="text-center">To Do</th>
-
                                     <th scope="col" width="18%"></th>
                                     <th scope="col" width="15%"></th>
     
@@ -416,8 +416,6 @@
                                                 t-esc="values[lead_source]['converted_lead_count']"/>
                                             <td class="px-3" style="color:blue;"
                                                 t-esc="values[lead_source]['leads_conversion_rate']"/>
-
-
                                         </tr>
                                         <t t-set="index" t-value="index+1"/>
 

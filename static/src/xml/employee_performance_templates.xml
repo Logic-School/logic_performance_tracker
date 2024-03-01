@@ -3,15 +3,18 @@
 <templates xml:space="preserve">
     <!-- Define your QWeb template for the dashboard_card view -->
     <t t-name="logic_performance_tracker.employee_performance_template">
-        <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/dashboard_card_view.css"/>
-        <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/lib/jquery.orgchart.css"/>
+        <link rel="stylesheet" type="text/css"
+              href="/logic_performance_tracker/static/src/css/dashboard_card_view.css"/>
+        <link rel="stylesheet" type="text/css"
+              href="/logic_performance_tracker/static/src/css/lib/jquery.orgchart.css"/>
         <!-- <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/lib/jquery-ui.css"/> -->
 
         <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/orgchart_styles.css"/>
         <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/other_styles.css"/>
         <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/progressbar.css"/>
 
-        <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/employee_performance_styles.css"/>
+        <link rel="stylesheet" type="text/css"
+              href="/logic_performance_tracker/static/src/css/employee_performance_styles.css"/>
 
         <style>
             <!-- .row{
@@ -19,7 +22,7 @@
                 margin-left:0;
             } -->
             .badge-secondary{
-                background-color: #CAD6D1;
+            background-color: #CAD6D1;
             }
         </style>
         <div t-if="values" class="container-fluid employee_performance" style="margin:0;padding:0;">
@@ -28,30 +31,33 @@
                     <div class="row justify-content-center">
                         <div class="col-auto ml-5" style="">   
                             <!-- <span class="font-weight-bold">Employee </span> -->
-                            <select class="department_employee form-control mr-2 font-weight-bold" style="display: inline-block; width: auto;background-color:#edf0f2;">
+                            <select class="department_employee form-control mr-2 font-weight-bold"
+                                    style="display: inline-block; width: auto;background-color:#edf0f2;">
                                 <option t-if="values['personal_data']" t-att-value="values['personal_data']['id']">
                                     <div>
-                                        <span t-esc="values['personal_data']['name']" />
+                                        <span t-esc="values['personal_data']['name']"/>
                                     </div>
                                 </option>
 
-                                <t t-if="values['department_employees']" t-foreach="values['department_employees']" t-as="department_employee">
+                                <t t-if="values['department_employees']" t-foreach="values['department_employees']"
+                                   t-as="department_employee">
                                     <option t-if="department_employee" t-att-value="department_employee['id']">
                                         <div>
-                                            <span t-esc="department_employee['name']" />
+                                            <span t-esc="department_employee['name']"/>
                                         </div>
                                     </option>
                                 </t>
                             </select> 
                         </div>
                         <div class="col-auto">
-                            <button class="form-control btn-primary report_download_btn" >Download</button>
+                            <button class="form-control btn-primary report_download_btn">Download</button>
                         </div>
                         <div class="col-auto" style="margin-left: auto; margin-right: 0;">   
                             <span class="font-weight-bold">From: </span>
                             <input class="from_date date-picker-icon custom-date-input" type="date"/>
                             <span class="font-weight-bold"> To: </span>
-                            <input placeholder="From: " class="end_date date-picker-icon custom-date-input" type="date"/>
+                            <input placeholder="From: " class="end_date date-picker-icon custom-date-input"
+                                   type="date"/>
                             <button class="ml-2 filter-button btn-md o_filter_performance" type="button">Filter</button>
                             <button class="rounded btn-md btn-warning o_filter_reset" type="button">Reset</button>
                         </div>
@@ -72,15 +78,18 @@
                                                     <div class="col">
 
                                                         <div class="personal-details">
-                                                            <div class="text-center" >
-                                                                <img t-att-src="values['personal_data']['image']" class="m-3" style="height: 100px; width:auto; border-radius:20px;" />
+                                                            <div class="text-center">
+                                                                <img t-att-src="values['personal_data']['image']"
+                                                                     class="m-3"
+                                                                     style="height: 100px; width:auto; border-radius:20px;"/>
                                                             </div>
                                                             <div class="detail-item row mb-1">
                                                                 <div class="col-4">
                                                                     <span class="label1 font-weight-normal badge badge-secondary">Name</span>
                                                                 </div>
                                                                 <div class="col-8">
-                                                                        <span class="value font-weight-bold" t-esc="values['personal_data']['name']"/>
+                                                                        <span class="value font-weight-bold"
+                                                                              t-esc="values['personal_data']['name']"/>
 
                                                                 </div>
                                                             </div>
@@ -92,7 +101,8 @@
                                                                 <div class="col-8">
                                                                     <!-- <span class="label1 font-weight-normal">: </span> -->
 
-                                                                    <span class="value font-weight-bold" t-esc="values['personal_data']['job_title']"/>
+                                                                    <span class="value font-weight-bold"
+                                                                          t-esc="values['personal_data']['job_title']"/>
 
                                                                 </div>
                                                             </div>
@@ -103,17 +113,20 @@
                                                                 </div>
                                                                 <div class="col-8">
 
-                                                                    <span class="value font-weight-bold" t-esc="values['personal_data']['department_name']"/>
+                                                                    <span class="value font-weight-bold"
+                                                                          t-esc="values['personal_data']['department_name']"/>
                                                                 </div>
                                                             </div>
-                                                            <div class="detail-item row mb-1" t-if="values['personal_data']['branch']">
+                                                            <div class="detail-item row mb-1"
+                                                                 t-if="values['personal_data']['branch']">
                                                                 <div class="col-4">
                                                                     <span class="label1 badge badge-warning">Branch</span>
                                                                 </div>
                                                                 <div class="col-8">
                                                                     <!-- <span class="label1 font-weight-normal">: </span> -->
 
-                                                                    <span class="value font-weight-bold" t-esc="values['personal_data']['branch']"/>
+                                                                    <span class="value font-weight-bold"
+                                                                          t-esc="values['personal_data']['branch']"/>
                                                                 </div>
                                                             </div>
 
@@ -123,7 +136,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="row">
                                     <div class="col">
                                         <div class="employee_details_card card mt-3" style="height: 100%;">
@@ -139,8 +152,10 @@
                                                     <div class="col-5 ml-0 mr-0 p-0">
                                                         <span class="label1 font-weight-normal">: </span>
 
-                                                        <span class="number-value" t-esc="values['common_performance']['completed_misc_count']"/>
-                                                        <span class="" t-esc="' ('+values['common_performance']['delayed_misc_count'] + ' Delayed )'"/>
+                                                        <span class="number-value"
+                                                              t-esc="values['common_performance']['completed_misc_count']"/>
+                                                        <span class=""
+                                                              t-esc="' ('+values['common_performance']['delayed_misc_count'] + ' Delayed )'"/>
                                                     </div>
 
                                                 </div>
@@ -152,8 +167,10 @@
                                                     <div class="col-5 ml-0 mr-0 p-0">
                                                         <span class="label1 font-weight-normal">: </span>
 
-                                                        <span class="number-value" t-esc="values['common_performance']['to_do_count']"/>
-                                                        <span class="" t-esc="' ( '+values['common_performance']['delayed_to_do_count'] + ' Delayed )'"/>
+                                                        <span class="number-value"
+                                                              t-esc="values['common_performance']['to_do_count']"/>
+                                                        <span class=""
+                                                              t-esc="' ( '+values['common_performance']['delayed_to_do_count'] + ' Delayed )'"/>
                                                     </div>
 
                                                 </div>
@@ -164,9 +181,11 @@
                                                     <div class="col-5 ml-0 mr-0 p-0">
                                                         <span class="label1 font-weight-normal">: </span>
 
-                                                        <span class="number-value" t-esc="values['marketing_data']['year_leads_count']"/>
+                                                        <span class="number-value"
+                                                              t-esc="values['marketing_data']['year_leads_count']"/>
                                                         <span>/</span>
-                                                        <span class="number-value text-primary" t-esc="values['marketing_data']['year_leads_target']"/>
+                                                        <span class="number-value text-primary"
+                                                              t-esc="values['marketing_data']['year_leads_target']"/>
                                                         <span class="font-weight-bold" t-esc="' ('+values['year']+')'"/>
                                                     </div>
                                                 </div>
@@ -178,22 +197,28 @@
                                                     <div class="col-5 ml-0 mr-0 p-0 text-nowrap">
                                                         <span class="label1 font-weight-normal">: </span>
 
-                                                        <span class="number-value" t-esc="values['sales_data']['month_year_converted_leads_count']"/>
+                                                        <span class="number-value"
+                                                              t-esc="values['sales_data']['month_year_converted_leads_count']"/>
                                                         <span>/</span>
-                                                        <span class="number-value text-primary" t-esc="values['sales_data']['month_year_leads_target']"/>
-                                                        <span t-if="values['month']" class="font-weight-bold" t-esc="' ('+values['month']+ ' '+values['year']+')'"/>
+                                                        <span class="number-value text-primary"
+                                                              t-esc="values['sales_data']['month_year_leads_target']"/>
+                                                        <span t-if="values['month']" class="font-weight-bold"
+                                                              t-esc="' ('+values['month']+ ' '+values['year']+')'"/>
                                                     </div>
                                                 </div>
 
-                                                <div class="detail-item row" t-if="values['academic_data'] || values['residential_data']">
+                                                <div class="detail-item row"
+                                                     t-if="values['academic_data'] || values['residential_data']">
                                                     <div class="col-7">
                                                         <span class="label1">Student rating:</span>
                                                     </div>
                                                     <div class="col-5 ml-0 mr-0 p-0 text-nowrap">
                                                         <span class="label1 font-weight-normal">: </span>
 
-                                                        <span class="number-value" t-esc="values['academic_data']['student_feedback_rating']"/>
-                                                        <span class="number-value" t-esc="values['residential_data']['student_feedback_rating']"/>
+                                                        <span class="number-value"
+                                                              t-esc="values['academic_data']['student_feedback_rating']"/>
+                                                        <span class="number-value"
+                                                              t-esc="values['residential_data']['student_feedback_rating']"/>
                                                         <span class="number-value text-primary">/ 5</span>
                                                     </div>
                                                 </div>
@@ -204,7 +229,8 @@
                                                     <div class="col-5 ml-0 mr-0 p-0 text-nowrap">
                                                         <span class="label1 font-weight-normal">: </span>
 
-                                                        <span class="number-value" t-esc="values['common_performance']['qualitative_average_rating']"/>
+                                                        <span class="number-value"
+                                                              t-esc="values['common_performance']['qualitative_average_rating']"/>
                                                         <span class="number-value text-primary">/ 5</span>
                                                     </div>
                                                 </div>
@@ -224,7 +250,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-xs-1 inline-block" >
+                                    <div class="col-xs-1 inline-block">
                                         <div style="margin-left: auto; margin-right: 0;">
                                             <span class="font-weight-bold">Year: </span>
                                             <span class="filter_year font-weight-bold" t-esc="values['year']"/>
@@ -275,7 +301,6 @@
             </div>
 
 
-
             <!-- <div class="row m-2">
                 <div class="container-fluid mt-3">
                     <div class="row justify-content-center">
@@ -305,8 +330,10 @@
                                     <div class="container-fluid mt-3">
                                         <div class="row justify-content-center">
                                             <div class="col">                            
-                                                <div class="districtchart-canvas-container" style="position:relative;height:500px;">
-                                                    <canvas id="districtWiseLeadChart" style="width:700px;height:450px;"></canvas>
+                                                <div class="districtchart-canvas-container"
+                                                     style="position:relative;height:500px;">
+                                                    <canvas id="districtWiseLeadChart"
+                                                            style="width:700px;height:450px;"></canvas>
                                                 </div>
                                             </div>
 
@@ -324,8 +351,10 @@
                     <div class="card-header row px-0 mr-0 ml-0" style="border:0px">
                         
                         <div t-if="values['academic_data']" class="mr-0 ml-2 p-0">
-                            <select class="academic_window form-control mr-2 font-weight-bold" style="display: inline-block; width: auto;background-color:#edf0f2;">
-                                <t t-if="values['academic_data']['academic_windows']" t-foreach="values['academic_data']['academic_windows']" t-as="academic_window">
+                            <select class="academic_window form-control mr-2 font-weight-bold"
+                                    style="display: inline-block; width: auto;background-color:#edf0f2;">
+                                <t t-if="values['academic_data']['academic_windows']"
+                                   t-foreach="values['academic_data']['academic_windows']" t-as="academic_window">
                                     <option t-att-value="academic_window['id']" t-esc="academic_window['name']"/>
                                 </t>
                             </select>
@@ -352,7 +381,7 @@
 
             <div class="row" t-if="values['sales_data']">
             <!-- <div class="row" t-if="values['sales_data']"> -->
-                    <div class="col container-fluid">
+                <div class="col container-fluid">
                         <div class="row justify-content-start">
                             <div class="col m-2">
                                 <div class="container-fluid mt-3">
@@ -360,8 +389,10 @@
                                         <div class="container-fluid mt-3">
                                             <div class="row justify-content-center">
                                                 <div class="col">                            
-                                                    <div class="sourcechart-canvas-container" style="position:relative;height:500px;">
-                                                        <canvas id="sourceWiseLeadChart" style="width:700px;height:450px;"></canvas>
+                                                    <div class="sourcechart-canvas-container"
+                                                         style="position:relative;height:500px;">
+                                                        <canvas id="sourceWiseLeadChart"
+                                                                style="width:700px;height:450px;"></canvas>
                                                     </div>
                                                 </div>
 
@@ -373,10 +404,10 @@
                         </div>
                     </div>
             </div>
-                <!-- </div> -->
+            <!-- </div> -->
 
-                <!-- <div class="row" t-if="values['sales_data']"> -->
-            <div class="row"  t-if="values['sales_data']">
+            <!-- <div class="row" t-if="values['sales_data']"> -->
+            <div class="row" t-if="values['sales_data']">
                     <div class="col container-fluid">
                         <div class="row justify-content-start">
                             <div class="col m-2">
@@ -385,8 +416,10 @@
                                         <div class="container-fluid mt-3">
                                             <div class="row justify-content-center">
                                                 <div class="col">                            
-                                                    <div class="coursechart-canvas-container" style="position:relative;height:500px;">
-                                                        <canvas id="courseWiseLeadChart" style="width:700px;height:450px;"></canvas>
+                                                    <div class="coursechart-canvas-container"
+                                                         style="position:relative;height:500px;">
+                                                        <canvas id="courseWiseLeadChart"
+                                                                style="width:700px;height:450px;"></canvas>
                                                     </div>
                                                 </div>
 
@@ -401,7 +434,7 @@
 
             <div class="row m-2">
                 <t t-if="values['common_performance']">
-                    <div class="col-md-2 col-sm-6 oh-payslip" >
+                    <div class="col-md-2 col-sm-6 oh-payslip">
                         <div class="oh-card model_record_card" id="logic.task.other" name="Miscellaneous Works">
                             <div class="oh-card-body">
                                 <div class="stat-widget-one">
@@ -415,7 +448,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-2 col-sm-6 oh-payslip" >
+                    <div class="col-md-2 col-sm-6 oh-payslip">
                         <div class="oh-card model_record_card" id="to_do.tasks" name="To Do">
                             <div class="oh-card-body">
                                 <div class="stat-widget-one">
@@ -428,10 +461,23 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-2 col-sm-6 oh-payslip">
+                        <div class="oh-card model_record_card" id="directors.feedback" name="Directors Feedback">
+                            <div class="oh-card-body">
+                                <div class="stat-widget-one">
+                                    <div class="stat-icon "><img class="img-fluid" src="/logic_performance_tracker/static/src/icons/feedback.png"/></div>
+                                    <div class="stat-content">
+                                        <div class="stat-text">FeedBacks</div>
+                                        <div class="stat-digit"><t t-esc="values['common_performance']['common_feedbacks']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </t>
-                
+
                 <t t-if="values['digital_data']">
-                    <div class="col-md-2 col-sm-6 oh-payslip" >
+                    <div class="col-md-2 col-sm-6 oh-payslip">
                         <div class="oh-card model_record_card" id="digital.task" name="Digital Tasks">
                             <div class="oh-card-body">
                                 <div class="stat-widget-one">
@@ -447,7 +493,7 @@
                 </t>
 
                 <t t-if="values['marketing_data']">
-                    <div class="col-md-2 col-sm-6 oh-payslip" >
+                    <div class="col-md-2 col-sm-6 oh-payslip">
                         <div class="oh-card model_record_card" id="seminar.leads" name="Seminar">
                             <div class="oh-card-body">
                                 <div class="stat-widget-one">
@@ -463,7 +509,7 @@
                 </t>
 
                 <t t-if="values['sales_data']">
-                    <div class="col-md-2 col-sm-6 oh-payslip" >
+                    <div class="col-md-2 col-sm-6 oh-payslip">
                         <div class="oh-card model_record_card" id="leads.logic" name="Leads">
                             <div class="oh-card-body">
                                 <div class="stat-widget-one">
@@ -480,7 +526,7 @@
 
                 <t t-if="values['academic_data']">
                     <t t-if="!values['academic_data']['is_associate_faculty']">
-                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                        <div class="col-md-2 col-sm-6 oh-payslip">
                             <div class="oh-card model_record_card" id="upaya.form" name="Upaya">
                                 <div class="oh-card-body">
                                     <div class="stat-widget-one">
@@ -494,7 +540,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                        <div class="col-md-2 col-sm-6 oh-payslip">
                             <div class="oh-card model_record_card" id="yes_plus.logic" name="Yes Plus">
                                 <div class="oh-card-body">
                                     <div class="stat-widget-one">
@@ -508,7 +554,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                        <div class="col-md-2 col-sm-6 oh-payslip">
                             <div class="oh-card model_record_card" id="student.faculty" name="Student Faculty Club">
                                 <div class="oh-card-body">
                                     <div class="stat-widget-one">
@@ -522,7 +568,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                        <div class="col-md-2 col-sm-6 oh-payslip">
                             <div class="oh-card model_record_card" id="one_to_one.meeting" name="One to One">
                                 <div class="oh-card-body">
                                     <div class="stat-widget-one">
@@ -536,7 +582,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                        <div class="col-md-2 col-sm-6 oh-payslip">
                             <div class="oh-card model_record_card" id="logic.mock_interview" name="Mock Interview">
                                 <div class="oh-card-body">
                                     <div class="stat-widget-one">
@@ -549,7 +595,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                        <div class="col-md-2 col-sm-6 oh-payslip">
                             <div class="oh-card model_record_card" id="logic.cip.form" name="CIP/Excel">
                                 <div class="oh-card-body">
                                     <div class="stat-widget-one">
@@ -563,7 +609,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                        <div class="col-md-2 col-sm-6 oh-payslip">
                             <div class="oh-card model_record_card" id="bring.your.buddy" name="Bring Your Buddy">
                                 <div class="oh-card-body">
                                     <div class="stat-widget-one">
@@ -577,7 +623,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                        <div class="col-md-2 col-sm-6 oh-payslip">
                             <div class="oh-card model_record_card" id="logic.presentations" name="Presentation">
                                 <div class="oh-card-body">
                                     <div class="stat-widget-one">
@@ -605,7 +651,7 @@
                             </div>
                         </div> -->
 
-                        <div class="col-md-2 col-sm-6 oh-payslip" >
+                        <div class="col-md-2 col-sm-6 oh-payslip">
                             <div class="oh-card model_record_card" id="financial.planning.form" name="FPP">
                                 <div class="oh-card-body">
                                     <div class="stat-widget-one">
@@ -622,7 +668,7 @@
                 </t>
 
                 <t t-if="values['academic_data'] || values['residential_data']">
-                    <div class="col-md-2 col-sm-6 oh-payslip" >
+                    <div class="col-md-2 col-sm-6 oh-payslip">
                         <div class="oh-card model_record_card" id="exam.details" name="Exams">
                             <div class="oh-card-body">
                                 <div class="stat-widget-one">

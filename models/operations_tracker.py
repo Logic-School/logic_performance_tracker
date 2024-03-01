@@ -40,7 +40,6 @@ class ResidentialTracker(models.Model):
             'qualitatives'], employees)
         dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self, employees,
                                                                                              start_date, end_date)
-
         dashboard_data['org_datas'], dashboard_data['dept_names'] = actions_common.get_org_datas_dept_names(manager,
                                                                                                             managers)
         return dashboard_data

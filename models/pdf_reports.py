@@ -299,6 +299,5 @@ def get_academic_report_data(self, manager_id, start_date=False, end_date=False)
 
 def get_common_performance_data(self, employees, start_date=False, end_date=False):
     for employee in employees:
-        self.env['logic.common.task.performance'].sudo().create_employee_common_task_performance(employee, start_date,
-                                                                                                 end_date)
+        self.env['logic.common.task.performance'].sudo().create_employee_common_task_performance(employee, start_date,                                                                                       end_date)
     return self.env['logic.common.task.performance'].sudo().get_employee_common_task_performances(employees)

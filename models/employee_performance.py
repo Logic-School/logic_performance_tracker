@@ -87,6 +87,13 @@ class LogicEmployeePerformance(models.Model):
             if start_date and end_date:
                 domain.extend([('seminar_date', '>=',start_date), ('seminar_date','<=',end_date)])
 
+        elif model_name == 'directors.feedback':
+            # if (seminar.attended_by.id==employee.id) or ( (not seminar.attended_by) and (seminar.create_uid.id==employee.user_id.id) ):
+
+            domain = [('employee_id', '=', employee.id)]
+            if start_date and end_date:
+                domain.extend([('date', '>=', start_date), ('date', '<=', end_date)])
+
         elif model_name=='leads.logic':
             lead_domain = [('leads_assign','=',employee.id)]
         
@@ -218,9 +225,9 @@ class LogicEmployeePerformance(models.Model):
         batch_objs = self.env['logic.base.batch'].sudo().search([('academic_coordinator','=',employee.user_id.id),('batch_window','=',window)])
         batches = []
         for batch_obj in batch_objs:
-            batch = {'id':batch_obj.id,'name':batch_obj.name}
+            batch = {'id':batch_obj.id, 'name':batch_obj.name}
             try:
-                batch['strength'] = self.env['logic.students'].sudo().search_count([('batch_id','=',batch_obj.id)])
+                batch['strength'] = self.env['logic.students'].sudo().search_count([('batch_id', '=', batch_obj.id)])
             except:
                 batch['strength'] = 0
             batches.append(batch)
@@ -483,12 +490,16 @@ class LogicEmployeePerformance(models.Model):
             common_performance['qualitative_rating'] = qualitative_perf[0].overall_average
 
         misc_domain = [('task_creator','=',employee.user_id.id),('state','=','completed')]
+        feedback_domain = [('employee_id', '=', employee.user_id.employee_id.id)]
         to_do_domain = [('state','=','completed'),'|',('assigned_to','=',employee.user_id.id),('coworkers_ids','in',[employee.user_id.id] ), ('state','=','completed')]
         if start_date and end_date:
             misc_domain.extend([('date_completed','>=',start_date),('date_completed','<=',end_date)])
             to_do_domain.extend([('completed_date','>=',start_date),('completed_date','<=',end_date)])
+            feedback_domain.extend([('date','>=',start_date),('date','<=',end_date)])
 
         common_performance['misc_task_count'] = self.env['logic.task.other'].sudo().search_count(misc_domain)
+        common_performance['common_feedbacks'] = self.env['directors.feedback'].sudo().search_count(feedback_domain)
+        common_performance['feedbacks'] = self.env['directors.feedback'].sudo().search(feedback_domain)
         common_performance['to_do_count'] = self.env['to_do.tasks'].sudo().search_count(to_do_domain)
         common_performance['to_do_tasks'] = self.env['to_do.tasks'].sudo().search(to_do_domain)
         print(common_performance['to_do_tasks'], 'to do tasks')

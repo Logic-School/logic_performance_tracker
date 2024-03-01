@@ -20,14 +20,17 @@ class CommonTaskPerformance(models.Model):
         employee_data = {'completed_to_do_count':0, 'completed_misc_count':0, 'delayed_to_do_count':0, 'delayed_misc_count':0, 'combined_rating':0, 'score':0}
         misc_domain = [('task_creator_employee','=',employee.id),('state','=',('completed')),('expected_completion','!=',False)]
         leads_total_domain = [('leads_assign','=',employee.user_id.employee_id.id)]
+        feedback_domain = [('employee_id', '=', employee.user_id.employee_id.id)]
         adm_leads_count = [('leads_assign','=',employee.user_id.employee_id.id),('admission_status', '=', True)]
         to_do_domain = [('state','=','completed'), '|', ('assigned_to','=',employee.user_id.id),('coworkers_ids','in',[employee.user_id.id] ), ('completed_date','!=',False)]
         if start_date and end_date:
             misc_domain.extend([('date_completed','>=',start_date),('date_completed','<=',end_date)])
+            feedback_domain.extend([('date','>=',start_date),('date','<=',end_date)])
             to_do_domain.extend([('completed_date','>=',start_date),('completed_date','<=',end_date)])
             adm_leads_count.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
             leads_total_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
         misc_tasks = self.env['logic.task.other'].sudo().search(misc_domain)
+        feedback = self.env['directors.feedback'].sudo().search(feedback_domain)
         to_do_tasks = self.env['to_do.tasks'].sudo().search(to_do_domain)
         leads_total_count = self.env['leads.logic'].sudo().search(leads_total_domain)
         adm_total_count_lead = self.env['leads.logic'].sudo().search(adm_leads_count)
@@ -107,7 +110,7 @@ class CommonTaskPerformance(models.Model):
             self.env['logic.common.task.performance'].sudo().create(values) 
         logger.error("Common Perf: "+str(employee_data))
 
-        return values           
+        return values
 
     def get_employee_common_task_performances(self,employees):
         logger = logging.getLogger("Common perf debug: ")

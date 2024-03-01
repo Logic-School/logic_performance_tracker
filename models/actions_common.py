@@ -64,7 +64,7 @@ class StateAction(models.Model):
         dashboard_data = {}
         sales_department_obj = self.env['hr.department'].sudo().search([('name', '=', 'Sales')])
         sales_dept_childs = self.env['hr.department'].sudo().search([('parent_id', '=', sales_department_obj[0].id)])
-        dashboard_data['sales_employees_count'] = self.env['hr.employee'].sudo().search_count([('department_id','in',sales_dept_childs.ids)])
+        dashboard_data['sales_employees_count'] = self.env['hr.employee'].sudo().search_count([('department_id', 'in', sales_dept_childs.ids)])
 
         it_department_obj = self.env['hr.department'].sudo().search([('name', '=', 'IT')])
         it_dept_childs = self.env['hr.department'].sudo().search([('parent_id', '=', it_department_obj[0].id)])
@@ -163,7 +163,7 @@ def get_employees(self,department_obj,manager=False,managers=False):
 
     if managers:
         logger.error("dept childs: "+str(department_obj[0].child_ids.ids))
-        employees = self.env['hr.employee'].sudo().search([('department_id','in',department_obj[0].child_ids.ids),('parent_id','in',managers.ids)])
+        employees = self.env['hr.employee'].sudo().search([('department_id','in',department_obj[0].child_ids.ids), ('parent_id','in',managers.ids)])
         employees+=managers
 
     else:
@@ -240,9 +240,9 @@ def get_academic_windows(self,employee):
     logger.error("academic_windows"+str(academic_windows))
     for window in academic_windows:
         batch_count = self.env['logic.base.batch'].sudo().search_count([('batch_window','=',window[0]),('academic_coordinator','=',employee.user_id.id)])
-        academic_windows_data.append( {
+        academic_windows_data.append({
             'id': window[0], 'name':window[1] + ' (' + str(batch_count) + ' Batches)'
-            } )
+            })
     logger.error("academic_windows_data"+str(academic_windows_data))
 
     return academic_windows_data
@@ -409,15 +409,6 @@ def get_employee_personal_to_do(self, employee, start_date=False, end_date=False
             personal_to_do[j.name]['rating'] = rating
             personal_to_do[j.name]['completed_date'] = completed_date
 
-
-
-
-    #
-    #     # personal_to_do[j[0]] = j[1],
-    #     # personal_to_do[1] = j.state
-    #
-    #     # personal_to_do['state'] = j.state
-    #     print(personal_to_do, 'ooo')
     return personal_to_do
 
 def get_employee_personal_misc(self, employee, start_date=False, end_date=False):
@@ -438,6 +429,7 @@ def get_employee_personal_misc(self, employee, start_date=False, end_date=False)
 
             if start_date <= date <= end_date:
                 print(j.name, 'common performance filterd')
+
                 personal_misc[j.name]['state'] = j.state
                 personal_misc[j.name]['assigned_date'] = date
                 personal_misc[j.name]['task_submission_status'] = task_submission_status
@@ -448,3 +440,15 @@ def get_employee_personal_misc(self, employee, start_date=False, end_date=False)
             personal_misc[j.name]['task_submission_status'] = task_submission_status
     print('misc')
     return personal_misc
+
+def get_employee_personal_feedback(self, employee, start_date=False, end_date=False):
+    logger = logging.getLogger("To do debug: ")
+    print(start_date, end_date, 'dates')
+    personal_feedback = {}
+    feedback = [('employee_id', '=', employee.id)]
+
+    common_performance = self.env['directors.feedback'].sudo().search(feedback)
+    print(common_performance, 'feedback')
+
+    for j in common_performance:
+        print(j)
