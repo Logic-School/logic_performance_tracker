@@ -23,6 +23,8 @@ class MarketingTracker(models.Model):
             employee_user_ids = employees.mapped('user_id.id')
 
         dashboard_data['qualitatives'] = actions_common.get_raw_qualitative_data(self,employees,start_date,end_date)
+        dashboard_data['quantitatives'] = actions_common.get_raw_quantitative_data(self,employees,start_date,end_date)
+
 
         districts = dict(self.env['seminar.leads'].sudo().fields_get()['district']['selection'])
         district_names = list(dict(self.env['seminar.leads'].sudo().fields_get()['district']['selection']).values())
@@ -30,8 +32,9 @@ class MarketingTracker(models.Model):
         dashboard_data['leads_data'] = {'districts':district_names,'leads_dataset':[]}
         for employee in employees:
             actions_common.create_employee_qualitative_performance(self,dashboard_data['qualitatives'],employee)
-            self.env['logic.common.task.performance'].sudo().create_employee_common_task_performance(employee,start_date,end_date)
+            actions_common.create_employee_quantitative_performance(self,dashboard_data['quantitatives'],employee)
 
+            self.env['logic.common.task.performance'].sudo().create_employee_common_task_performance(employee,start_date,end_date)
             self.create_employee_seminar_leaderboard_data(employee,start_date,end_date)
             leads_count = []
             conversion_rates = []
@@ -52,6 +55,8 @@ class MarketingTracker(models.Model):
         dashboard_data['org_datas'],dashboard_data['dept_names'] = actions_common.get_org_datas_dept_names(manager,managers)
         dashboard_data['seminar_performances'] = self.get_seminar_leaderboard_data(employees)
         dashboard_data['qualitatives'],dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data['qualitatives'],employees)
+        dashboard_data['quantitatives'],dashboard_data['quantitative_overall_averages'] = actions_common.get_ordered_quantitative_data(self,dashboard_data['quantitatives'],employees)
+
         dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self,employees,start_date,end_date)
         dashboard_data['common_task_performances'] = self.env['logic.common.task.performance'].sudo().get_employee_common_task_performances(employees)
 

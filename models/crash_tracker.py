@@ -34,12 +34,16 @@ class CrashTracker(models.Model):
         dashboard_data['department_heads'] = department_heads_data
 
         dashboard_data['qualitatives'] = actions_common.get_raw_qualitative_data(self,employees,start_date,end_date)
+        dashboard_data['quantitatives'] = actions_common.get_raw_quantitative_data(self,employees,start_date,end_date)
+
 
         lead_sources = self.env['leads.sources'].sudo().search([])
         lead_source_names = lead_sources.mapped('name')
 
         for employee in employees:
             actions_common.create_employee_qualitative_performance(self,dashboard_data['qualitatives'],employee)
+            actions_common.create_employee_quantitative_performance(self,dashboard_data['quantitatives'],employee)
+
             self.env['sales.tracker'].sudo().create_employee_leads_leaderboard_data(employee,start_date,end_date)
 
             self.env['logic.common.task.performance'].sudo().create_employee_common_task_performance(employee,start_date,end_date)
@@ -48,6 +52,8 @@ class CrashTracker(models.Model):
         dashboard_data['lead_sources'] = self.env['sales.tracker'].sudo().get_lead_sources_data()
         dashboard_data['common_task_performances'] = self.env['logic.common.task.performance'].sudo().get_employee_common_task_performances(employees)
         dashboard_data['qualitatives'],dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data['qualitatives'],employees)    
+        dashboard_data['quantitatives'],dashboard_data['quantitative_overall_averages'] = actions_common.get_ordered_quantitative_data(self,dashboard_data['quantitatives'],employees)
+
         dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self,employees,start_date,end_date)
         dashboard_data['leads_performances'] = self.env['sales.tracker'].sudo().get_leads_leaderboard_data(employees)
         dashboard_data['month'] = actions_common.get_month_list().get(month).capitalize()

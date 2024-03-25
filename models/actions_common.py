@@ -203,6 +203,38 @@ def get_raw_qualitative_data(self,employees=False,start_date=False,end_date=Fals
         qualitatives = self.env['base.qualitative.analysis'].retrieve_performance(employees=employees)
     return qualitatives
 
+def create_employee_quantitative_performance(self,quantitatives,employee):
+    logger = logging.getLogger("Debugger: ")
+
+    quantitative_average = 0
+    quantitative_values = {}
+    if quantitatives.get(employee.name):
+        for attribute in quantitatives[employee.name].keys():
+            quantitative_average += quantitatives[employee.name][attribute]['average_rating']
+            quantitative_values[attribute] = quantitatives[employee.name][attribute]['average_rating']
+        quantitative_average = round(quantitative_average/len(quantitatives[employee.name].keys()), 2)
+        logger.error("qual aver: "+str(quantitative_average))
+    logger.error("qual values: "+str(quantitative_values))
+
+    emp_qual_obj = self.env['employee.quantitative.performance'].sudo().search([('employee','=',employee.id)])
+    if emp_qual_obj:
+        emp_qual_obj.write({
+            'overall_average': quantitative_average
+        })
+    else:
+        self.env['employee.quantitative.performance'].sudo().create({
+            'employee': employee.id,
+            'overall_average': quantitative_average,
+        })
+    return quantitative_average
+
+def get_raw_quantitative_data(self,employees=False,start_date=False,end_date=False):
+    if start_date and end_date:
+        quantitatives = self.env['quantitative.analysis'].retrieve_performance(employees=employees,start_date=start_date,end_date=end_date)
+    else:
+        quantitatives = self.env['quantitative.analysis'].retrieve_performance(employees=employees)
+    return quantitatives
+
 def get_ordered_qualitative_data(self,qualitatives,employees):
 
     logger = logging.getLogger("Debugger: ")
@@ -215,6 +247,19 @@ def get_ordered_qualitative_data(self,qualitatives,employees):
     logger.error("qualitative_overall_average_datas: "+str(qualitative_overall_average_datas))
     logger.error("dashboard_data['qualitatives']: "+str(qualitatives))
     return qualitatives,qualitative_overall_average_datas
+
+def get_ordered_quantitative_data(self,quantitatives,employees):
+
+    logger = logging.getLogger("Debugger: ")
+    quantitative_overall_objs = self.env['employee.quantitative.performance'].sudo().search([('employee','in',employees.ids)],order="overall_average desc")
+    quantitative_overall_average_datas = {}
+    for quantitative_overall_obj in quantitative_overall_objs:
+        quantitative_overall_average_datas[quantitative_overall_obj.employee.name] = quantitative_overall_obj.overall_average
+        if not quantitatives.get(quantitative_overall_obj.employee.name):
+            quantitatives[quantitative_overall_obj.employee.name] = {}
+    logger.error("quantitative_overall_average_datas: "+str(quantitative_overall_average_datas))
+    logger.error("dashboard_data['quantitative']: "+str(quantitatives))
+    return quantitatives,quantitative_overall_average_datas
 
 def get_org_datas_dept_names(manager,managers):
     if managers:

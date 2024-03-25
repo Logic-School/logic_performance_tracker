@@ -40,6 +40,8 @@ class AcademicTracker(models.Model):
 
 
         dashboard_data['qualitatives'] = actions_common.get_raw_qualitative_data(self,employees,start_date,end_date)
+        dashboard_data['quantitatives'] = actions_common.get_raw_quantitative_data(self,employees,start_date,end_date)
+
 
         for employee in employees:
             total_completed=0
@@ -71,6 +73,8 @@ class AcademicTracker(models.Model):
                 self.env['academic.coordinator.performance'].create(values)
 
             actions_common.create_employee_qualitative_performance(self,dashboard_data['qualitatives'],employee)
+            actions_common.create_employee_quantitative_performance(self,dashboard_data['quantitatives'],employee)
+
 
         academic_coord_perfs = self.env['academic.coordinator.performance'].sudo().search([('employee', 'in', employees.ids)])
         logger.error(academic_coord_perfs)
@@ -94,6 +98,8 @@ class AcademicTracker(models.Model):
 
         dashboard_data['coordinator_data'] = employees_data
         dashboard_data['qualitatives'],dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data['qualitatives'],employees)    
+        dashboard_data['quantitatives'],dashboard_data['quantitative_overall_averages'] = actions_common.get_ordered_quantitative_data(self,dashboard_data['quantitatives'],employees)
+
         dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self,employees,start_date,end_date)
         dashboard_data['common_task_performances'] = self.env['logic.common.task.performance'].sudo().get_employee_common_task_performances(employees)
 

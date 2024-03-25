@@ -68,6 +68,7 @@ class DigitalTaskInherit(models.Model):
         dashboard_data['states_data'] = self.get_states_data(tasks)
 
         dashboard_data['qualitatives'] = actions_common.get_raw_qualitative_data(self,employees,start_date,end_date)
+        dashboard_data['quantitatives'] = actions_common.get_raw_quantitative_data(self,employees,start_date,end_date)
 
 
         if not start_date or not end_date:
@@ -82,9 +83,12 @@ class DigitalTaskInherit(models.Model):
             self.env['logic.common.task.performance'].sudo().create_employee_common_task_performance(employee,start_date,end_date)
 
             actions_common.create_employee_qualitative_performance(self,dashboard_data['qualitatives'],employee)
+            actions_common.create_employee_quantitative_performance(self,dashboard_data['quantitatives'],employee)
+
 
         dashboard_data['qualitatives'],dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data['qualitatives'],employees)
         dashboard_data['common_task_performances'] = self.env['logic.common.task.performance'].sudo().get_employee_common_task_performances(employees)
+        dashboard_data['quantitatives'],dashboard_data['quantitative_overall_averages'] = actions_common.get_ordered_quantitative_data(self,dashboard_data['quantitatives'],employees)
 
         org_datas=[]
         if manager:
