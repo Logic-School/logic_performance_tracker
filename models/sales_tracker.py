@@ -30,7 +30,6 @@ class SalesTracker(models.Model):
         dashboard_data['qualitatives'] = actions_common.get_raw_qualitative_data(self,employees,start_date,end_date)
         dashboard_data['quantitatives'] = actions_common.get_raw_quantitative_data(self,employees,start_date,end_date)
 
-
         lead_sources = self.env['leads.sources'].sudo().search([])
         lead_source_names = lead_sources.mapped('name')
         logger.error("lead_sources: "+str(lead_source_names))

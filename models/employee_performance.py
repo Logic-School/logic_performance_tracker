@@ -202,8 +202,11 @@ class LogicEmployeePerformance(models.Model):
             days, months, years = actions_common.get_day_month_year_from_timedelta(date.today() - employee.joining_date)
             personal_data['employment_duration'] = f'( {years} Years, {months} Months and {days} Days )'
 
-        personal_data['branch'] = dict(employee._fields['branch'].selection).get(employee.branch) if employee.branch else False 
-        personal_data['image'] = 'data:image/png;base64, ' + str(employee.image_1920, 'UTF-8')
+        personal_data['branch'] = dict(employee._fields['branch'].selection).get(employee.branch) if employee.branch else False
+        if employee.image_1920:
+            personal_data['image'] = 'data:image/png;base64, ' + str(employee.image_1920, 'UTF-8')
+        else:
+            personal_data['image'] = False
         return personal_data
     
     def get_student_feedback_average(self,employee):

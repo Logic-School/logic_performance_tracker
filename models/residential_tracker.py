@@ -33,8 +33,8 @@ class ResidentialTracker(models.Model):
 
             self.env['logic.common.task.performance'].sudo().create_employee_common_task_performance(employee,start_date,end_date)
         dashboard_data['common_task_performances'] = self.env['logic.common.task.performance'].sudo().get_employee_common_task_performances(employees)
-        dashboard_data['qualitatives'],dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data['qualitatives'],employees)    
-        dashboard_data['quantitatives'],dashboard_data['quantitative_overall_averages'] = actions_common.get_ordered_quantitative_data(self,dashboard_data['quantitatives'],employees)
+        dashboard_data['qualitatives'], dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data['qualitatives'],employees)
+        dashboard_data['quantitatives'], dashboard_data['quantitative_overall_averages'] = actions_common.get_ordered_quantitative_data(self,dashboard_data['quantitatives'],employees)
 
         dashboard_data['other_performances'] = actions_common.get_miscellaneous_performances(self,employees,start_date,end_date)
         
