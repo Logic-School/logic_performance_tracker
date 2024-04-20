@@ -220,16 +220,22 @@ class SalesTracker(models.Model):
                 warm_lead_count += 1
             elif lead_with_admission.lead_quality == 'cold':
                 cold_lead_count += 1
-            leads = self.env['leads.logic'].sudo().search(lead_domain)
-            for i in leads:
-                converted_lead_count += i.admission_count
-                # if month:
-                #     if lead_with_admission.admission_date.month == month and lead_with_admission.admission_date.year == year:
-                #         converted_lead_count += i.admission_count
-                #         # print(lead_with_admission.admission_count, 'sec count')
-                # else:
-                #     converted_lead_count += i.admission_count
-                    # print(lead_with_admission.admission_count, 'sec count')
+
+        for lead_conversion in leads_with_admission:
+            converted_lead_count += lead_conversion.admission_count
+            # if month:
+            #     print(lead_conversion.admission_date, 'datessss')
+            #     print(lead_conversion.admission_count, 'countssss')
+            # else:
+            #     print('no')
+            # leads = self.env['leads.logic'].sudo().search(lead_domain)
+            # for i in leads:
+            #     # converted_lead_count += i.admission_count
+            #     if month:
+            #         if lead_conversion.admission_date.month == month and lead_conversion.admission_date.year == year:
+            #             converted_lead_count += i.admission_count
+            #     else:
+            #         converted_lead_count += i.admission_count
 
         if leads_count>0:
             lead_conversion_rate = round(100 * (converted_lead_count/leads_count),2)
