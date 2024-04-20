@@ -203,10 +203,8 @@ class LogicEmployeePerformance(models.Model):
             personal_data['employment_duration'] = f'( {years} Years, {months} Months and {days} Days )'
 
         personal_data['branch'] = dict(employee._fields['branch'].selection).get(employee.branch) if employee.branch else False
-        if employee.image_1920:
-            personal_data['image'] = 'data:image/png;base64, ' + str(employee.image_1920, 'UTF-8')
-        else:
-            personal_data['image'] = False
+        personal_data['image'] = 'data:image/png;base64, ' + str(employee.image_1920, 'UTF-8')
+
         return personal_data
     
     def get_student_feedback_average(self,employee):
