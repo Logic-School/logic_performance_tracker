@@ -18,7 +18,7 @@ class CommonTaskPerformance(models.Model):
     def create_employee_common_task_performance(self,employee, start_date=False, end_date=False):
         logger = logging.getLogger("Common perf debug: ")
         employee_data = {'completed_to_do_count':0, 'completed_misc_count':0, 'delayed_to_do_count':0, 'delayed_misc_count':0, 'combined_rating':0, 'score':0}
-        misc_domain = [('task_creator_employee','=',employee.id),('state','=',('completed')),('expected_completion','!=',False)]
+        misc_domain = [('task_creator_employee','=',employee.id),('state','in',['completed','achievement'])]
         leads_total_domain = [('leads_assign','=',employee.user_id.employee_id.id)]
         feedback_domain = [('employee_id', '=', employee.user_id.employee_id.id)]
         adm_leads_count = [('leads_assign','=',employee.user_id.employee_id.id),('admission_status', '=', True)]

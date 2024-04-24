@@ -458,7 +458,7 @@ def get_employee_personal_to_do(self, employee, start_date=False, end_date=False
 
 def get_employee_personal_misc(self, employee, start_date=False, end_date=False):
     personal_misc = {}
-    misc_domain = [('task_creator', '=', employee.user_id.id), ('state', '=', 'completed')]
+    misc_domain = [('task_creator', '=', employee.user_id.id), ('state','in',['completed','achievement'])]
 
     misc_performance = self.env['logic.task.other'].sudo().search(misc_domain)
     if start_date and end_date:

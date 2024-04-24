@@ -121,7 +121,7 @@ class LogicEmployeePerformance(models.Model):
         return domain
     
     def get_monthly_misc_counts(self,employee,year):
-        misc_tasks = self.env['logic.task.other'].sudo().search([('task_creator_employee','=',employee.id),('state','=','completed')])
+        misc_tasks = self.env['logic.task.other'].sudo().search([('task_creator_employee','=',employee.id),('state','in',['completed','achievement'])])
         misc_tasks = misc_tasks.filtered(lambda task: (task.date_completed or task.date).year==year)
         misc_data = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0}
         for task in misc_tasks:
@@ -490,7 +490,7 @@ class LogicEmployeePerformance(models.Model):
         if qualitative_perf:
             common_performance['qualitative_rating'] = qualitative_perf[0].overall_average
 
-        misc_domain = [('task_creator','=',employee.user_id.id),('state','=','completed')]
+        misc_domain = [('task_creator','=',employee.user_id.id),('state','in',['completed','achievement'])]
         feedback_domain = [('employee_id', '=', employee.user_id.employee_id.id)]
         to_do_domain = [('state','=','completed'),'|',('assigned_to','=',employee.user_id.id),('coworkers_ids','in',[employee.user_id.id] ), ('state','=','completed')]
         if start_date and end_date:
