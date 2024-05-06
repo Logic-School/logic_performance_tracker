@@ -115,8 +115,12 @@ class CommonTaskPerformance(models.Model):
     def get_employee_common_task_performances(self,employees):
         logger = logging.getLogger("Common perf debug: ")
         logger.error("emps: "+str(employees.mapped('name')))
+        # common_leads_sources = self.env['leads.sources'].sudo().search([])
         common_task_perf_objs = self.env['logic.common.task.performance'].sudo().search([('employee','in',employees.ids)], order="score desc")
         employee_performances = {}
+        # for source in common_leads_sources:
+        #     employee_performances[source.name] = {}
+        #     employee_performances[source.name]['name'] = source.name
 
         for common_task_perf_obj in common_task_perf_objs:
             emp_id_name = str(common_task_perf_obj.employee.id) + " "
@@ -137,3 +141,12 @@ class CommonTaskPerformance(models.Model):
         logger.error('common perfs: '+str(employee_performances))
         print(employee_performances, "employee_performances")
         return employee_performances
+
+    # def get_lead_source_base_performance(self):
+    #     common_leads_sources = self.env['leads.sources'].sudo().search([])
+    #     leads_sources = {}
+    #     for source in common_leads_sources:
+    #         lead_source_name_name = str(source.id) + " "
+    #         leads_sources[lead_source_name_name] = {}
+    #         leads_sources[lead_source_name_name]['source_name'] = source.name
+    #     return leads_sources

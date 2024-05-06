@@ -446,8 +446,52 @@
                             </table>
                         </div>
                     </div>
+
+
             </div>
-        </t>
+        <div class="m-3" t-if="values['leads_sources']">
+                        <!-- <h1 class="inline">Miscellaneous Works</h1> -->
+                <div class="h-100 table-responsive card" style="border-radius:10px;">
+                            <table style="font-size:14px;"
+                                   class="table table-striped table-hover rounded-table table-borderless">
+                                <thead>
+                                    <tr class="rounded" style="background-color:#78787859;">
+                                        <td colspan="8" class="text-center"><h2>Lead Conversions (By Source)</h2></td>
+                                    </tr>
+                                </thead>
+                                <thead style="background-color:#e0e0de" class="">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Lead Sources</th>
+                                    <th class="text-center" scope="col">Total Leads</th>
+                                    <th class="text-center" scope="col">Converted Leads</th>
+
+                                </tr>
+                                </thead>
+                                <tbody style="font-size:14px;">
+                                    <t t-set="index" t-value="1"/>
+                                    <t t-if="values['leads_sources']"
+                                       t-foreach="Object.keys(values['leads_sources'])" t-as="source">
+
+                                        <tr>
+                                            <td t-esc="index"/>
+                                            <td t-esc="values['leads_sources'][source]['name']"/>
+                                            <td style="color: green"
+                                                t-esc="values['leads_sources'][source]['lead_count']"
+                                                class="text-center"/>
+
+                                            <td style="color: green"
+                                                t-esc="values['leads_sources'][source]['lead_converted']"
+                                                class="text-center"/>
+
+                                        </tr>
+                                        <t t-set="index" t-value="index+1"/>
+                                        </t>
+                                </tbody>
+                            </table>
+                </div>
+        </div>
+    </t>
 
     <t t-name="logic_performance_tracker.salesman_leads_sub_data">
             <!-- <div class="o_coordinator_subtable"> -->

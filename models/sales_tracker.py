@@ -62,6 +62,8 @@ class SalesTracker(models.Model):
         dashboard_data['lead_sources'] = self.get_lead_sources_data()
         dashboard_data['org_datas'],dashboard_data['dept_names'] = actions_common.get_org_datas_dept_names(manager,managers)
         dashboard_data['leads_performances'] = self.get_leads_leaderboard_data(employees)
+        dashboard_data['leads_sources'] = self.get_leads_source_leaderboard_data(start_date,end_date)
+
         dashboard_data['qualitatives'],dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data['qualitatives'],employees)
         dashboard_data['quantitatives'],dashboard_data['quantitative_overall_averages'] = actions_common.get_ordered_quantitative_data(self,dashboard_data['quantitatives'],employees)
 
@@ -362,7 +364,6 @@ class SalesTracker(models.Model):
         total_leads = len(leads)
         adm_leads = self.env['leads.logic'].sudo().search(adm_total_leads_domain)
         total_adm_count = len(adm_leads)
-
         leads_with_admission,leads_without_admission = self.get_leads_with_and_without_admission(leads,start_date,end_date)
         month,year = self.get_leads_month_year(start_date,end_date)
         year_lead_target_obj = self.env['leads.target'].sudo().search([('year','=',year),('user_id','=',employee.user_id.id)])
@@ -439,9 +440,11 @@ class SalesTracker(models.Model):
             year=start_date.year
             if start_date.month==end_date.month and start_date.year==end_date.year:
                 month = start_date.month
+
         else:
             year = date.today().year
             month = date.today().month
+
         return month,year
 
     def get_leads_with_and_without_admission(self,leads,start_date,end_date):
@@ -476,6 +479,40 @@ class SalesTracker(models.Model):
             employees_data[emp_id]['converted_target_ratio'] = perf_obj.converted_target_ratio
 
         return employees_data
+
+    def get_leads_source_leaderboard_data(self,start_date, end_date):
+        if start_date and end_date:
+            print(start_date, end_date, 'datesrtrtre')
+            source_objs = self.env['leads.sources'].sudo().search([])
+            # print(end_date, 'end_date')
+            source_data = {}
+            for perf_obj in source_objs:
+                print(source_objs, 'perf_obj')
+                sc_count = self.env['leads.logic'].sudo().search_count([('leads_source', '=', perf_obj.id), ('date_of_adding', '>=', start_date), ('date_of_adding', '<=', end_date)])
+                converted_count = self.env['leads.logic'].sudo().search_count(
+                    [('leads_source', '=', perf_obj.id), ('admission_status', '=', True), ('date_of_adding', '>=', start_date), ('date_of_adding', '<=', end_date)])
+
+                source_id = str(perf_obj.id) + " "
+                source_data[source_id] = {}
+                source_data[source_id]['name'] = perf_obj.name
+                source_data[source_id]['lead_count'] = sc_count
+                source_data[source_id]['lead_converted'] = converted_count
+        else:
+            source_objs = self.env['leads.sources'].sudo().search([])
+            # print(end_date, 'end_date')
+            source_data = {}
+            for perf_obj in source_objs:
+                print(source_objs, 'perf_obj')
+                sc_count = self.env['leads.logic'].sudo().search_count([('leads_source', '=', perf_obj.id)])
+                converted_count = self.env['leads.logic'].sudo().search_count([('leads_source', '=', perf_obj.id), ('admission_status', '=', True)])
+
+                source_id = str(perf_obj.id) + " "
+                source_data[source_id] = {}
+                source_data[source_id]['name'] = perf_obj.name
+                source_data[source_id]['lead_count'] = sc_count
+                source_data[source_id]['lead_converted'] = converted_count
+
+        return source_data
     
     @api.model
     def get_sales_performance_report_data(self, start_date=False, end_date=False, manager_id=False):
@@ -496,3 +533,4 @@ class EmployeeSalesPerformance(models.Model):
     conversion_rate = fields.Float(string="Conversion Rate")
     total_lead_count = fields.Float(string="Total Lead Count")
     total_adm_count = fields.Float(string="Total Adm Count")
+    lead_sources = fields.Many2one('leads.sources', string="Lead Sources")
