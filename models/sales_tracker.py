@@ -63,6 +63,7 @@ class SalesTracker(models.Model):
         dashboard_data['org_datas'],dashboard_data['dept_names'] = actions_common.get_org_datas_dept_names(manager,managers)
         dashboard_data['leads_performances'] = self.get_leads_leaderboard_data(employees)
         dashboard_data['leads_sources'] = self.get_leads_source_leaderboard_data(start_date,end_date)
+        dashboard_data['leads_courses'] = self.get_leads_course_leaderboard_data(start_date, end_date)
 
         dashboard_data['qualitatives'],dashboard_data['qualitative_overall_averages'] = actions_common.get_ordered_qualitative_data(self,dashboard_data['qualitatives'],employees)
         dashboard_data['quantitatives'],dashboard_data['quantitative_overall_averages'] = actions_common.get_ordered_quantitative_data(self,dashboard_data['quantitatives'],employees)
@@ -513,6 +514,40 @@ class SalesTracker(models.Model):
                 source_data[source_id]['lead_converted'] = converted_count
 
         return source_data
+
+    def get_leads_course_leaderboard_data(self,start_date, end_date):
+        if start_date and end_date:
+            print(start_date, end_date, 'datesrtrtre')
+            source_objs = self.env['logic.base.courses'].sudo().search([('state', '=', 'done')])
+            # print(end_date, 'end_date')
+            course_data = {}
+            for perf_obj in source_objs:
+                print(source_objs, 'perf_obj')
+                sc_count = self.env['leads.logic'].sudo().search_count([('base_course_id', '=', perf_obj.id), ('date_of_adding', '>=', start_date), ('date_of_adding', '<=', end_date)])
+                converted_count = self.env['leads.logic'].sudo().search_count(
+                    [('base_course_id', '=', perf_obj.id), ('admission_status', '=', True), ('date_of_adding', '>=', start_date), ('date_of_adding', '<=', end_date)])
+
+                course_id = str(perf_obj.id) + " "
+                course_data[course_id] = {}
+                course_data[course_id]['name'] = perf_obj.name
+                course_data[course_id]['lead_count'] = sc_count
+                course_data[course_id]['lead_converted'] = converted_count
+        else:
+            source_objs = self.env['logic.base.courses'].sudo().search([('state', '=', 'done')])
+            # print(end_date, 'end_date')
+            course_data = {}
+            for perf_obj in source_objs:
+                print(source_objs, 'perf_obj')
+                sc_count = self.env['leads.logic'].sudo().search_count([('base_course_id', '=', perf_obj.id)])
+                converted_count = self.env['leads.logic'].sudo().search_count([('base_course_id', '=', perf_obj.id), ('admission_status', '=', True)])
+
+                course_id = str(perf_obj.id) + " "
+                course_data[course_id] = {}
+                course_data[course_id]['name'] = perf_obj.name
+                course_data[course_id]['lead_count'] = sc_count
+                course_data[course_id]['lead_converted'] = converted_count
+
+        return course_data
     
     @api.model
     def get_sales_performance_report_data(self, start_date=False, end_date=False, manager_id=False):
