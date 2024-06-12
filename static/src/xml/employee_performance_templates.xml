@@ -146,8 +146,6 @@
                                                 <div class="detail-item row" t-if="values['common_performance']">
                                                     <div class="col-7">
                                                         <span class="label1 text-nowrap">Miscellaneous Tasks</span>
-
-
                                                     </div>
                                                     <div class="col-5 ml-0 mr-0 p-0">
                                                         <span class="label1 font-weight-normal">: </span>

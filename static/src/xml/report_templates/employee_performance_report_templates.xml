@@ -540,8 +540,7 @@
                                 <th scope="col" width="7%" class="text-center">#</th>
                                 <th scope="col" width="60%" class="text-center">Leave Type</th>
                                 <th class="text-center" width="33%" scope="col">Leaves Taken</th>
-    
-    
+
                             </tr>
                             </thead>
                             <tbody style="font-size:14px;">
@@ -563,6 +562,63 @@
                 </div>
             </div>
 
+            <div t-if="values['miscellaneous_tasks']" style="page-break-inside: avoid;">
+                <div class="mt-5">
+                    <div class="table-responsive table-sm card performance-table">
+                        <!-- Add 'table-bordered' class for borders -->
+                        <table class="table table-striped table-hover table-bordered">
+                            <thead>
+                                <tr class="rounded" style="background-color:#78787859;">
+                                    <td colspan="5" class="text-center"><h5>Miscellaneous</h5></td>
+                                </tr>
+                            </thead>
+                            <thead style="background-color:#e0e0de" class="">
+                            <tr>
+<!--                                <th scope="col" width="7%" class="text-center">#</th>-->
+                                <!--                                <th scope="col" class="text-center">Task</th>-->
+                                <!--                                <th scope="col" class="text-center">Assigned Date</th>-->
+                                <!--                                <th scope="col" class="text-center">Completed Date</th>-->
+                                <th scope="col" class="text-center">#</th>
+                                <th scope="col" class="text-center">Task Type</th>
+                                <th scope="col" class="text-center">Total</th>
+                                <th scope="col" class="text-center">On Time</th>
+                                <th scope="col" class="text-center">Delayed</th>
+                                <!--                                <th scope="col" class="text-center">Status</th>-->
+                            </tr>
+                            </thead>
+                            <tbody style="font-size:14px;">
+                                <t t-set="index" t-value="1"/>
+                                <t t-foreach="Object.keys(values['miscellaneous_tasks'])"
+                                   t-as="task">
+                                        <!--                                            <t t-foreach="values['miscellaneous_tasks'].items()" t-as="task">-->
+                                    <tr>
+                                        <td t-esc="index" class="text-center"/>
+                                        <td class="text-center">
+            <t t-if="task == 'other'">Other</t>
+                                            <t t-if="task == 'meeting'">Meeting</t>
+                                            <t t-if="task == 'telephone_discussion'">Telephone Discussion</t>
+                                            <t t-if="task == 'clerical_works'">Clerical Works</t>
+                                            <t t-if="task == 'day_to_day_works'">Day To Day Works</t>
+                                            <t t-if="task == 'batch_related_works'">Batch Related Works</t>
+        </td>
+                                        <!--                                        <td t-esc="task"-->
+                                        <!--                                                class="text-center"/>&lt;!&ndash; Task Type &ndash;&gt;-->
+                                        <td t-esc="values['miscellaneous_tasks'][task]['count']"
+                                            class="text-center"/>
+                                        <td t-esc="values['miscellaneous_tasks'][task]['on_time']"
+                                            class="text-center"/> <!-- On Time Count -->
+                                        <td t-esc="values['miscellaneous_tasks'][task]['delayed']"
+                                            class="text-center"/> <!-- Delayed Count -->
+
+                                                                                                                </tr>
+                                    <t t-set="index" t-value="index+1"/>
+                                                            </t>
+                                                        </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <div t-if="values['to_do_tasks']" style="page-break-inside: avoid;">
                 <div class="mt-5">
                     <div class="table-responsive table-sm card performance-table">
@@ -579,7 +635,7 @@
                                 <th scope="col" class="text-center">Task</th>
                                 <th scope="col" class="text-center">Assigned Date</th>
                                 <th scope="col" class="text-center">Completed Date</th>
-<!--                                <th scope="col" class="text-center">Status</th>-->
+                                <!--                                <th scope="col" class="text-center">Status</th>-->
                             </tr>
                             </thead>
                             <tbody style="font-size:14px;">
@@ -593,9 +649,9 @@
                                             class="text-center"/>
                                         <td t-esc="values['to_do_tasks'][to_do]['completed_date']"
                                             class="text-center"/>
-<!--                                        <td style="color: green"-->
-<!--                                            t-esc="values['to_do_tasks'][to_do]['state']"-->
-<!--                                            class="text-center"/>-->
+                                        <!--                                        <td style="color: green"-->
+                                        <!--                                            t-esc="values['to_do_tasks'][to_do]['state']"-->
+                                        <!--                                            class="text-center"/>-->
                                     </tr>
                                     <t t-set="index" t-value="index+1"/>
                                     </t>
@@ -605,50 +661,7 @@
                 </div>
             </div>
 
-            <div t-if="values['miscellaneous_tasks']" style="page-break-inside: avoid;">
-                <div class="mt-5">
-                    <div class="table-responsive table-sm card performance-table">
-                        <!-- Add 'table-bordered' class for borders -->
-                        <table class="table table-striped table-hover table-bordered">
-                            <thead>
-                                <tr class="rounded" style="background-color:#78787859;">
-                                    <td colspan="5" class="text-center"><h5>Miscellaneous</h5></td>
-                                </tr>
-                            </thead>
-                            <thead style="background-color:#e0e0de" class="">
-                            <tr>
-                                <th scope="col" width="7%" class="text-center">#</th>
-                                <th scope="col" class="text-center">Task</th>
-                                <th scope="col" class="text-center">Date</th>
-                                <th scope="col" class="text-center">Completion</th>
-<!--                                <th scope="col" class="text-center">Status</th>-->
-                            </tr>
-                            </thead>
-                            <tbody style="font-size:14px;">
-                                <t t-set="index" t-value="1"/>
-                                <t t-foreach="Object.keys(values['miscellaneous_tasks'])" t-as="misc">
-                                    <tr class="">
-                                        <td t-esc="index" class="text-center"/>
-                                        <td t-esc="misc" class="text-center"/>
-                                        <td t-esc="values['miscellaneous_tasks'][misc]['date']"
-                                            class="text-center"/>
-<!--                                        <td t-esc="values['miscellaneous_tasks'][misc]['task_submission_status']"-->
-<!--                                            class="text-center"/>-->
-                                        <t t-if="values['miscellaneous_tasks'][misc]['task_submission_status'] == 'on_time'">
-                                            <td span="2" style="color: green" class="text-center">On Time</td></t>
-                                        <t t-if="values['miscellaneous_tasks'][misc]['task_submission_status'] == 'delayed'">
-                                            <td span="2" style="color: red" class="text-center">Delayed</td></t>
-<!--                                        <td style="color: green"-->
-<!--                                            t-esc="values['miscellaneous_tasks'][misc]['state']"-->
-<!--                                            class="text-center"/>-->
-                                    </tr>
-                                    <t t-set="index" t-value="index+1"/>
-                                    </t>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+
         </div>
     </t>
 </templates>

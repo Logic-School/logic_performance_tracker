@@ -448,7 +448,7 @@ def get_employee_personal_to_do(self, employee, start_date=False, end_date=False
                 personal_to_do[j.name]['rating'] = rating
                 personal_to_do[j.name]['completed_date'] = completed_date
         else:
-            print('not')
+            # print('not')
             personal_to_do[j.name]['state'] = state
             personal_to_do[j.name]['assigned_date'] = assigned_date
             personal_to_do[j.name]['rating'] = rating
@@ -456,34 +456,73 @@ def get_employee_personal_to_do(self, employee, start_date=False, end_date=False
 
     return personal_to_do
 
+# def get_employee_personal_misc(self, employee, start_date=False, end_date=False):
+#     personal_misc = {}
+#     misc_domain = [('task_creator', '=', employee.user_id.id), ('state','in',['completed','achievement'])]
+#
+#     misc_performance = self.env['logic.task.other'].sudo().search(misc_domain)
+#     tasks = ['meeting', 'other', 'project', 'task']
+#
+#
+#     if start_date and end_date:
+#         common_performance = misc_performance.filtered(lambda filtered_misc: filtered_misc.date >= start_date and filtered_misc.date <= end_date)
+#     for j in misc_performance:
+#         if not personal_misc.get(j.name):
+#             personal_misc[j.name] = {'state': 'null'}
+#         state = j.state
+#         date = j.date
+#         task_submission_status = j.task_submission_status
+#         if start_date and end_date:
+#             if start_date <= date <= end_date:
+#                 personal_misc[j.name]['state'] = j.state
+#                 personal_misc[j.task_types]['task_types'] = tasks
+#                 personal_misc[j.name]['assigned_date'] = date
+#                 personal_misc[j.name]['task_submission_status'] = task_submission_status
+#         else:
+#             personal_misc[j.name]['state'] = state
+#             personal_misc[j.name]['date'] = date
+#             personal_misc[j.name]['task_types'] = tasks
+#             personal_misc[j.name]['task_submission_status'] = task_submission_status
+#
+#     return personal_misc
 def get_employee_personal_misc(self, employee, start_date=False, end_date=False):
     personal_misc = {}
-    misc_domain = [('task_creator', '=', employee.user_id.id), ('state','in',['completed','achievement'])]
+    misc_domain = [('task_creator', '=', employee.user_id.id), ('state', 'in', ['completed', 'achievement'])]
 
     misc_performance = self.env['logic.task.other'].sudo().search(misc_domain)
+
     if start_date and end_date:
-        common_performance = misc_performance.filtered(lambda filtered_misc: filtered_misc.date >= start_date and filtered_misc.date <= end_date)
+        misc_performance = misc_performance.filtered(lambda x: start_date <= x.date <= end_date)
+
     for j in misc_performance:
+        task_type = j.task_types
+        if task_type not in personal_misc:
+            personal_misc[task_type] = {
 
-        if not personal_misc.get(j.name):
-            personal_misc[j.name] = {'state': 'null'}
-        state = j.state
-        date = j.date
-        task_submission_status = j.task_submission_status
+                'count': 0,
+                'on_time': 0,
+                'delayed': 0,
+                'completed': 0
+            }
         if start_date and end_date:
-
-            if start_date <= date <= end_date:
-                print(j.name, 'common performance filterd')
-
-                personal_misc[j.name]['state'] = j.state
-                personal_misc[j.name]['assigned_date'] = date
-                personal_misc[j.name]['task_submission_status'] = task_submission_status
+            print(start_date, end_date, 'dates')
+            if start_date <= j.date <= end_date:
+                personal_misc[task_type]['count'] += 1
+                if j.task_submission_status == 'on_time':
+                    personal_misc[task_type]['on_time'] += 1
+                if j.state == 'completed':
+                    personal_misc[task_type]['completed'] += 1
+                elif j.task_submission_status == 'delayed':
+                    personal_misc[task_type]['delayed'] += 1
         else:
+            personal_misc[task_type]['count'] += 1
+            if j.task_submission_status == 'on_time':
+                personal_misc[task_type]['on_time'] += 1
+            if j.state == 'completed':
+                personal_misc[task_type]['completed'] += 1
+            elif j.task_submission_status == 'delayed':
+                personal_misc[task_type]['delayed'] += 1
 
-            personal_misc[j.name]['state'] = state
-            personal_misc[j.name]['date'] = date
-            personal_misc[j.name]['task_submission_status'] = task_submission_status
-    print('misc')
     return personal_misc
 
 def get_employee_personal_feedback(self, employee, start_date=False, end_date=False):
@@ -491,7 +530,6 @@ def get_employee_personal_feedback(self, employee, start_date=False, end_date=Fa
     print(start_date, end_date, 'dates')
     personal_feedback = {}
     feedback = [('employee_id', '=', employee.id)]
-
     common_performance = self.env['directors.feedback'].sudo().search(feedback)
     print(common_performance, 'feedback')
 

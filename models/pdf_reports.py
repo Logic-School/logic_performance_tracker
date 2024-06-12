@@ -32,7 +32,7 @@ def get_employee_performance_data(self, employee_id, start_date, end_date):
         # start_date,end_date = actions_common.get_date_obj_from_string(start_date,end_date)
         employee_data['start_date'] = start_date.strftime("%d / %m / %Y")
         employee_data['end_date'] = end_date.strftime("%d / %m / %Y")
-    print(employee_data, "employee_to_do")
+    print(employee_data['miscellaneous_tasks'], "employee_to_do")
     return employee_data
 
 

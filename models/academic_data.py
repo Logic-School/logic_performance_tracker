@@ -153,7 +153,7 @@ def get_exam_data(self,batch):
     # exam_recs = self.env['exam.details'].sudo().search([('batch','=',batch.id),('exam_type','=','quarterly')])
     quart_percents = ['25','50','75','100']
     exam_data = {'exam_datasets':[]}
-    exams = self.env['exam.details'].sudo().search([('batch','=',batch.id)])
+    exams = self.env['exam.details'].sudo().search([('batch', '=', batch.id)])
     for exam_rec in exams:
         if exam_rec:
             exam_dataset = {
@@ -179,6 +179,7 @@ def get_one_to_one_data(self,batch):
         if one_to_one_count>0:
             attendance_data['total_conducted']+=1
     return attendance_data
+
 def get_exam_pass_fail_percent(self,exam_rec):
     pass_count = 0
     fail_count = 0
