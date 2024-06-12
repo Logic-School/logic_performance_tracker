@@ -351,7 +351,6 @@
                                 <t t-set="index" t-value="1"/>
                                 <t t-foreach="Object.keys(values['sales_data']['source_leads_data'])"
                                    t-as="lead_source">
-                                <!-- Add rows dynamically based on data -->
                                     <tr>
                                         <td t-esc="index" class="text-center"/>
                                         <td t-esc="lead_source" class="text-center"/>
@@ -363,7 +362,6 @@
                                             class="text-center"/>
                                         <td t-esc="values['sales_data']['source_leads_data'][lead_source]['cold_leads_count']"
                                             class="text-center"/>
-
                                         <td t-esc="values['sales_data']['source_leads_data'][lead_source]['converted_lead_count']"
                                             class="text-center"/>
                                         <td t-esc="values['sales_data']['source_leads_data'][lead_source]['leads_conversion_rate']"
@@ -382,7 +380,6 @@
                                         class="text-center font-weight-bold"/>
                                     <td t-esc="values['sales_data']['overall_source_leads_data']['total_cold_leads']"
                                         class="text-center font-weight-bold"/>
-
                                     <td t-esc="values['sales_data']['overall_source_leads_data']['total_converted_leads']"
                                         class="text-center font-weight-bold"/>
                                     <td t-esc="values['sales_data']['overall_source_leads_data']['total_conversion_rate']"
@@ -594,13 +591,13 @@
                                     <tr>
                                         <td t-esc="index" class="text-center"/>
                                         <td class="text-center">
-            <t t-if="task == 'other'">Other</t>
+                                            <t t-if="task == 'other'">Other</t>
                                             <t t-if="task == 'meeting'">Meeting</t>
                                             <t t-if="task == 'telephone_discussion'">Telephone Discussion</t>
                                             <t t-if="task == 'clerical_works'">Clerical Works</t>
                                             <t t-if="task == 'day_to_day_works'">Day To Day Works</t>
                                             <t t-if="task == 'batch_related_works'">Batch Related Works</t>
-        </td>
+                                        </td>
                                         <!--                                        <td t-esc="task"-->
                                         <!--                                                class="text-center"/>&lt;!&ndash; Task Type &ndash;&gt;-->
                                         <td t-esc="values['miscellaneous_tasks'][task]['count']"
@@ -611,7 +608,7 @@
                                             class="text-center"/> <!-- Delayed Count -->
 
                                                                                                                 </tr>
-                                    <t t-set="index" t-value="index+1"/>
+                                        <t t-set="index" t-value="index+1"/>
                                                             </t>
                                                         </tbody>
                         </table>

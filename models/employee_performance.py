@@ -196,10 +196,10 @@ class LogicEmployeePerformance(models.Model):
         personal_data['job_title'] = employee.job_title
         personal_data['department_name'] = employee.department_id.name
         personal_data['head_name'] = employee.parent_id.name if employee.parent_id else False
-        personal_data['date_of_joining'] = employee.joining_date
+        personal_data['date_of_joining'] = employee.joining_date_cus
         personal_data['employment_duration'] = False
-        if employee.joining_date:
-            days, months, years = actions_common.get_day_month_year_from_timedelta(date.today() - employee.joining_date)
+        if employee.joining_date_cus:
+            days, months, years = actions_common.get_day_month_year_from_timedelta(date.today() - employee.joining_date_cus)
             personal_data['employment_duration'] = f'( {years} Years, {months} Months and {days} Days )'
 
         personal_data['branch'] = dict(employee._fields['branch'].selection).get(employee.branch) if employee.branch else False
