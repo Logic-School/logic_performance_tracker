@@ -175,7 +175,7 @@ def get_exam_data(self,batch):
                     # 'barThickness': 60,
                     # 'maxBarThickness': 80,
                     # 'backgroundColor': rgba_colors.pop(random.randint(0, 20)),
-                    'borderColor': rgba_colors.pop(random.randint(0, 20)),
+                    # 'borderColor': rgba_colors.pop(random.randint(0, 20)),
                     'borderWidth': 1,
                     'data': get_exam_pass_fail_percent(self, exam_rec)
                 }
