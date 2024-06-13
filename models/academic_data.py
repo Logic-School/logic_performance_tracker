@@ -148,7 +148,17 @@ def get_attendance_data(self,batch):
 
 
 def get_exam_data(self,batch):
-    rgba_colors = ['rgba(178, 56, 154, 0.75)', 'rgba(57, 141, 244, 0.52)', 'rgba(61, 14, 226, 0.88)', 'rgba(154, 29, 178, 0.51)', 'rgba(126, 101, 181, 0.05)', 'rgba(21, 80, 20, 0.70)', 'rgba(130, 79, 252, 0.09)', 'rgba(161, 125, 151, 0.61)', 'rgba(126, 124, 212, 0.81)', 'rgba(158, 94, 192, 0.75)', 'rgba(5, 19, 109, 0.87)', 'rgba(91, 247, 56, 0.89)', 'rgba(158, 182, 64, 0.12)', 'rgba(188, 190, 44, 0.53)', 'rgba(127, 164, 35, 0.92)', 'rgba(166, 173, 138, 0.32)', 'rgba(183, 241, 33, 0.89)', 'rgba(228, 183, 46, 0.94)', 'rgba(141, 226, 67, 0.39)', 'rgba(134, 126, 5, 0.13)', 'rgba(32, 190, 250, 0.85)', 'rgba(161, 59, 186, 0.20)', 'rgba(44, 217, 96, 0.68)', 'rgba(214, 67, 23, 0.77)', 'rgba(182, 127, 43, 0.94)', 'rgba(189, 3, 175, 0.71)', 'rgba(169, 148, 168, 0.69)', 'rgba(207, 205, 71, 0.74)', 'rgba(51, 140, 78, 0.42)', 'rgba(5, 246, 98, 0.81)', 'rgba(86, 128, 43, 0.90)', 'rgba(175, 77, 156, 0.63)', 'rgba(171, 104, 178, 0.31)', 'rgba(217, 229, 63, 0.47)']
+    # rgba_colors = ['rgba(178, 56, 154, 0.75)', 'rgba(57, 141, 244, 0.52)', 'rgba(61, 14, 226, 0.88)', 'rgba(154, 29, 178, 0.51)', 'rgba(126, 101, 181, 0.05)', 'rgba(21, 80, 20, 0.70)', 'rgba(130, 79, 252, 0.09)', 'rgba(161, 125, 151, 0.61)', 'rgba(126, 124, 212, 0.81)', 'rgba(158, 94, 192, 0.75)', 'rgba(5, 19, 109, 0.87)', 'rgba(91, 247, 56, 0.89)', 'rgba(158, 182, 64, 0.12)', 'rgba(188, 190, 44, 0.53)', 'rgba(127, 164, 35, 0.92)', 'rgba(166, 173, 138, 0.32)', 'rgba(183, 241, 33, 0.89)', 'rgba(228, 183, 46, 0.94)', 'rgba(141, 226, 67, 0.39)', 'rgba(134, 126, 5, 0.13)', 'rgba(32, 190, 250, 0.85)', 'rgba(161, 59, 186, 0.20)', 'rgba(44, 217, 96, 0.68)', 'rgba(214, 67, 23, 0.77)', 'rgba(182, 127, 43, 0.94)', 'rgba(189, 3, 175, 0.71)', 'rgba(169, 148, 168, 0.69)', 'rgba(207, 205, 71, 0.74)', 'rgba(51, 140, 78, 0.42)', 'rgba(5, 246, 98, 0.81)', 'rgba(86, 128, 43, 0.90)', 'rgba(175, 77, 156, 0.63)', 'rgba(171, 104, 178, 0.31)', 'rgba(217, 229, 63, 0.47)']
+    rgba_colors = [
+        # Add at least 21 color strings here
+        "rgba(255, 99, 132, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(255, 206, 86, 0.2)",
+        "rgba(75, 192, 192, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(255, 159, 64, 0.2)",
+        "rgba(199, 199, 199, 0.2)", "rgba(83, 102, 255, 0.2)", "rgba(155, 159, 64, 0.2)",
+        "rgba(100, 100, 100, 0.2)", "rgba(200, 200, 200, 0.2)", "rgba(300, 300, 300, 0.2)",
+        "rgba(400, 400, 400, 0.2)", "rgba(500, 500, 500, 0.2)", "rgba(600, 600, 600, 0.2)",
+        "rgba(700, 700, 700, 0.2)", "rgba(800, 800, 800, 0.2)", "rgba(900, 900, 900, 0.2)",
+        "rgba(1000, 1000, 1000, 0.2)", "rgba(1100, 1100, 1100, 0.2)", "rgba(1200, 1200, 1200, 0.2)"
+    ]
 
     # exam_recs = self.env['exam.details'].sudo().search([('batch','=',batch.id),('exam_type','=','quarterly')])
     quart_percents = ['25','50','75','100']
@@ -156,18 +166,32 @@ def get_exam_data(self,batch):
     exams = self.env['exam.details'].sudo().search([('batch', '=', batch.id)])
     for exam_rec in exams:
         if exam_rec:
-            exam_dataset = {
-                'type':'bar',
-                'label': exam_rec.name,
-                'fill': True,
-                'barPercentage': 0.5,
-                # 'barThickness': 60,
-                # 'maxBarThickness': 80,
-                'backgroundColor': rgba_colors.pop(random.randint(0,20)),
-                'borderColor': rgba_colors.pop(random.randint(0,20)),
-                'borderWidth': 1,
-                'data': get_exam_pass_fail_percent(self,exam_rec)
-            }
+            if len(rgba_colors) < 21:
+                exam_dataset = {
+                    'type': 'bar',
+                    'label': exam_rec.name,
+                    'fill': True,
+                    'barPercentage': 0.5,
+                    # 'barThickness': 60,
+                    # 'maxBarThickness': 80,
+                    # 'backgroundColor': rgba_colors.pop(random.randint(0, 20)),
+                    'borderColor': rgba_colors.pop(random.randint(0, 20)),
+                    'borderWidth': 1,
+                    'data': get_exam_pass_fail_percent(self, exam_rec)
+                }
+            else:
+                exam_dataset = {
+                    'type':'bar',
+                    'label': exam_rec.name,
+                    'fill': True,
+                    'barPercentage': 0.5,
+                    # 'barThickness': 60,
+                    # 'maxBarThickness': 80,
+                    'backgroundColor': rgba_colors.pop(random.randint(0,20)),
+                    'borderColor': rgba_colors.pop(random.randint(0,20)),
+                    'borderWidth': 1,
+                    'data': get_exam_pass_fail_percent(self,exam_rec)
+                }
             exam_data['exam_datasets'].append(exam_dataset)
     return exam_data
 
