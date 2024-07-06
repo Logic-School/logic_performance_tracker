@@ -37,7 +37,7 @@
                         <button class="ml-2 filter-button btn-md o_filter_performance" type="button">Filter</button>
                         <button class="rounded btn-md btn-warning o_filter_reset" type="button">Reset</button>
                         <button class="rounded btn-md btn-primary report_download_btn"
-                                style="display:none;">Download</button>
+                                >Download</button>
 
                     </div>
                 </div>
