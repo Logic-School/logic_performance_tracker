@@ -1,5 +1,7 @@
 from odoo import models,fields,api
 import logging
+from datetime import date
+
 class CommonTaskPerformance(models.Model):
     _name = "logic.common.task.performance"
     employee = fields.Many2one('hr.employee')
@@ -15,6 +17,21 @@ class CommonTaskPerformance(models.Model):
     total_leads_count = fields.Float()
     admission_lead_count = fields.Float()
 
+    def get_leads_month_year(self, start_date, end_date):
+        month = False
+
+        if start_date and end_date:
+            # lead_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
+            year = start_date.year
+            if start_date.month == end_date.month and start_date.year == end_date.year:
+                month = start_date.month
+
+        else:
+            year = date.today().year
+            month = date.today().month
+
+        return month, year
+
     def create_employee_common_task_performance(self,employee, start_date=False, end_date=False):
         logger = logging.getLogger("Common perf debug: ")
         employee_data = {'completed_to_do_count':0, 'completed_misc_count':0, 'delayed_to_do_count':0, 'delayed_misc_count':0, 'combined_rating':0, 'score':0}
@@ -27,7 +44,7 @@ class CommonTaskPerformance(models.Model):
             misc_domain.extend([('date_completed','>=',start_date),('date_completed','<=',end_date)])
             feedback_domain.extend([('date','>=',start_date),('date','<=',end_date)])
             to_do_domain.extend([('completed_date','>=',start_date),('completed_date','<=',end_date)])
-            adm_leads_count.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
+            # adm_leads_count.extend([('admission_date','>=',start_date),('admission_date','<=',end_date)])
             leads_total_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
         misc_tasks = self.env['logic.task.other'].sudo().search(misc_domain)
         feedback = self.env['directors.feedback'].sudo().search(feedback_domain)
@@ -36,18 +53,40 @@ class CommonTaskPerformance(models.Model):
         adm_total_count_lead = self.env['leads.logic'].sudo().search(adm_leads_count)
         misc_average_rating = 0
         to_do_average_rating = 0
+        month, year = self.get_leads_month_year(start_date, end_date)
+
         employee_data['completed_to_do_count'] = len(to_do_tasks)
-        employee_data['adm_completed_count'] = len(adm_total_count_lead)
 
+        if start_date and end_date:
+            total_adm_count = sum(self.env['admission.fee.collection'].sudo().search_count(
+                [('lead_id', '=', lead.id), ('admission_date', '>=', start_date), ('admission_date', '<=', end_date)]
+            ) for lead in adm_total_count_lead)
+            print(total_adm_count, 'total_adm_count')
+        else:
+            total_adm_count = 0
+            for i in adm_total_count_lead:
+                total_adm_coun = self.env['admission.fee.collection'].sudo().search(
+                    [('lead_id', '=', i.id)])
+                for j in total_adm_coun:
+                    if j.admission_date.month == month:
+                        total_adm_count += 1
+                    print(j.id, 'ppoo')
+        # for j in adm_total_count_lead:
+        #
+        #     if start_date and end_date:
+        #         admission = self.env['admission.fee.collection'].sudo().search([('lead_id', '=', j.id),('admission_date','>=',start_date),('admission_date','<=',end_date)])
+        #     else:
+        #         admission = self.env['admission.fee.collection'].sudo().search([('lead_id', '=', j.id)])
+        #     total_adm_count += len(admission)
+        employee_data['adm_completed_count'] = total_adm_count
         employee_data['total_leads_count'] = len(leads_total_count)
-
         employee_data['completed_misc_count'] = len(misc_tasks)
         total_tasks = employee_data['completed_to_do_count'] + employee_data['completed_misc_count']
         for task in misc_tasks:
             employee_data['combined_rating']+=int(task.head_rating)
             misc_average_rating+=int(task.head_rating)
             if task.completion_datetime and task.expected_completion and task.expected_completed_difference>0 and not task.delay_approved:
-                employee_data['delayed_misc_count']+=1                
+                employee_data['delayed_misc_count'] += 1
                 employee_data['score'] += 0.5 * int(task.head_rating)
             else:
                 employee_data['score'] += int(task.head_rating)

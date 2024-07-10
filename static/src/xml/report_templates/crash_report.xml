@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- Define your QWeb template for the dashboard_card view -->
+    <t t-name="logic_performance_tracker.crash_report_template">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"/>
+        <style>
+            .page-header {
+
+                padding: 10px;
+                text-align: center;
+            }
+
+            .employee-report-details-card {
+                border-radius: 10px;
+                background-color: #ffffff;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                padding: 10px;
+                margin-bottom: 20px;
+            }
+
+            .employee-image {
+                height: 100px;
+                width: auto;
+                border-radius: 20px;
+            }
+
+            .performance-table {
+                border-radius: 10px;
+            }
+
+            .label1{
+                font-weight: bold;
+            }
+        </style>
+        <div t-if="values" class="container-fluid" style="margin:0;padding:0;">
+
+            <div class="container mt-3 card-body">
+                <div class="page-header">
+                    <h4>Crash Report - <span t-esc="values['start_date']"/> - <span t-esc="values['end_date']"/></h4>
+                </div>
+            </div>
+
+<!--            <div t-if="values['seminar_leaderboard_data']">-->
+<!--                <div class="mt-5">-->
+<!--                    <div class="table-responsive table-sm card performance-table">-->
+<!--                        &lt;!&ndash; Add 'table-bordered' class for borders &ndash;&gt;-->
+<!--                        <table class="table table-striped table-hover table-bordered">-->
+<!--                            <thead>-->
+<!--                                <tr class="rounded" style="background-color:#78787859;">-->
+<!--                                    <td colspan="9" class="text-center font-weight-bold"><h5>Leaderboard</h5></td>-->
+<!--                                </tr>-->
+<!--                            </thead>-->
+<!--                            <thead class="bg-light">-->
+<!--                                <tr>-->
+<!--                                    <th scope="col" width="7%">#</th>-->
+<!--                                    <th scope="col" width="15%">Employee</th>-->
+<!--                                    <th class="text-center" width="10%" scope="col">Leads</th>-->
+<!--                                    <th class="text-center" width="10%" scope="col">Seminars</th>-->
+<!--                                    <th class="text-center" width="10%" scope="col">Webinars</th>-->
+<!--                                    <th class="text-center" width="10%" scope="col">MOUs</th>-->
+<!--                                    <th class="text-center" width="8%" scope="col">CIPs</th>-->
+<!--                                    <th scope="col" class="text-center" width="15%">Seminar Target</th>-->
+
+<!--                                    <th scope="col" class="text-center" width="15%">Conversion Rate (%)</th>-->
+
+<!--                                </tr>-->
+<!--                            </thead>-->
+<!--                            <tbody style="font-size:14px;">-->
+<!--                                <t t-set="index" t-value="1"/>-->
+<!--                                <t t-foreach="Object.keys(values['seminar_leaderboard_data'])" t-as="employee">-->
+
+<!--                                    <tr>-->
+<!--                                        <td t-esc="index"/>-->
+<!--                                        <td t-esc="values['seminar_leaderboard_data'][employee]['name']"/>-->
+<!--                                        <td style="color: green" t-esc="values['seminar_leaderboard_data'][employee]['lead_count']" class="text-center"/>-->
+<!--                                        <td style="color: green" t-esc="values['seminar_leaderboard_data'][employee]['seminar_count']" class="text-center"/>-->
+<!--                                        <td style="color: green" t-esc="values['seminar_leaderboard_data'][employee]['webinar_count']" class="text-center"/>-->
+<!--                                        <td style="color: green" t-esc="values['seminar_leaderboard_data'][employee]['mou_count']" class="text-center"/>-->
+<!--                                        <td style="color: green" t-esc="values['seminar_leaderboard_data'][employee]['seminar_cip_rec_count']" class="text-center"/>-->
+
+<!--                                        <td class="text-center">-->
+<!--                                            <span style="color: brown" t-esc="values['seminar_leaderboard_data'][employee]['seminar_count']"/>-->
+<!--                                            <span t-esc="' / '"/>-->
+<!--                                            <span style="color: green" t-esc="values['seminar_leaderboard_data'][employee]['lead_target']"/>-->
+<!--                                        </td>-->
+<!--                                        <td style="color: green" t-esc="values['seminar_leaderboard_data'][employee]['conversion_rate']" class="text-center"/>-->
+
+<!--                                        &lt;!&ndash; <td t-esc="exec_performance['average_rating']"/> &ndash;&gt;-->
+
+
+<!--                                    </tr>-->
+<!--                                    <t t-set="index" t-value="index+1"/>-->
+<!--                                    </t>-->
+<!--                            </tbody>-->
+<!--                        </table>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+            <div t-if="values['common_task_performances']">
+                <div class="mt-5">
+                    <div class="table-responsive table-sm card performance-table">
+                        <!-- Add 'table-bordered' class for borders -->
+                        <table class="table table-striped table-hover table-bordered">
+                            <thead>
+                                <tr class="rounded" style="background-color:#78787859;">
+                                    <td colspan="8" class="text-center font-weight-bold"><h5>Tasks Performance</h5></td>
+                                </tr>
+                            </thead>
+                            <thead style="" class="">
+                                <tr>
+                                    <th scope="col" width="7%">#</th>
+                                    <th scope="col" width="20%">Employee</th>
+                                    <th colspan="2" class="text-center" width="20%" scope="col">Completed Tasks</th>
+                                    <th colspan="2" class="text-center" width="20%" scope="col">Delayed Tasks</th>
+                                    <th scope="col" width="18%">Average Rating</th>
+                                    <th scope="col" width="15%" class="text-center">Score</th>
+
+                                </tr>
+                                <tr>
+                                    <th scope="col" width="7%"></th>
+                                    <th scope="col" width="20%"></th>
+                                    <th scope="col" width="10%" class="text-center">Miscellaneous</th>
+                                    <th scope="col" width="10%" class="text-center">To Do</th>
+                                    <th scope="col" width="10%" class="text-center">Miscellaneous</th>
+                                    <th scope="col" width="10%" class="text-center">To Do</th>
+
+                                    <th scope="col" width="18%"></th>
+                                    <th scope="col" width="15%"></th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody style="font-size:14px;">
+                                <t t-set="index" t-value="1"/>
+                                <t t-if="values['common_task_performances']" t-foreach="Object.keys(values['common_task_performances'])" t-as="employee">
+
+                                    <tr>
+                                        <td t-esc="index"/>
+                                        <td t-esc="values['common_task_performances'][employee]['name']"/>
+                                        <td style="color: green" t-esc="values['common_task_performances'][employee]['completed_misc_count']" class="text-center"/>
+
+                                        <td style="color: green" t-esc="values['common_task_performances'][employee]['completed_to_do_count']" class="text-center"/>
+                                        <td style="color: brown" t-esc="values['common_task_performances'][employee]['delayed_misc_count']" class="text-center"/>
+                                        <td style="color: brown" t-esc="values['common_task_performances'][employee]['delayed_to_do_count']" class="text-center"/>
+
+                                        <!-- <td t-esc="exec_performance['average_rating']"/> -->
+                                        <t t-set="star_count" t-value="Math.round(values['common_task_performances'][employee]['combined_rating'])"/>
+                                        <td class="text-center">
+                                            <!-- <t t-foreach="Array.from(Array(star_count).keys())" t-as="star_ind">
+                                                <span class="fa fa-star checked"></span>
+                                            </t>
+                                            <t t-foreach="Array.from(Array(5-star_count).keys())" t-as="star_ind">
+                                                <span class="fa fa-star"></span>
+                                            </t> -->
+                                            <span class="" t-esc="values['common_task_performances'][employee]['combined_rating']"/>
+                                        </td>
+                                        <td style="color: green" t-esc="values['common_task_performances'][employee]['score']" class="text-center"/>
+
+
+                                    </tr>
+                                    <t t-set="index" t-value="index+1"/>
+                                    </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

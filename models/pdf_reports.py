@@ -59,6 +59,12 @@ def get_employee_academic_data(self, employee, start_date=False, end_date=False)
 
 
 def get_employee_crash_data(self, employee, start_date=False, end_date=False):
+    print('craassshhhh')
+    employee_crash_data = {}
+    employee_crash_data['is_crash_head'] = employee.department_id.manager_id.id == employee.id
+    # if employee_crash_data['is_crash_head']:
+    #     employee_crash_data['crash_head_data'] = get_crash_head_data(self, employee)
+    # employee_crash_data['crash_datas'] = get_crash_datas(self, employee, start_date, end_date)
     return {}
 
 
@@ -153,11 +159,8 @@ def get_employee_sales_data(self, employee, start_date=False, end_date=False, cr
                                                                                        'overall_course_leads_data'][
                                                                                        'total_converted_leads'] /
                                                                                    sales_data[
-                                                                                       'overall_course_leads_data'][
-                                                                                       'total_leads_count']) * 100, 2)
-
+                                                                                       'overall_course_leads_data'][                                                                             'total_leads_count']) * 100, 2)
     return sales_data
-
 
 def get_employee_marketing_data(self, employee, start_date=False, end_date=False):
     logger = logging.getLogger('Seminar Debug: ')
@@ -214,6 +217,18 @@ def get_marketing_report_data(self, employees, start_date=False, end_date=False)
     return marketing_data
 
 
+def get_crash_report_data(self, employees, start_date=False, end_date=False):
+    crash_data = {}
+    if start_date and end_date:
+        start_date, end_date = actions_common.get_date_obj_from_string(start_date, end_date)
+        crash_data['start_date'] = start_date.strftime("%d / %m / %Y")
+        crash_data['end_date'] = end_date.strftime("%d / %m / %Y")
+    # crash_data['seminar_leaderboard_data'] = get_seminar_leaderboard_data(self, employees, start_date, end_date)
+    crash_data['common_task_performances'] = get_common_performance_data(self, employees, start_date, end_date)
+
+    return crash_data
+
+
 def get_seminar_leaderboard_data(self, employees, start_date=False, end_date=False):
     for employee in employees:
         self.env['marketing.tracker'].sudo().create_employee_seminar_leaderboard_data(employee, start_date, end_date)
@@ -231,7 +246,7 @@ def get_sales_report_data(self, employees, start_date=False, end_date=False):
         start_date, end_date = actions_common.get_date_obj_from_string(start_date, end_date)
         sales_data['start_date'] = start_date.strftime("%d / %m / %Y")
         sales_data['end_date'] = end_date.strftime("%d / %m / %Y")
-    sales_data['leads_leaderboard_data'] = get_leads_leaderboard_data(self, employees, start_date=False, end_date=False)
+    sales_data['leads_leaderboard_data'] = get_leads_leaderboard_data(self, employees, start_date, end_date)
     sales_data['course_names'] = self.env['logic.base.courses'].sudo().search(
         [('name', 'not in', ('Nill', "DON'T USE", 'Nil')), ('type', '!=', 'crash')]).mapped('name')
 
@@ -242,7 +257,7 @@ def get_sales_report_data(self, employees, start_date=False, end_date=False):
 def get_leads_leaderboard_data(self, employees, start_date=False, end_date=False):
     for employee in employees:
         self.env['sales.tracker'].sudo().create_employee_leads_leaderboard_data(employee, start_date, end_date)
-    return self.env['sales.tracker'].sudo().get_leads_leaderboard_data(employees)
+    return self.env['sales.tracker'].sudo().get_leads_leaderboard_data(employees, start_date, end_date)
 
 
 def get_coursewise_sales_data(self, employees, start_date=False, end_date=False, crash=False):

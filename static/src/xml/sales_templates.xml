@@ -37,7 +37,7 @@
                         <button class="ml-2 filter-button btn-md o_filter_performance" type="button">Filter</button>
                         <button class="rounded btn-md btn-warning o_filter_reset" type="button">Reset</button>
                         <button class="rounded btn-md btn-primary report_download_btn"
-                                >Download</button>
+                        >Download</button>
 
                     </div>
                 </div>
@@ -150,11 +150,11 @@
                                         <td t-esc="index"/>
                                         <td t-esc="values['leads_performances'][employee]['name']"/>
                                         <td style="color: green"
-                                            t-esc="values['leads_performances'][employee]['lead_count']"
+                                            t-esc="values['leads_performances'][employee]['total_lead_count']"
                                             class="text-center"/>
                                         <td class="text-center">
                                             <span style="color: brown"
-                                                  t-esc="values['leads_performances'][employee]['lead_converted']"/>
+                                                  t-esc="values['leads_performances'][employee]['total_adm_count']"/>
                                             <span t-esc="' / '"/>
                                             <span style="color: green"
                                                   t-esc="values['leads_performances'][employee]['lead_target']"/>
@@ -451,7 +451,7 @@
             </div>
         <div class="m-3" t-if="values['leads_sources']">
                         <!-- <h1 class="inline">Miscellaneous Works</h1> -->
-                <div class="h-100 table-responsive card" style="border-radius:10px;">
+            <div class="h-100 table-responsive card" style="border-radius:10px;">
                             <table style="font-size:14px;"
                                    class="table table-striped table-hover rounded-table table-borderless">
                                 <thead>
@@ -493,7 +493,7 @@
         </div>
         <div class="m-3" t-if="values['leads_courses']">
                         <!-- <h1 class="inline">Miscellaneous Works</h1> -->
-                <div class="h-100 table-responsive card" style="border-radius:10px;">
+            <div class="h-100 table-responsive card" style="border-radius:10px;">
                             <table style="font-size:14px;"
                                    class="table table-striped table-hover rounded-table table-borderless">
                                 <thead>

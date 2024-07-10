@@ -60,7 +60,7 @@
                                     <th scope="col" class="text-center" width="25%">Target Achieved</th>
 
                                     <th scope="col" class="text-center" width="25%">Conversion Rate (%)</th>
-    
+
                                 </tr>
                             </thead>
                             <tbody style="font-size:14px;">
@@ -72,17 +72,17 @@
                                         <td t-esc="index"/>
                                         <td t-esc="values['leads_leaderboard_data'][employee]['name']"/>
                                         <td style="color: green"
-                                            t-esc="values['leads_leaderboard_data'][employee]['lead_count']"
+                                            t-esc="values['leads_leaderboard_data'][employee]['total_lead_count']"
                                             class="text-center"/>
                                         <td class="text-center">
                                             <span style="color: brown"
-                                                  t-esc="values['leads_leaderboard_data'][employee]['lead_converted']"/>
+                                                  t-esc="values['leads_leaderboard_data'][employee]['report_adm_count']"/>
                                             <span t-esc="' / '"/>
                                             <span style="color: green"
                                                   t-esc="values['leads_leaderboard_data'][employee]['lead_target']"/>
                                         </td>
                                         <td style="color: green"
-                                            t-esc="values['leads_leaderboard_data'][employee]['conversion_rate']"
+                                            t-esc="values['leads_leaderboard_data'][employee]['report_conversion_rate']"
                                             class="text-center"/>
 
                                         <!-- <td t-esc="exec_performance['average_rating']"/> -->
@@ -279,7 +279,7 @@
 <!--                                                  t-esc="values['leads_leaderboard_data'][employee]['lead_target']"/>-->
 <!--                                        </td>-->
                                         <td style="color: green"
-                                            t-esc="values['leads_leaderboard_data'][employee]['total_adm_count']"
+                                            t-esc="values['leads_leaderboard_data'][employee]['report_adm_count']"
                                             class="text-center"/>
 
                                         <!-- <td t-esc="exec_performance['average_rating']"/> -->

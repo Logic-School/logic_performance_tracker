@@ -2,6 +2,7 @@ from odoo import models,fields,api
 from . import actions_common
 from . import common_task_performance
 from datetime import date
+from . import pdf_reports
 
 class CrashTracker(models.Model):
     _name = "crash.tracker"
@@ -30,12 +31,9 @@ class CrashTracker(models.Model):
             employees = actions_common.get_employees(self,department_obj,manager,managers)
             employee_ids = employees.ids
 
-
         dashboard_data['department_heads'] = department_heads_data
-
         dashboard_data['qualitatives'] = actions_common.get_raw_qualitative_data(self,employees,start_date,end_date)
         dashboard_data['quantitatives'] = actions_common.get_raw_quantitative_data(self,employees,start_date,end_date)
-
 
         lead_sources = self.env['leads.sources'].sudo().search([])
         lead_source_names = lead_sources.mapped('name')
@@ -65,6 +63,13 @@ class CrashTracker(models.Model):
         dashboard_data['year'] = year
 
         return dashboard_data
+
+    @api.model
+    def get_crash_performance_report_data(self, start_date=False, end_date=False, manager_id=False):
+        employees = self.env['hr.employee'].sudo().search([('parent_id', '=', int(manager_id))])
+        employees += self.env['hr.employee'].sudo().browse(int(manager_id))
+        employee_data = pdf_reports.get_crash_report_data(self, employees, start_date, end_date)
+        return employee_data
     
     @api.model
     def retrieve_employee_all_source_wise_lead_data(self,employee_id,start_date=False,end_date=False):

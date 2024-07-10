@@ -2,8 +2,10 @@
 <templates id="template" xml:space="preserve">
     <!-- Define your QWeb template for the dashboard_card view -->
     <t t-name="logic_performance_tracker.crash_dashboard_template">
-        <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/dashboard_card_view.css"/>
-        <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/lib/jquery.orgchart.css"/>
+        <link rel="stylesheet" type="text/css"
+              href="/logic_performance_tracker/static/src/css/dashboard_card_view.css"/>
+        <link rel="stylesheet" type="text/css"
+              href="/logic_performance_tracker/static/src/css/lib/jquery.orgchart.css"/>
 
         <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/orgchart_styles.css"/>
         <link rel="stylesheet" type="text/css" href="/logic_performance_tracker/static/src/css/other_styles.css"/>
@@ -21,9 +23,11 @@
             <div class="inline-container mt-2">
                 <div style="margin-left: auto; margin-right: 0;">
                     <span class="font-weight-bold">Department </span>
-                    <select class="department_head form-control mr-2" style="display: inline-block; width: auto;background-color:#bfc1c2;">
+                    <select class="department_head form-control mr-2"
+                            style="display: inline-block; width: auto;background-color:#bfc1c2;">
                         <t t-foreach="values['department_heads']" t-as="department_head">
-                            <option t-att-value="department_head['head_id']" t-esc="department_head['department_name']"/>
+                            <option t-att-value="department_head['head_id']"
+                                    t-esc="department_head['department_name']"/>
                         </t>
                     </select>
                     <span class="font-weight-bold">From: </span>
@@ -32,10 +36,12 @@
                     <input placeholder="From: " class="end_date date-picker-icon custom-date-input" type="date"/>
                     <button class="ml-2 filter-button btn-md o_filter_performance" type="button">Filter</button>
                     <button class="rounded btn-md btn-warning o_filter_reset" type="button">Reset</button>
+                    <button class="rounded btn-md btn-primary report_download_btn">Download</button>
+
 
                 </div>
             </div>
-            
+
             <div class="tracker-heading1 mt-3">
                 <h1 class="text-center">Department Hierarchy</h1>
             </div>
@@ -55,32 +61,36 @@
 
                         <div class="row">
                             <div t-if="values['lead_sources']" class="col p-0 m-0">
-                                <select class="lead_source_id form-control mr-2 font-weight-bold" style="display: inline-block; width: auto;background-color:#edf0f2;">
-                                    <t t-if="values['lead_sources']" t-foreach="values['lead_sources']" t-as="lead_source">
+                                <select class="lead_source_id form-control mr-2 font-weight-bold"
+                                        style="display: inline-block; width: auto;background-color:#edf0f2;">
+                                    <t t-if="values['lead_sources']" t-foreach="values['lead_sources']"
+                                       t-as="lead_source">
                                         <option t-att-value="lead_source['id']" t-esc="lead_source['name']"/>
                                     </t>
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div class="row">
 
                             <div class="col p-0 m-0">
                                 <div class="container-fluid mt-3">
                                     <div class="row justify-content-center">
                                         <div class="col" style="width:100%">                            
-                                            <div class="employee_lead_source_chart-canvas-container" style="position:relative;height:500px;">
-                                                <canvas id="employeeLeadSourceChart" style="width:700px;height:450px;"></canvas>
+                                            <div class="employee_lead_source_chart-canvas-container"
+                                                 style="position:relative;height:500px;">
+                                                <canvas id="employeeLeadSourceChart"
+                                                        style="width:700px;height:450px;"></canvas>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                        <!-- <div class="graph_view" style="padding:0">
-    
-                        </div> -->
-    
+                            <!-- <div class="graph_view" style="padding:0">
+
+                            </div> -->
+
                             <div class="col m-0">
                                 <div class="m-3 mt-5">
             
@@ -96,10 +106,13 @@
             <div class="m-3" t-if="values['leads_performances']">
                 <!-- <h1 class="inline">Miscellaneous Works</h1> -->
                 <div class="h-100 table-responsive card" style="border-radius:10px;"> 
-                    <table style="font-size:14px;" class="table table-striped table-hover rounded-table table-borderless">
+                    <table style="font-size:14px;"
+                           class="table table-striped table-hover rounded-table table-borderless">
                         <thead>
                             <tr class="rounded" style="background-color:#78787859;">
-                                <td colspan="5" class="text-center"><h2>Leaderboard <span t-if="values['month']" class="text-info" t-esc="'( '+values['month'] +' '+ values['year'] +' )'"/></h2></td>
+                                <td colspan="5" class="text-center"><h2>Leaderboard <span t-if="values['month']"
+                                                                                          class="text-info"
+                                                                                          t-esc="'( '+values['month'] +' '+ values['year'] +' )'"/></h2></td>
                             </tr>
                         </thead>
                         <thead style="background-color:#e0e0de" class="">
@@ -122,13 +135,19 @@
                                     <td class="d-none o_employee_id" t-att-data-empid="employee"/>
                                     <td t-esc="index"/>
                                     <td t-esc="values['leads_performances'][employee]['name']"/>
-                                    <td style="color: green" t-esc="values['leads_performances'][employee]['lead_count']" class="text-center"/>
+                                    <td style="color: green"
+                                        t-esc="values['leads_performances'][employee]['lead_count']"
+                                        class="text-center"/>
                                     <td class="text-center">
-                                        <span style="color: brown" t-esc="values['leads_performances'][employee]['lead_converted']"/>
+                                        <span style="color: brown"
+                                              t-esc="values['leads_performances'][employee]['lead_converted']"/>
                                         <span t-esc="' / '"/>
-                                        <span style="color: green" t-esc="values['leads_performances'][employee]['lead_target']"/>
+                                        <span style="color: green"
+                                              t-esc="values['leads_performances'][employee]['lead_target']"/>
                                     </td>
-                                    <td style="color: green" t-esc="values['leads_performances'][employee]['conversion_rate']" class="text-center"/>
+                                    <td style="color: green"
+                                        t-esc="values['leads_performances'][employee]['conversion_rate']"
+                                        class="text-center"/>
                                 </tr>
                                 <t t-set="index" t-value="index+1"/>
                                 </t>
@@ -141,7 +160,8 @@
             <div class="m-3" t-if="values['common_task_performances']">
                 <!-- <h1 class="inline">Miscellaneous Works</h1> -->
                 <div class="h-100 table-responsive card" style="border-radius:10px;"> 
-                    <table style="font-size:14px;" class="table table-striped table-hover rounded-table table-borderless">
+                    <table style="font-size:14px;"
+                           class="table table-striped table-hover rounded-table table-borderless">
                         <thead>
                             <tr class="rounded" style="background-color:#78787859;">
                                 <td colspan="8" class="text-center"><h2>Tasks Performance</h2></td>
@@ -158,35 +178,45 @@
                             <th scope="col" width="15%" class="text-center">Score</th>
 
                         </tr>
-                        <tr>
+                            <tr>
                             <th scope="col" width="7%"></th>
-                            <th scope="col" width="20%"></th>
-                            <th scope="col" width="10%" class="text-center">Miscellaneous</th>
-                            <th scope="col" width="10%" class="text-center">To Do</th>
-                            <th scope="col" width="10%" class="text-center">Miscellaneous</th>
-                            <th scope="col" width="10%" class="text-center">To Do</th>
+                                <th scope="col" width="20%"></th>
+                                <th scope="col" width="10%" class="text-center">Miscellaneous</th>
+                                <th scope="col" width="10%" class="text-center">To Do</th>
+                                <th scope="col" width="10%" class="text-center">Miscellaneous</th>
+                                <th scope="col" width="10%" class="text-center">To Do</th>
 
-                            <th scope="col" width="18%"></th>
-                            <th scope="col" width="15%"></th>
+                                <th scope="col" width="18%"></th>
+                                <th scope="col" width="15%"></th>
 
 
                         </tr>
                         </thead>
                         <tbody style="font-size:14px;">
                             <t t-set="index" t-value="1"/>
-                            <t t-if="values['common_task_performances']" t-foreach="Object.keys(values['common_task_performances'])" t-as="employee">
+                            <t t-if="values['common_task_performances']"
+                               t-foreach="Object.keys(values['common_task_performances'])" t-as="employee">
 
                                 <tr>
                                     <td t-esc="index"/>
                                     <td t-esc="values['common_task_performances'][employee]['name']"/>
-                                    <td style="color: green" t-esc="values['common_task_performances'][employee]['completed_misc_count']" class="text-center"/>
+                                    <td style="color: green"
+                                        t-esc="values['common_task_performances'][employee]['completed_misc_count']"
+                                        class="text-center"/>
 
-                                    <td style="color: green" t-esc="values['common_task_performances'][employee]['completed_to_do_count']" class="text-center"/>
-                                    <td style="color: brown" t-esc="values['common_task_performances'][employee]['delayed_misc_count']" class="text-center"/>
-                                    <td style="color: brown" t-esc="values['common_task_performances'][employee]['delayed_to_do_count']" class="text-center"/>
+                                    <td style="color: green"
+                                        t-esc="values['common_task_performances'][employee]['completed_to_do_count']"
+                                        class="text-center"/>
+                                    <td style="color: brown"
+                                        t-esc="values['common_task_performances'][employee]['delayed_misc_count']"
+                                        class="text-center"/>
+                                    <td style="color: brown"
+                                        t-esc="values['common_task_performances'][employee]['delayed_to_do_count']"
+                                        class="text-center"/>
 
                                     <!-- <td t-esc="exec_performance['average_rating']"/> -->
-                                    <t t-set="star_count" t-value="Math.round(values['common_task_performances'][employee]['combined_rating'])"/>
+                                    <t t-set="star_count"
+                                       t-value="Math.round(values['common_task_performances'][employee]['combined_rating'])"/>
                                     <td>
                                         <t t-foreach="Array.from(Array(star_count).keys())" t-as="star_ind">
                                             <span class="fa fa-star checked"></span>
@@ -194,9 +224,12 @@
                                         <t t-foreach="Array.from(Array(5-star_count).keys())" t-as="star_ind">
                                             <span class="fa fa-star"></span>
                                         </t>
-                                        <span class="ml-2" t-esc="values['common_task_performances'][employee]['combined_rating']"/>
+                                        <span class="ml-2"
+                                              t-esc="values['common_task_performances'][employee]['combined_rating']"/>
                                     </td>
-                                    <td style="color: green" t-esc="values['common_task_performances'][employee]['score']" class="text-center"/>
+                                    <td style="color: green"
+                                        t-esc="values['common_task_performances'][employee]['score']"
+                                        class="text-center"/>
 
 
                                 </tr>
@@ -210,7 +243,8 @@
             <div class="m-3" t-if="values['qualitatives']">
                 <!-- <h1 class="inline">Qualitative Analysis</h1> -->
                 <div class="h-100 table-responsive card" style="border-radius:10px;"> 
-                    <table style="font-size:14px;" class="table table-striped table-hover rounded-table table-borderless">
+                    <table style="font-size:14px;"
+                           class="table table-striped table-hover rounded-table table-borderless">
                         <thead>
                             <tr class="rounded" style="background-color:#78787859;">
                                 <td colspan="4" class="text-center"><h2>Qualitative Analysis</h2></td>
@@ -221,25 +255,28 @@
                             <th scope="col" width="7%">#</th>
                             <th scope="col" width="20%">
                                 <div class="">
-                                    <img src="/logic_performance_tracker/static/src/icons/employees.png" alt="" height='25' width='25'/>
+                                    <img src="/logic_performance_tracker/static/src/icons/employees.png" alt=""
+                                         height='25' width='25'/>
                                     Employee
                                 </div>
                             </th>
                             <th scope="col" width="60%">
                                 <div class="">
-                                    <img src="/logic_performance_tracker/static/src/icons/performances.png" alt="" height='25' width='25'/>
+                                    <img src="/logic_performance_tracker/static/src/icons/performances.png" alt=""
+                                         height='25' width='25'/>
                                     Performances
                                 </div>
                             </th>
                             <th scope="col" width="13%">
                                 <div class="">
-                                    <img src="/logic_performance_tracker/static/src/icons/performances.png" alt="" height='25' width='25'/>
+                                    <img src="/logic_performance_tracker/static/src/icons/performances.png" alt=""
+                                         height='25' width='25'/>
                                     Overall Rating
                                 </div>
                             </th>
                         </tr>
                         </thead>
-                        <tbody >
+                        <tbody>
                             <t t-set="index" t-value="1"/>
                             <t t-foreach="Object.keys(values['qualitative_overall_averages'])" t-as="employee">
                                 <tr>
@@ -248,15 +285,17 @@
                                     <td style="color: brown" class="">
                                         <t t-foreach="Object.keys(values['qualitatives'][employee])" t-as="attribute">
                                             <span class="ml-4">
-                                                <span class="text-center" t-esc="values['qualitatives'][employee][attribute]['attribute_type']"/>
-                                                <t t-set="star_count" t-value="Math.round(values['qualitatives'][employee][attribute]['average_rating'])"/>
-                                                    <t t-foreach="Array.from(Array(star_count).keys())" t-as="star_ind">
+                                                <span class="text-center"
+                                                      t-esc="values['qualitatives'][employee][attribute]['attribute_type']"/>
+                                                <t t-set="star_count"
+                                                   t-value="Math.round(values['qualitatives'][employee][attribute]['average_rating'])"/>
+                                                <t t-foreach="Array.from(Array(star_count).keys())" t-as="star_ind">
                                                         <span class="text-right fa fa-star checked"></span>
                                                     </t>
-                                                    <t t-foreach="Array.from(Array(5-star_count).keys())" t-as="star_ind">
+                                                <t t-foreach="Array.from(Array(5-star_count).keys())" t-as="star_ind">
                                                         <span class="text-right fa fa-star"></span>
                                                     </t>
-                                                    <span t-esc="values['qualitatives'][employee][attribute]['average_rating']"/>
+                                                <span t-esc="values['qualitatives'][employee][attribute]['average_rating']"/>
                                                 </span>
                                         </t>
                                     </td>
@@ -275,7 +314,8 @@
             <div class="m-3" t-if="values['quantitatives']">
                 <!-- <h1 class="inline">Qualitative Analysis</h1> -->
                 <div class="h-100 table-responsive card" style="border-radius:10px;">
-                    <table style="font-size:14px;" class="table table-striped table-hover rounded-table table-borderless">
+                    <table style="font-size:14px;"
+                           class="table table-striped table-hover rounded-table table-borderless">
                         <thead>
                             <tr class="rounded" style="background-color:#78787859;">
                                 <td colspan="4" class="text-center"><h2>Quantitative Analysis</h2></td>
@@ -286,25 +326,28 @@
                             <th scope="col" width="7%">#</th>
                             <th scope="col" width="20%">
                                 <div class="">
-                                    <img src="/logic_performance_tracker/static/src/icons/employees.png" alt="" height='25' width='25'/>
+                                    <img src="/logic_performance_tracker/static/src/icons/employees.png" alt=""
+                                         height='25' width='25'/>
                                     Employee
                                 </div>
                             </th>
                             <th scope="col" width="60%">
                                 <div class="">
-                                    <img src="/logic_performance_tracker/static/src/icons/performances.png" alt="" height='25' width='25'/>
+                                    <img src="/logic_performance_tracker/static/src/icons/performances.png" alt=""
+                                         height='25' width='25'/>
                                     Performances
                                 </div>
                             </th>
                             <th scope="col" width="13%">
                                 <div class="">
-                                    <img src="/logic_performance_tracker/static/src/icons/performances.png" alt="" height='25' width='25'/>
+                                    <img src="/logic_performance_tracker/static/src/icons/performances.png" alt=""
+                                         height='25' width='25'/>
                                     Overall Rating
                                 </div>
                             </th>
                         </tr>
                         </thead>
-                        <tbody >
+                        <tbody>
                             <t t-set="index" t-value="1"/>
                             <t t-foreach="Object.keys(values['quantitative_overall_averages'])" t-as="employee">
                                 <tr>
@@ -313,15 +356,17 @@
                                     <td style="color: brown" class="">
                                         <t t-foreach="Object.keys(values['quantitatives'][employee])" t-as="attribute">
                                             <span class="ml-4">
-                                                <span class="text-center" t-esc="values['quantitatives'][employee][attribute]['attribute_type']"/>
-                                                <t t-set="star_count" t-value="Math.round(values['quantitatives'][employee][attribute]['average_rating'])"/>
-                                                    <t t-foreach="Array.from(Array(star_count).keys())" t-as="star_ind">
+                                                <span class="text-center"
+                                                      t-esc="values['quantitatives'][employee][attribute]['attribute_type']"/>
+                                                <t t-set="star_count"
+                                                   t-value="Math.round(values['quantitatives'][employee][attribute]['average_rating'])"/>
+                                                <t t-foreach="Array.from(Array(star_count).keys())" t-as="star_ind">
                                                         <span class="text-right fa fa-star checked"></span>
                                                     </t>
-                                                    <t t-foreach="Array.from(Array(5-star_count).keys())" t-as="star_ind">
+                                                <t t-foreach="Array.from(Array(5-star_count).keys())" t-as="star_ind">
                                                         <span class="text-right fa fa-star"></span>
                                                     </t>
-                                                    <span t-esc="values['quantitatives'][employee][attribute]['average_rating']"/>
+                                                <span t-esc="values['quantitatives'][employee][attribute]['average_rating']"/>
                                                 </span>
                                         </t>
                                     </td>
