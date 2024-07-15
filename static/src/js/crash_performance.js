@@ -458,7 +458,7 @@ odoo.define('logic_performance_tracker.crash_dashboard', function (require) {
                  method: 'get_crash_performance_report_data', // Use 'search_read' to retrieve records
                  args: [fromDate, endDate, department_head_id], // Define search domain if needed
                  // kwargs: {},
-             }).then(function(sales_data){
+             }).then(function(crash_data){
                  var report_template = QWeb.render('logic_performance_tracker.crash_report_template',{'values':crash_data})
                  console.log(crash_data)
                  console.log(crash_data)

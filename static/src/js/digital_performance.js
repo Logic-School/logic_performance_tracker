@@ -36,13 +36,15 @@ odoo.define('logic_performance_tracker.digital_dashboard', function (require) {
     
     var DashboardCardAction = AbstractAction.extend({
     
-        xmlDependencies: ['/logic_performance_tracker/static/src/xml/digital_templates.xml'],
+        xmlDependencies: ['/logic_performance_tracker/static/src/xml/digital_templates.xml',
+        '/logic_performance_tracker/static/src/xml/report_templates/digital_reporting.xml',],
             
         events:{
             'click .o_filter_performance': '_onPerformanceFilterActionClicked',
             'click .o_record_state': '_onStateActionClicked',
             'click .o_filter_reset': 'filter_reset',
             'click .node': '_onEmployeeNodeClicked',
+            'click .report_download_btn': '_downloadPDFReport',
         },
     
         init: function(parent, context) {
@@ -275,6 +277,48 @@ odoo.define('logic_performance_tracker.digital_dashboard', function (require) {
     
             // this.updateState(self.state,false)
         },
+        _downloadPDFReport: function(){
+            self = this;
+            var fromDate = this.$('.from_date').val();
+            var endDate = this.$('.end_date').val();
+            var department_head_id = this.$('.department_head').val()
+
+            if (fromDate == '' || endDate == '') {
+                fromDate = false
+                endDate = false
+            }
+            var def = self._rpc({
+                model: 'digital.task', // Replace with your actual model name
+                method: 'get_digital_performance_report_data', // Use 'search_read' to retrieve records
+                args: [fromDate, endDate, department_head_id], // Define search domain if needed
+                // kwargs: {},
+            }).then(function(digital_data){
+                var report_template = QWeb.render('logic_performance_tracker.digital_report_template',{'values': digital_data})
+
+                console.log(report_template)
+                self._rpc({
+                    model: 'performance.tracker', // Replace with your actual model name
+                    method: 'get_performance_report_pdf', // Use 'search_read' to retrieve records
+                    args: [report_template,'Digital Performance'],
+                }).then(function(pdf_data){
+                    var link = `data:application/pdf;base64, ${pdf_data.pdf_b64}`
+                    console.log(link)
+                    self.$('.o_dashboard_card').append("<a id='report_download' target='_blank'><a/>")
+                    var download_link = self.$('#report_download')
+                    download_link.attr('href',link)
+                    download_link.attr('download',pdf_data.filename)
+                    console.log(download_link[0])
+                    download_link[0].click()
+                    download_link.remove()
+                    // download_link.remove()
+                    // window.open('data:application/pdf;base64, '+pdf_file)
+                }).catch(function(err){
+                    console.log(err)
+                })
+            }).catch(function(err){
+                console.log(err)
+            })
+        },
 
         _onEmployeeNodeClicked: function (ev){
             var self = this
@@ -304,6 +348,7 @@ odoo.define('logic_performance_tracker.digital_dashboard', function (require) {
             console.log(err)
         })
         },
+
     
         _onStateActionClicked: function (ev) {
             let record_state = $(ev.currentTarget).find('.state').text()

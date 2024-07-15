@@ -5,6 +5,7 @@ import random
 from datetime import date
 from . import actions_common
 from . import academic_data
+from . import digital_task
 from . import pdf_reports
 import pdfkit
 from . import leave_data

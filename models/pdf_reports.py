@@ -311,6 +311,17 @@ def get_academic_report_data(self, manager_id, start_date=False, end_date=False)
         academic_data['end_date'] = end_date.strftime("%d / %m / %Y")
     return academic_data
 
+def get_digital_report_data(self, manager_id, start_date=False, end_date=False):
+    digital_data = False
+    print('working digital')
+    if manager_id:
+        digital_data = self.env['digital.task'].retrieve_dashboard_data(start_date, end_date, manager_id=int(manager_id))
+    if start_date and end_date:
+        start_date, end_date = actions_common.get_date_obj_from_string(start_date, end_date)
+        digital_data['start_date'] = start_date.strftime("%d / %m / %Y")
+        digital_data['end_date'] = end_date.strftime("%d / %m / %Y")
+    return digital_data
+
 
 def get_common_performance_data(self, employees, start_date=False, end_date=False):
     for employee in employees:

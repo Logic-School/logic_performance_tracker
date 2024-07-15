@@ -2,6 +2,8 @@ from odoo import models,fields,api
 from odoo.exceptions import UserError
 from . import actions_common
 import logging
+from . import pdf_reports
+
 class DigitalTaskInherit(models.Model):
     _inherit = "digital.task"
 
@@ -96,3 +98,10 @@ class DigitalTaskInherit(models.Model):
         dashboard_data['org_datas'] = org_datas
         # raise UserError(dashboard_data)
         return dashboard_data
+
+    @api.model
+    def get_digital_performance_report_data(self, start_date=False, end_date=False, manager_id=False):
+        employees = self.env['hr.employee'].sudo().search([('parent_id', '=', int(manager_id))])
+        employees += self.env['hr.employee'].sudo().browse(int(manager_id))
+        employee_data = pdf_reports.get_digital_report_data(self, manager_id, start_date, end_date)
+        return employee_data

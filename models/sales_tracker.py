@@ -427,17 +427,32 @@ class SalesTracker(models.Model):
         adm_total_leads_domain = [('leads_assign', '=', employee.id), ('admission_status', '=', True)]
         month, year = self.get_leads_month_year(start_date, end_date)
 
-
-        # Apply date filters if provided
-        if start_date and end_date:
-            lead_domain.extend([('date_of_adding', '>=', start_date), ('date_of_adding', '<=', end_date)])
-
-        # Search leads based on domains
         leads = self.env['leads.logic'].sudo().search(lead_domain)
-        total_leads = len(leads)
+        # Apply date filters if provided
+        # if start_date and end_date:
+        #     lead_domain.extend([('date_of_adding', '>=', start_date), ('date_of_adding', '<=', end_date)])
+        #
+        # # Search leads based on domains
+        # leads = self.env['leads.logic'].sudo().search(lead_domain)
+        # total_leads = len(leads)
+        if start_date and end_date:
+            total_leads = sum(self.env['leads.logic'].sudo().search_count(
+                [('leads_assign', '=', employee.id), ('assigned_date', '>=', start_date), ('assigned_date', '<=', end_date)]))
+        else:
+            total_leads = 0
+            leads = self.env['leads.logic'].sudo().search(lead_domain)
+            for i in leads:
+                if i.assigned_date.month == month:
+                    total_leads += 1
+            # for i in leads:
+            #     total_adm_coun = self.env['admission.fee.collection'].sudo().search(
+            #         [('lead_id', '=', i.id)])
+            #     for j in total_adm_coun:
+            #         if j.admission_date.month == month:
+            #             total_adm_count += 1
+            #         print(j.id, 'ppoo')
 
         adm_leads = self.env['leads.logic'].sudo().search(adm_total_leads_domain)
-
 
         if start_date and end_date:
             total_adm_count = sum(self.env['admission.fee.collection'].sudo().search_count(
@@ -585,12 +600,12 @@ class SalesTracker(models.Model):
             leads_with_admission = leads_with_admission.filtered(
                 lambda lead: lead.admission_date >= start_date and lead.admission_date <= end_date)
             leads_without_admission = leads_without_admission.filtered(
-                lambda lead: lead.date_of_adding >= start_date and lead.date_of_adding <= end_date)
+                lambda lead: lead.assigned_date >= start_date and lead.assigned_date <= end_date)
         else:
             leads_with_admission = leads_with_admission.filtered(
                 lambda lead: lead.admission_date.month == month and lead.admission_date.year == year)
             leads_without_admission = leads_without_admission.filtered(
-                lambda lead: lead.date_of_adding.month == month and lead.date_of_adding.year == year)
+                lambda lead: lead.assigned_date.month == month and lead.assigned_date.year == year)
 
         return leads_with_admission, leads_without_admission
 
