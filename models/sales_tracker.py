@@ -442,8 +442,9 @@ class SalesTracker(models.Model):
             total_leads = 0
             leads = self.env['leads.logic'].sudo().search(lead_domain)
             for i in leads:
-                if i.assigned_date.month == month:
-                    total_leads += 1
+                if i.assigned_date:
+                    if i.assigned_date.month == month:
+                        total_leads += 1
             # for i in leads:
             #     total_adm_coun = self.env['admission.fee.collection'].sudo().search(
             #         [('lead_id', '=', i.id)])
