@@ -437,7 +437,8 @@ class SalesTracker(models.Model):
         # total_leads = len(leads)
         if start_date and end_date:
             total_leads = sum(self.env['leads.logic'].sudo().search_count(
-                [('leads_assign', '=', employee.id), ('assigned_date', '>=', start_date), ('assigned_date', '<=', end_date)]))
+                [('leads_assign', '=', employee.id), ('assigned_date', '>=', start_date),
+                 ('assigned_date', '<=', end_date)]))
         else:
             total_leads = 0
             leads = self.env['leads.logic'].sudo().search(lead_domain)
@@ -470,10 +471,7 @@ class SalesTracker(models.Model):
                         total_adm_count += 1
                     print(j.id, 'ppoo')
 
-
                 # if i.admission_date.month == month:
-
-
 
             print(month, 'total_adm_count else')
 
@@ -488,7 +486,6 @@ class SalesTracker(models.Model):
         # Separate leads into those with and without admissions
         leads_with_admission, leads_without_admission = self.get_leads_with_and_without_admission(leads, start_date,
                                                                                                   end_date)
-
 
         # Get lead target for the specific month and year
         year_lead_target_obj = self.env['leads.target'].sudo().search(
@@ -601,12 +598,13 @@ class SalesTracker(models.Model):
             leads_with_admission = leads_with_admission.filtered(
                 lambda lead: lead.admission_date >= start_date and lead.admission_date <= end_date)
             leads_without_admission = leads_without_admission.filtered(
-                lambda lead: lead.assigned_date >= start_date and lead.assigned_date <= end_date)
+                lambda lead: lead.assigned_date and lead.assigned_date >= start_date and lead.assigned_date <= end_date)
         else:
             leads_with_admission = leads_with_admission.filtered(
                 lambda lead: lead.admission_date.month == month and lead.admission_date.year == year)
             leads_without_admission = leads_without_admission.filtered(
-                lambda lead: lead.assigned_date.month == month and lead.assigned_date.year == year)
+                lambda
+                    lead: lead.assigned_date and lead.assigned_date.month == month and lead.assigned_date.year == year)
 
         return leads_with_admission, leads_without_admission
 
