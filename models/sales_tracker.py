@@ -436,9 +436,9 @@ class SalesTracker(models.Model):
         # leads = self.env['leads.logic'].sudo().search(lead_domain)
         # total_leads = len(leads)
         if start_date and end_date:
-            total_leads = sum(self.env['leads.logic'].sudo().search_count(
+            total_leads = self.env['leads.logic'].sudo().search_count(
                 [('leads_assign', '=', employee.id), ('assigned_date', '>=', start_date),
-                 ('assigned_date', '<=', end_date)]))
+                 ('assigned_date', '<=', end_date)])
         else:
             total_leads = 0
             leads = self.env['leads.logic'].sudo().search(lead_domain)
