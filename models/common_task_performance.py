@@ -13,6 +13,7 @@ class CommonTaskPerformance(models.Model):
     misc_average_rating = fields.Float()
     to_do_average_rating = fields.Float()
     qualitative_average_rating = fields.Float()
+    quantitative_average_rating = fields.Float()
     score = fields.Float()
     total_leads_count = fields.Float()
     admission_lead_count = fields.Float()
@@ -113,9 +114,9 @@ class CommonTaskPerformance(models.Model):
 
         qualitative_average_rating = 0    
         if not start_date or not end_date:
-            quality_records = self.env['base.qualitative.analysis'].sudo().search([('name','=',employee.id)])
+            quality_records = self.env['base.qualitative.analysis'].sudo().search([('name','=', employee.id)])
         else:
-            quality_records = self.env['base.qualitative.analysis'].sudo().search([('name','=',employee.id),('added_date','>=',start_date),('added_date','<=',end_date)])
+            quality_records = self.env['base.qualitative.analysis'].sudo().search([('name','=', employee.id),('added_date','>=',start_date),('added_date','<=',end_date)])
         if quality_records:
             for quality_rec in quality_records:
                 average_rating = 0

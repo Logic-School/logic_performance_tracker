@@ -251,6 +251,7 @@ def get_ordered_qualitative_data(self,qualitatives,employees):
 def get_ordered_quantitative_data(self,quantitatives,employees):
 
     logger = logging.getLogger("Debugger: ")
+
     quantitative_overall_objs = self.env['employee.quantitative.performance'].sudo().search([('employee','in',employees.ids)],order="overall_average desc")
     quantitative_overall_average_datas = {}
     for quantitative_overall_obj in quantitative_overall_objs:
@@ -259,6 +260,8 @@ def get_ordered_quantitative_data(self,quantitatives,employees):
             quantitatives[quantitative_overall_obj.employee.name] = {}
     logger.error("quantitative_overall_average_datas: "+str(quantitative_overall_average_datas))
     logger.error("dashboard_data['quantitative']: "+str(quantitatives))
+    # print('oo', quantitative_overall_average_datas)
+
     return quantitatives,quantitative_overall_average_datas
 
 def get_org_datas_dept_names(manager,managers):
