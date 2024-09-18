@@ -68,6 +68,28 @@ def get_employee_crash_data(self, employee, start_date=False, end_date=False):
     return {}
 
 
+def get_leads_month_year(self, start_date, end_date):
+    month = False
+
+    if start_date and end_date:
+        # Convert strings to date objects only if they are not already date objects
+        if isinstance(start_date, str):
+            start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+        if isinstance(end_date, str):
+            end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+
+        print(start_date, 'start', end_date, 'end')
+        year = start_date.year
+        print(year, 'year')
+        if start_date.month == end_date.month and start_date.year == end_date.year:
+            month = start_date.month
+    else:
+        year = date.today().year
+        month = date.today().month
+
+    return month, year
+
+
 def get_academic_head_data(self, employee):
     academic_head_data = {}
     batch_count = 0
@@ -242,15 +264,22 @@ def get_sales_report_data(self, employees, start_date=False, end_date=False):
                                                                                                                employees,
                                                                                                                start_date,
                                                                                                                end_date)
+    sales_data['source_wise_data'] = get_leads_source_leaderboard_data(self, employees, start_date, end_date)
+    print(sales_data, 'gghhh')
+
     if start_date and end_date:
         start_date, end_date = actions_common.get_date_obj_from_string(start_date, end_date)
         sales_data['start_date'] = start_date.strftime("%d / %m / %Y")
         sales_data['end_date'] = end_date.strftime("%d / %m / %Y")
+
     sales_data['leads_leaderboard_data'] = get_leads_leaderboard_data(self, employees, start_date, end_date)
     sales_data['course_names'] = self.env['logic.base.courses'].sudo().search(
         [('name', 'not in', ('Nill', "DON'T USE", 'Nil')), ('type', '!=', 'crash')]).mapped('name')
 
     sales_data['common_task_performances'] = get_common_performance_data(self, employees, start_date, end_date)
+
+    sales_data['head'] = self.env['hr.department'].sudo().search([('name', 'ilike', 'Sales Team')], limit=1).manager_id.name
+    print(sales_data, 'sale_rrrr')
     return sales_data
 
 
@@ -299,6 +328,51 @@ def get_coursewise_sales_data(self, employees, start_date=False, end_date=False,
     coursewise_total_data['total_revenue'] = overall_total_revenue
     return coursewise_data, coursewise_total_data
 
+
+
+def get_leads_source_leaderboard_data(self, employees, start_date, end_date):
+    source_objs = self.env['leads.sources'].sudo().search([])
+    source_data = {}
+    source_wise_data = {}
+    # month, year = self.get_leads_month_year(start_date, end_date)
+    # print(month, year, 'mm')
+
+    # Compute source_data
+    for perf_obj in source_objs:
+        sc_count_domain = [('leads_source', '=', perf_obj.id)]
+        converted_count_domain = [('leads_source', '=', perf_obj.id), ('admission_status', '=', True)]
+
+        if start_date and end_date:
+            sc_count_domain.extend([('date_of_adding', '>=', start_date), ('date_of_adding', '<=', end_date)])
+
+        sc_count = self.env['leads.logic'].sudo().search_count(sc_count_domain)
+
+        if start_date and end_date:
+            converted_count = sum(self.env['admission.fee.collection'].sudo().search_count(
+                [('lead_id', '=', lead.id), ('admission_date', '>=', start_date),
+                 ('admission_date', '<=', end_date)]
+            ) for lead in self.env['leads.logic'].sudo().search(converted_count_domain))
+        else:
+            converted_count = 0
+            converted_leads = self.env['leads.logic'].sudo().search(converted_count_domain)
+            for lead in converted_leads:
+                admission = self.env['admission.fee.collection'].sudo().search(
+                    [('lead_id', '=', lead.id)])
+                for adm in admission:
+                    if adm.admission_date.month == month:
+                        converted_count += 1
+
+        source_id = str(perf_obj.id) + " "
+        source_data[source_id] = {
+            'name': perf_obj.name,
+            'lead_count': sc_count,
+            'lead_converted': converted_count,
+        }
+    print(source_wise_data, 'source_data')
+    # Compute source_wise_data if needed
+    # ...
+
+    return source_wise_data, source_data
 
 def get_academic_report_data(self, manager_id, start_date=False, end_date=False):
     academic_data = False

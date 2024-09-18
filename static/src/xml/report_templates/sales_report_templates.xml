@@ -3,11 +3,14 @@
     <!-- Define your QWeb template for the dashboard_card view -->
     <t t-name="logic_performance_tracker.sales_report_template">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Trirong"/>
+        <link href="https://fonts.googleapis.com/css2?family=Tinos" rel="stylesheet"/>
         <style>
             .page-header {
 
                 padding: 10px;
                 text-align: center;
+                font-family: "Tinos", serif;
             }
 
             .employee-report-details-card {
@@ -16,6 +19,7 @@
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                 padding: 10px;
                 margin-bottom: 20px;
+                font-family: "Tinos", serif;
             }
             
             .employee-image {
@@ -30,20 +34,31 @@
             
             .label1{
                 font-weight: bold;
+                font-family: "Tinos", serif;
+            }
+            #leader_board {
+                font-family: "Tinos", serif;
+            }
+            .sub_heads {
+                text-align: left;
+                font-family: "Tinos", serif;
             }
         </style>
         <div t-if="values" class="container-fluid" style="margin:0;padding:0;">
-            
-            <div class="container mt-3 card-body">
+
+        <div class="container mt-3 card-body">
                 <div class="page-header">
                     <h4>Sales Report - <span t-esc="values['start_date']"/>
                         -
                         <span t-esc="values['end_date']"/></h4>
                 </div>
             </div>
+            <div class="sub_heads" align="left">
+                <h5>Head : <span t-esc="values['head']"/></h5>
+            </div>
 
             <div t-if="values['leads_leaderboard_data']">
-                <div class="mt-5">
+                <div class="mt-5" id="leader_board">
                     <div class="table-responsive table-sm card performance-table">
                         <!-- Add 'table-bordered' class for borders -->
                         <table class="table table-striped table-hover table-bordered">
@@ -97,8 +112,186 @@
                 </div>
             </div>
 
+            <div t-if="values['leads_leaderboard_data']">
+                <div class="mt-5" id="leader_board">
+                    <div class="table-responsive table-sm card performance-table">
+                        <!-- Add 'table-bordered' class for borders -->
+                        <table class="table table-striped table-hover table-bordered">
+                            <thead>
+                                <tr class="rounded" style="background-color:#78787859;">
+                                    <td colspan="8" class="text-center font-weight-bold"><h5>Lead Conversions</h5></td>
+                                </tr>
+                            </thead>
+                            <thead class="bg-light">
+                                <tr>
+                                    <th scope="col" width="7%">#</th>
+                                    <th scope="col" width="25%">Employee</th>
+                                    <th class="text-center" width="18%" scope="col">Leads Count</th>
+                                    <th scope="col" class="text-center" width="25%">Lead Conversion</th>
+
+                                </tr>
+                            </thead>
+                            <tbody style="font-size:14px;">
+                                <t t-set="index" t-value="1"/>
+                                <t t-foreach="Object.keys(values['leads_leaderboard_data'])" t-as="employee">
+
+                                    <tr class="o_employee_leads_data_name">
+                                        <td class="d-none o_employee_id" t-att-data-empid="employee"/>
+                                        <td t-esc="index"/>
+                                        <td t-esc="values['leads_leaderboard_data'][employee]['name']"/>
+                                        <td style="color: green"
+                                            t-esc="values['leads_leaderboard_data'][employee]['total_lead_count']"
+                                            class="text-center"/>
+                                        <!--                                        <td class="text-center">-->
+                                        <!--                                            <span style="color: brown"-->
+                                        <!--                                                  t-esc="values['leads_leaderboard_data'][employee]['lead_converted']"/>-->
+                                        <!--                                            <span t-esc="' / '"/>-->
+                                        <!--                                            <span style="color: green"-->
+                                        <!--                                                  t-esc="values['leads_leaderboard_data'][employee]['lead_target']"/>-->
+                                        <!--                                        </td>-->
+                                        <td style="color: green"
+                                            t-esc="values['leads_leaderboard_data'][employee]['report_adm_count']"
+                                            class="text-center"/>
+
+                                        <!-- <td t-esc="exec_performance['average_rating']"/> -->
+
+
+                                    </tr>
+                                    <t t-set="index" t-value="index+1"/>
+                                    </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div t-if="values['source_wise_data'][1]">
+                <div class="mt-5" id="leader_board">
+                    <div class="table-responsive table-sm card performance-table">
+                        <!-- Add 'table-bordered' class for borders -->
+                        <table class="table table-striped table-hover table-bordered">
+                            <thead>
+                                <tr class="rounded" style="background-color:#78787859;">
+                                    <td colspan="5" class="text-center font-weight-bold">
+                                        <h5>Lead Conversions (By Source)</h5>
+                                    </td>
+                                </tr>
+                            </thead>
+                            <thead class="bg-light">
+                                <tr>
+                                    <th scope="col" width="7%">#</th>
+                                    <th scope="col" width="25%">Source</th>
+                                    <th class="text-center" width="18%" scope="col">Leads Count</th>
+                                    <th class="text-center" width="25%" scope="col">Lead Conversion</th>
+                                </tr>
+                            </thead>
+                            <tbody style="font-size:14px;">
+                                <t t-set="index" t-value="1"/>
+                                <t t-foreach="Object.keys(values['source_wise_data'][1])" t-as="source_key">
+                                    <tr class="o_employee_leads_data_name">
+                                        <td class="d-none o_employee_id" t-att-data-empid="source_key"/>
+                                        <td t-esc="index"/>
+                                        <td t-esc="values['source_wise_data'][1][source_key]['name']"/>
+                                        <td style="color: green" t-esc="values['source_wise_data'][1][source_key]['lead_count']" class="text-center"/>
+                                        <td style="color: green" t-esc="values['source_wise_data'][1][source_key]['lead_converted']" class="text-center"/>
+                                    </tr>
+                                    <t t-set="index" t-value="index+1"/>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+
+<!--                        <tbody style="font-size:14px;">-->
+<!--                            <t t-set="index" t-value="1"/>-->
+<!--                            <t t-foreach="Object.keys(values['source_wise_data'])" t-as="source">-->
+<!--                                <tr>-->
+<!--                                    <td t-esc="index"/>-->
+<!--                                    <td t-esc="source[1]['name']"/>-->
+<!--                                    <td style="color: green" t-esc="source[1]['lead_count']" class="text-center"/>-->
+<!--                                    <td style="color: green" t-esc="values['source_wise_data'][source]['lead_converted']" class="text-center"/>-->
+<!--                                </tr>-->
+<!--                                <t t-set="index" t-value="index + 1"/>-->
+<!--                            </t>-->
+<!--                        </tbody>-->
+
+<!--            <div t-if="values['source_wise_data']">-->
+<!--                <div class="mt-5" id="source_wise_sales">-->
+<!--                <div class="table-responsive table-sm card performance-table">-->
+<!--                    <table class="table table-striped table-hover table-bordered">-->
+<!--                        <thead>-->
+<!--                            <tr class="rounded" style="background-color:#78787859;">-->
+<!--                                <td colspan="8" class="text-center font-weight-bold">-->
+<!--                                    <h5>Source-wise Lead Conversions</h5>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                        </thead>-->
+<!--                        <thead class="bg-light">-->
+<!--                            <tr>-->
+<!--                                <th scope="col" width="7%">#</th>-->
+<!--                                &lt;!&ndash;                                <th scope="col" width="25%">Employee</th>&ndash;&gt;-->
+<!--                                <th class="text-center" width="18%" scope="col">Source</th>-->
+<!--                                <th class="text-center" width="18%" scope="col">Leads Count</th>-->
+<!--                                <th class="text-center" width="18%" scope="col">Lead Conversion</th>-->
+<!--                            </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+<!--                    &lt;!&ndash; Loop through each user in source_wise_data &ndash;&gt;-->
+<!--                            <t t-foreach="Object.keys(values['source_wise_data'])" t-as="source_item">-->
+<!--                                <t t-set="source_name" t-value="source_item[0]"/>-->
+<!--                                <t t-set="source_data" t-value="source_item[1]['source_data']"/>-->
+<!--                                &lt;!&ndash; For each source, render the data &ndash;&gt;-->
+<!--                                <tr>-->
+<!--                                    <td t-esc="source_name"/>-->
+<!--                                    <td>-->
+<!--                                        <t t-foreach="source_data.items()" t-as="data_item">-->
+<!--                                            <div><strong t-esc="data_item[0]"/>:-->
+<!--                                                <t t-esc="data_item[1]['lead_count']"/></div>-->
+<!--                                        </t>-->
+<!--                                    </td>-->
+<!--                                    <td>-->
+<!--                                        <t t-foreach="source_data.items()" t-as="data_item">-->
+<!--                                            <div><strong t-esc="data_item[0]"/>:-->
+<!--                                                <t t-esc="data_item[1]['converted_count']"/></div>-->
+<!--                                        </t>-->
+<!--                                    </td>-->
+<!--                                </tr>-->
+<!--                            </t>-->
+<!--                        </tbody>-->
+                        <!--                            <tbody style="font-size:14px;">-->
+                        <!--                                <t t-set="index" t-value="1"/>-->
+                        <!--                                <t t-foreach="values['source_wise_data'].items()" t-as="employee">-->
+                        <!--                                    &lt;!&ndash; Check if 'source_data' exists for the employee &ndash;&gt;-->
+                        <!--                                    <t t-if="employee[1]['source_data']">-->
+                        <!--                                        <t t-foreach="employee[1]['source_data'].items()" t-as="source">-->
+                        <!--                                            <tr>-->
+                        <!--                                                <td t-esc="index"/> &lt;!&ndash; Incremental index &ndash;&gt;-->
+                        <!--                                                <td t-esc="employee[0]"/> &lt;!&ndash; Employee Name &ndash;&gt;-->
+                        <!--                                                <td t-esc="source[0]" class="text-center"/> &lt;!&ndash; Source Name &ndash;&gt;-->
+                        <!--                                                <td t-esc="source[1]['lead_count']" class="text-center text-success"/> &lt;!&ndash; Lead Count &ndash;&gt;-->
+                        <!--                                                <td t-esc="source[1]['converted_count']" class="text-center text-danger"/> &lt;!&ndash; Converted Count &ndash;&gt;-->
+                        <!--                                            </tr>-->
+                        <!--                                            <t t-set="index" t-value="index + 1"/>-->
+                        <!--                                        </t>-->
+                        <!--                                    </t>-->
+                        <!--                                </t>-->
+                        <!--                                &lt;!&ndash; Display a message if there is no data &ndash;&gt;-->
+                        <!--                                <t t-if="values['source_wise_data'] == {}">-->
+                        <!--                                    <tr>-->
+                        <!--                                        <td colspan="5" class="text-center">No source-wise data available</td>-->
+                        <!--                                    </tr>-->
+                        <!--                                </t>-->
+                        <!--                            </tbody>-->
+<!--                        </table>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+
             <div t-if="values['coursewise_sales_data']">
-                <div class="mt-5">
+                <div class="mt-5" id="leader_board">
                     <div class="table-responsive table-sm card performance-table">
                         <!-- Add 'table-bordered' class for borders -->
                         <table class="table table-striped table-hover table-bordered">
@@ -158,7 +351,7 @@
             </div>
 
             <div t-if="values['common_task_performances']">
-                <div class="mt-5">
+                <div class="mt-5" id="leader_board">
                     <div class="table-responsive table-sm card performance-table">
                         <!-- Add 'table-bordered' class for borders -->
                         <table class="table table-striped table-hover table-bordered">
@@ -232,59 +425,6 @@
                                             class="text-center"/>
     
     
-                                    </tr>
-                                    <t t-set="index" t-value="index+1"/>
-                                    </t>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div t-if="values['leads_leaderboard_data']">
-                <div class="mt-5">
-                    <div class="table-responsive table-sm card performance-table">
-                        <!-- Add 'table-bordered' class for borders -->
-                        <table class="table table-striped table-hover table-bordered">
-                            <thead>
-                                <tr class="rounded" style="background-color:#78787859;">
-                                    <td colspan="8" class="text-center font-weight-bold"><h5>Lead Conversions</h5></td>
-                                </tr>
-                            </thead>
-                            <thead class="bg-light">
-                                <tr>
-                                    <th scope="col" width="7%">#</th>
-                                    <th scope="col" width="25%">Employee</th>
-                                    <th class="text-center" width="18%" scope="col">Leads Count</th>
-                                    <th scope="col" class="text-center" width="25%">Lead Conversion</th>
-
-                                </tr>
-                            </thead>
-                            <tbody style="font-size:14px;">
-                                <t t-set="index" t-value="1"/>
-                                <t t-foreach="Object.keys(values['leads_leaderboard_data'])" t-as="employee">
-
-                                    <tr class="o_employee_leads_data_name">
-                                        <td class="d-none o_employee_id" t-att-data-empid="employee"/>
-                                        <td t-esc="index"/>
-                                        <td t-esc="values['leads_leaderboard_data'][employee]['name']"/>
-                                        <td style="color: green"
-                                            t-esc="values['leads_leaderboard_data'][employee]['total_lead_count']"
-                                            class="text-center"/>
-<!--                                        <td class="text-center">-->
-<!--                                            <span style="color: brown"-->
-<!--                                                  t-esc="values['leads_leaderboard_data'][employee]['lead_converted']"/>-->
-<!--                                            <span t-esc="' / '"/>-->
-<!--                                            <span style="color: green"-->
-<!--                                                  t-esc="values['leads_leaderboard_data'][employee]['lead_target']"/>-->
-<!--                                        </td>-->
-                                        <td style="color: green"
-                                            t-esc="values['leads_leaderboard_data'][employee]['report_adm_count']"
-                                            class="text-center"/>
-
-                                        <!-- <td t-esc="exec_performance['average_rating']"/> -->
-
-
                                     </tr>
                                     <t t-set="index" t-value="index+1"/>
                                     </t>

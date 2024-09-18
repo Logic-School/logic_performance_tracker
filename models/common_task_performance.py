@@ -1,6 +1,7 @@
 from odoo import models,fields,api
 import logging
-from datetime import date
+from datetime import date,datetime
+
 
 class CommonTaskPerformance(models.Model):
     _name = "logic.common.task.performance"
@@ -22,11 +23,17 @@ class CommonTaskPerformance(models.Model):
         month = False
 
         if start_date and end_date:
-            # lead_domain.extend([('date_of_adding','>=',start_date),('date_of_adding','<=',end_date)])
+            # Convert strings to date objects only if they are not already date objects
+            if isinstance(start_date, str):
+                start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+            if isinstance(end_date, str):
+                end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+
+            print(start_date, 'start', end_date, 'end')
             year = start_date.year
+            print(year, 'year')
             if start_date.month == end_date.month and start_date.year == end_date.year:
                 month = start_date.month
-
         else:
             year = date.today().year
             month = date.today().month

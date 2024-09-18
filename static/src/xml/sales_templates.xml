@@ -491,6 +491,7 @@
                             </table>
                 </div>
         </div>
+
         <div class="m-3" t-if="values['leads_courses']">
                         <!-- <h1 class="inline">Miscellaneous Works</h1> -->
             <div class="h-100 table-responsive card" style="border-radius:10px;">
