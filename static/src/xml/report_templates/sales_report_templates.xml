@@ -294,22 +294,23 @@
                 <div class="mt-5" id="leader_board">
                     <div class="table-responsive table-sm card performance-table">
                         <!-- Add 'table-bordered' class for borders -->
-                        <table class="table table-striped table-hover table-bordered">
+                        <table class="table table-striped table-hover table-bordered" style="table-layout: fixed; width: 100%;">
                             <thead>
                                 <tr class="rounded" style="background-color:#78787859;">
-                                    <td t-att-colspan="values['course_names'].length + 3"
-                                        class="text-center font-weight-bold"><h5>Coursewise Revenue</h5></td>
+                                    <td t-att-colspan="values['course_names'].length + 3" class="text-center font-weight-bold">
+                                        <h5>Coursewise Revenue</h5>
+                                    </td>
                                 </tr>
                             </thead>
                             <thead style="font-size:15px;">
-                                <th scope="col" width="7%">#</th>
-                                <th scope="col" width="17%">Employee</th>
-                                <t t-foreach="values['course_names']" t-as="course">
-                                    <th scope="col" t-esc="course"/>
-
-                                </t>
-                                <th scope="col">Total Revenue</th>
-
+                                <tr>
+                                    <th scope="col" width="7%">#</th>
+                                    <th scope="col" width="17%">Employee</th>
+                                    <t t-foreach="values['course_names']" t-as="course">
+                                        <th scope="col" t-esc="course" style="width: 10%;"/>
+                                    </t>
+                                    <th scope="col" style="width: 15%;">Total Revenue</th>
+                                </tr>
                             </thead>
                             <tbody style="font-size:14px;">
                                 <t t-set="index" t-value="1"/>
@@ -319,36 +320,32 @@
                                         <td class="text-center" t-esc="employee"/>
                                         <t t-foreach="Object.keys(values['coursewise_sales_data'][employee]['coursewise_data'])"
                                            t-as="course">
-                                            <td class="text-center">
+                                            <td class="text-center" style="white-space: nowrap;">
                                                 <span t-esc="values['coursewise_sales_data'][employee]['coursewise_data'][course]['course_revenue'].toLocaleString('en-IN', {'style':'currency', 'currency':'INR'})"/>
                                             </td>
                                         </t>
-                                        <td class="text-center">
+                                        <td class="text-center" style="white-space: nowrap;">
                                             <span t-esc="values['coursewise_sales_data'][employee]['total_revenue'].toLocaleString('en-IN', {'style':'currency', 'currency':'INR'})"/>
-
                                         </td>
-
                                     </tr>
                                     <t t-set="index" t-value="index+1"/>
-
                                 </t>
 
                                 <tr>
                                     <td t-esc="''"/>
                                     <td t-esc="'Total'" class="text-center font-weight-bold"/>
                                     <t t-foreach="Object.keys(values['coursewise_total_sales_data'])" t-as="course">
-                                        <td class="text-center">
+                                        <td class="text-center" style="white-space: nowrap;">
                                             <span t-esc="values['coursewise_total_sales_data'][course].toLocaleString('en-IN', {'style':'currency', 'currency':'INR'})"/>
                                         </td>
                                     </t>
-                                    
                                 </tr>
                             </tbody>
-
                         </table>
                     </div>
                 </div>
             </div>
+
 
             <div t-if="values['common_task_performances']">
                 <div class="mt-5" id="leader_board">
